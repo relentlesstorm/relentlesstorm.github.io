@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Useful Elastic cluster APIs</title>
+    <link rel="stylesheet" href="/assets/built/screen.css?v=ed85671088">
+
+    <meta name="description" content="Useful Elastic cluster APIs" />
+    <link rel="canonical" href="http://localhost:2368/useful-es-apis/" />
+    <meta name="referrer" content="no-referrer-when-downgrade" />
+    
+    <meta property="og:site_name" content="Flamingbytes" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="Useful Elastic cluster APIs" />
+    <meta property="og:description" content="Useful Elastic cluster APIs" />
+    <meta property="og:url" content="http://localhost:2368/useful-es-apis/" />
+    <meta property="og:image" content="https://images.unsplash.com/photo-1623282033815-40b05d96c903?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDF8fGFwaXxlbnwwfHx8fDE2NzI0NjUxMTA&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000" />
+    <meta property="article:published_time" content="2022-10-28T05:37:00.000Z" />
+    <meta property="article:modified_time" content="2022-12-31T05:40:32.000Z" />
+    <meta property="article:tag" content="Big Data" />
+    
+    <meta property="article:publisher" content="https://www.facebook.com/ghost" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Useful Elastic cluster APIs" />
+    <meta name="twitter:description" content="Useful Elastic cluster APIs" />
+    <meta name="twitter:url" content="http://localhost:2368/useful-es-apis/" />
+    <meta name="twitter:image" content="https://images.unsplash.com/photo-1623282033815-40b05d96c903?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDF8fGFwaXxlbnwwfHx8fDE2NzI0NjUxMTA&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000" />
+    <meta name="twitter:label1" content="Written by" />
+    <meta name="twitter:data1" content="relentlesstorm" />
+    <meta name="twitter:label2" content="Filed under" />
+    <meta name="twitter:data2" content="Big Data" />
+    <meta name="twitter:site" content="@ghost" />
+    <meta property="og:image:width" content="2000" />
+    <meta property="og:image:height" content="1333" />
+    
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "publisher": {
+        "@type": "Organization",
+        "name": "Flamingbytes",
+        "url": "http://localhost:2368/",
+        "logo": {
+            "@type": "ImageObject",
+            "url": "http://localhost:2368/favicon.ico",
+            "width": 48,
+            "height": 48
+        }
+    },
+    "author": {
+        "@type": "Person",
+        "name": "relentlesstorm",
+        "url": "http://localhost:2368/author/relentlesstorm/",
+        "sameAs": []
+    },
+    "headline": "Useful Elastic cluster APIs",
+    "url": "http://localhost:2368/useful-es-apis/",
+    "datePublished": "2022-10-28T05:37:00.000Z",
+    "dateModified": "2022-12-31T05:40:32.000Z",
+    "image": {
+        "@type": "ImageObject",
+        "url": "https://images.unsplash.com/photo-1623282033815-40b05d96c903?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxMTc3M3wwfDF8c2VhcmNofDF8fGFwaXxlbnwwfHx8fDE2NzI0NjUxMTA&ixlib=rb-4.0.3&q=80&w=2000",
+        "width": 2000,
+        "height": 1333
+    },
+    "keywords": "Big Data",
+    "description": "Useful Elastic cluster APIs",
+    "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "http://localhost:2368/"
+    }
+}
+    </script>
+
+    <meta name="generator" content="Ghost 5.26" />
+    <link rel="alternate" type="application/rss+xml" title="Flamingbytes" href="http://localhost:2368/rss/" />
+    
+    <script defer src="https://cdn.jsdelivr.net/ghost/sodo-search@~1.1/umd/sodo-search.min.js" data-key="321a1d1aea33fd468f6e61f563" data-styles="https://cdn.jsdelivr.net/ghost/sodo-search@~1.1/umd/main.css" data-sodo-search="http://localhost:2368/" crossorigin="anonymous"></script>
+    <script defer src="/public/cards.min.js?v=ed85671088"></script><style>:root {--ghost-accent-color: #ff9f1a;}</style>
+    <link rel="stylesheet" type="text/css" href="/public/cards.min.css?v=ed85671088">
+</head>
+
+<body class="post-template tag-big-data is-head-left-logo has-serif-body is-head-brand">
+<div class="gh-site">
+
+    <header id="gh-head" class="gh-head gh-outer">
+        <div class="gh-head-inner gh-inner">
+            <div class="gh-head-brand">
+                <div class="gh-head-brand-wrapper">
+                    <a class="gh-head-logo" href="http://localhost:2368">
+                            Flamingbytes
+                    </a>
+                </div>
+                <button class="gh-search gh-icon-btn" data-ghost-search><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" width="20" height="20"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg></button>
+                <button class="gh-burger"></button>
+            </div>
+
+            <nav class="gh-head-menu">
+                <ul class="nav">
+    <li class="nav-home"><a href="http://localhost:2368/">Home</a></li>
+    <li class="nav-tags"><a href="http://localhost:2368/tags/">Tags</a></li>
+    <li class="nav-archive"><a href="http://localhost:2368/archive/">Archive</a></li>
+    <li class="nav-about"><a href="http://localhost:2368/about/">About</a></li>
+</ul>
+
+            </nav>
+
+            <div class="gh-head-actions">
+                        <button class="gh-search gh-icon-btn" data-ghost-search><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" width="20" height="20"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg></button>
+            </div>
+        </div>
+    </header>
+
+    
+<main class="gh-main">
+        <article class="gh-article post tag-big-data">
+
+            <header class="gh-article-header gh-canvas">
+                    <a class="gh-article-tag" href="http://localhost:2368/tag/big-data/">Big Data</a>
+
+                <h1 class="gh-article-title">Useful Elastic cluster APIs</h1>
+
+                    <aside class="gh-article-sidebar">
+
+        <div class="gh-author-image-list">
+                <a class="gh-author-image" href="/author/relentlesstorm/">
+                        <div class="gh-author-icon"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="64" height="64"><g fill="none" fill-rule="evenodd"><path d="M3.513 18.998C4.749 15.504 8.082 13 12 13s7.251 2.504 8.487 5.998C18.47 21.442 15.417 23 12 23s-6.47-1.558-8.487-4.002zM12 12c2.21 0 4-2.79 4-5s-1.79-4-4-4-4 1.79-4 4 1.79 5 4 5z" fill="#FFF"/></g></svg>
+</div>
+                </a>
+        </div>
+
+        <div class="gh-author-name-list">
+                <h4 class="gh-author-name">
+                    <a href="/author/relentlesstorm/">relentlesstorm</a>
+                </h4>
+                
+        </div>
+
+        <div class="gh-article-meta">
+            <div class="gh-article-meta-inner">
+                <time class="gh-article-date" datetime="2022-10-28">Oct 28, 2022</time>
+                    <span class="gh-article-meta-sep"></span>
+                    <span class="gh-article-length">9 min</span>
+            </div>
+        </div>
+
+    </aside>
+
+                    <p class="gh-article-excerpt">Useful Elastic cluster APIs</p>
+
+                    <figure class="gh-article-image">
+        <img
+            srcset="https://images.unsplash.com/photo-1623282033815-40b05d96c903?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDF8fGFwaXxlbnwwfHx8fDE2NzI0NjUxMTA&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;300 300w,
+                    https://images.unsplash.com/photo-1623282033815-40b05d96c903?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDF8fGFwaXxlbnwwfHx8fDE2NzI0NjUxMTA&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720 720w,
+                    https://images.unsplash.com/photo-1623282033815-40b05d96c903?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDF8fGFwaXxlbnwwfHx8fDE2NzI0NjUxMTA&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;960 960w,
+                    https://images.unsplash.com/photo-1623282033815-40b05d96c903?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDF8fGFwaXxlbnwwfHx8fDE2NzI0NjUxMTA&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1200 1200w,
+                    https://images.unsplash.com/photo-1623282033815-40b05d96c903?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDF8fGFwaXxlbnwwfHx8fDE2NzI0NjUxMTA&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000 2000w"
+            sizes="(max-width: 1200px) 100vw, 1200px"
+            src="https://images.unsplash.com/photo-1623282033815-40b05d96c903?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDF8fGFwaXxlbnwwfHx8fDE2NzI0NjUxMTA&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1200"
+            alt="Useful Elastic cluster APIs"
+        >
+            <figcaption>Photo by <a href="https://unsplash.com/@douglasamarelo?utm_source=ghost&utm_medium=referral&utm_campaign=api-credit">Douglas Lopes</a> / <a href="https://unsplash.com/?utm_source=ghost&utm_medium=referral&utm_campaign=api-credit">Unsplash</a></figcaption>
+    </figure>
+            </header>
+
+            <section class="gh-content gh-canvas">
+                <!--kg-card-begin: markdown--><h2 id="cluster-settings">Cluster settings</h2>
+<pre><code class="language-shell">$ curl -q -s http://10.10.10.1:39200/_cluster/health
+{
+  &quot;cluster_name&quot;: &quot;rally-benchmark&quot;,
+  &quot;status&quot;: &quot;green&quot;,
+  &quot;timed_out&quot;: false,
+  &quot;number_of_nodes&quot;: 3,
+  &quot;number_of_data_nodes&quot;: 3,
+  &quot;active_primary_shards&quot;: 8,
+  &quot;active_shards&quot;: 16,
+  &quot;relocating_shards&quot;: 0,
+  &quot;initializing_shards&quot;: 0,
+  &quot;unassigned_shards&quot;: 0,
+  &quot;delayed_unassigned_shards&quot;: 0,
+  &quot;number_of_pending_tasks&quot;: 0,
+  &quot;number_of_in_flight_fetch&quot;: 0,
+  &quot;task_max_waiting_in_queue_millis&quot;: 0,
+  &quot;active_shards_percent_as_number&quot;: 100
+}
+</code></pre>
+<pre><code class="language-shell">$ curl -q -s http://10.10.10.1:39200/_cluster/settings| jq -r
+{
+  &quot;persistent&quot;: {},
+  &quot;transient&quot;: {}
+}
+</code></pre>
+<pre><code class="language-shell">$ curl -q -s http://10.10.10.1:39200/_cluster/stats| jq -r
+{
+  &quot;_nodes&quot;: {
+    &quot;total&quot;: 3,
+    &quot;successful&quot;: 3,
+    &quot;failed&quot;: 0
+  },
+  &quot;cluster_name&quot;: &quot;rally-benchmark&quot;,
+  &quot;cluster_uuid&quot;: &quot;_aPIWBOCS0Gtyo4fTp3Wrg&quot;,
+  &quot;timestamp&quot;: 1667177008901,
+  &quot;status&quot;: &quot;green&quot;,
+  &quot;indices&quot;: {
+    &quot;count&quot;: 4,
+    &quot;shards&quot;: {
+      &quot;total&quot;: 16,
+      &quot;primaries&quot;: 8,
+      &quot;replication&quot;: 1,
+      &quot;index&quot;: {
+        &quot;shards&quot;: {
+          &quot;min&quot;: 2,
+          &quot;max&quot;: 10,
+          &quot;avg&quot;: 4
+        },
+        &quot;primaries&quot;: {
+          &quot;min&quot;: 1,
+          &quot;max&quot;: 5,
+          &quot;avg&quot;: 2
+        },
+        &quot;replication&quot;: {
+          &quot;min&quot;: 1,
+          &quot;max&quot;: 1,
+          &quot;avg&quot;: 1
+        }
+      }
+    },
+    &quot;docs&quot;: {
+      &quot;count&quot;: 11396556,
+      &quot;deleted&quot;: 0
+    },
+    &quot;store&quot;: {
+      &quot;size_in_bytes&quot;: 6443644350,
+      &quot;total_data_set_size_in_bytes&quot;: 6443644350,
+      &quot;reserved_in_bytes&quot;: 0
+    },
+    &quot;fielddata&quot;: {
+      &quot;memory_size_in_bytes&quot;: 14072,
+      &quot;evictions&quot;: 0
+    },
+    &quot;query_cache&quot;: {
+      &quot;memory_size_in_bytes&quot;: 0,
+      &quot;total_count&quot;: 3883795,
+      &quot;hit_count&quot;: 0,
+      &quot;miss_count&quot;: 3883795,
+      &quot;cache_size&quot;: 0,
+      &quot;cache_count&quot;: 0,
+      &quot;evictions&quot;: 0
+    },
+    &quot;completion&quot;: {
+      &quot;size_in_bytes&quot;: 0
+    },
+    &quot;segments&quot;: {
+      &quot;count&quot;: 219,
+      &quot;memory_in_bytes&quot;: 1526988,
+      &quot;terms_memory_in_bytes&quot;: 1189120,
+      &quot;stored_fields_memory_in_bytes&quot;: 115320,
+      &quot;term_vectors_memory_in_bytes&quot;: 0,
+      &quot;norms_memory_in_bytes&quot;: 155520,
+      &quot;points_memory_in_bytes&quot;: 0,
+      &quot;doc_values_memory_in_bytes&quot;: 67028,
+      &quot;index_writer_memory_in_bytes&quot;: 0,
+      &quot;version_map_memory_in_bytes&quot;: 0,
+      &quot;fixed_bit_set_memory_in_bytes&quot;: 0,
+      &quot;max_unsafe_auto_id_timestamp&quot;: 1667016435644,
+      &quot;file_sizes&quot;: {}
+    },
+    &quot;mappings&quot;: {
+      &quot;field_types&quot;: [
+        {
+          &quot;name&quot;: &quot;boolean&quot;,
+          &quot;count&quot;: 1,
+          &quot;index_count&quot;: 1,
+          &quot;script_count&quot;: 0
+        },
+        {
+          &quot;name&quot;: &quot;constant_keyword&quot;,
+          &quot;count&quot;: 3,
+          &quot;index_count&quot;: 1,
+          &quot;script_count&quot;: 0
+        },
+        {
+          &quot;name&quot;: &quot;date&quot;,
+          &quot;count&quot;: 6,
+          &quot;index_count&quot;: 2,
+          &quot;script_count&quot;: 0
+        },
+        {
+          &quot;name&quot;: &quot;geo_point&quot;,
+          &quot;count&quot;: 1,
+          &quot;index_count&quot;: 1,
+          &quot;script_count&quot;: 0
+        },
+        {
+          &quot;name&quot;: &quot;integer&quot;,
+          &quot;count&quot;: 1,
+          &quot;index_count&quot;: 1,
+          &quot;script_count&quot;: 0
+        },
+        {
+          &quot;name&quot;: &quot;ip&quot;,
+          &quot;count&quot;: 1,
+          &quot;index_count&quot;: 1,
+          &quot;script_count&quot;: 0
+        },
+        {
+          &quot;name&quot;: &quot;keyword&quot;,
+          &quot;count&quot;: 32,
+          &quot;index_count&quot;: 3,
+          &quot;script_count&quot;: 0
+        },
+        {
+          &quot;name&quot;: &quot;long&quot;,
+          &quot;count&quot;: 3,
+          &quot;index_count&quot;: 2,
+          &quot;script_count&quot;: 0
+        },
+        {
+          &quot;name&quot;: &quot;object&quot;,
+          &quot;count&quot;: 13,
+          &quot;index_count&quot;: 2,
+          &quot;script_count&quot;: 0
+        },
+        {
+          &quot;name&quot;: &quot;text&quot;,
+          &quot;count&quot;: 17,
+          &quot;index_count&quot;: 3,
+          &quot;script_count&quot;: 0
+        }
+      ],
+      &quot;runtime_field_types&quot;: []
+    },
+    &quot;analysis&quot;: {
+      &quot;char_filter_types&quot;: [],
+      &quot;tokenizer_types&quot;: [],
+      &quot;filter_types&quot;: [],
+      &quot;analyzer_types&quot;: [],
+      &quot;built_in_char_filters&quot;: [],
+      &quot;built_in_tokenizers&quot;: [],
+      &quot;built_in_filters&quot;: [],
+      &quot;built_in_analyzers&quot;: []
+    },
+    &quot;versions&quot;: [
+      {
+        &quot;version&quot;: &quot;7.17.0&quot;,
+        &quot;index_count&quot;: 4,
+        &quot;primary_shard_count&quot;: 8,
+        &quot;total_primary_bytes&quot;: 3221823908
+      }
+    ]
+  },
+  &quot;nodes&quot;: {
+    &quot;count&quot;: {
+      &quot;total&quot;: 3,
+      &quot;coordinating_only&quot;: 0,
+      &quot;data&quot;: 3,
+      &quot;data_cold&quot;: 3,
+      &quot;data_content&quot;: 3,
+      &quot;data_frozen&quot;: 3,
+      &quot;data_hot&quot;: 3,
+      &quot;data_warm&quot;: 3,
+      &quot;ingest&quot;: 3,
+      &quot;master&quot;: 3,
+      &quot;ml&quot;: 0,
+      &quot;remote_cluster_client&quot;: 3,
+      &quot;transform&quot;: 3,
+      &quot;voting_only&quot;: 0
+    },
+    &quot;versions&quot;: [
+      &quot;7.17.0&quot;
+    ],
+    &quot;os&quot;: {
+      &quot;available_processors&quot;: 24,
+      &quot;allocated_processors&quot;: 24,
+      &quot;names&quot;: [
+        {
+          &quot;name&quot;: &quot;Linux&quot;,
+          &quot;count&quot;: 3
+        }
+      ],
+      &quot;pretty_names&quot;: [
+        {
+          &quot;pretty_name&quot;: &quot;CentOS Linux 7 (Core)&quot;,
+          &quot;count&quot;: 3
+        }
+      ],
+      &quot;architectures&quot;: [
+        {
+          &quot;arch&quot;: &quot;amd64&quot;,
+          &quot;count&quot;: 3
+        }
+      ],
+      &quot;mem&quot;: {
+        &quot;total_in_bytes&quot;: 100700000256,
+        &quot;free_in_bytes&quot;: 68239511552,
+        &quot;used_in_bytes&quot;: 32460488704,
+        &quot;free_percent&quot;: 68,
+        &quot;used_percent&quot;: 32
+      }
+    },
+    &quot;process&quot;: {
+      &quot;cpu&quot;: {
+        &quot;percent&quot;: 0
+      },
+      &quot;open_file_descriptors&quot;: {
+        &quot;min&quot;: 460,
+        &quot;max&quot;: 493,
+        &quot;avg&quot;: 474
+      }
+    },
+    &quot;jvm&quot;: {
+      &quot;max_uptime_in_millis&quot;: 169991344,
+      &quot;versions&quot;: [
+        {
+          &quot;version&quot;: &quot;1.8.0_352&quot;,
+          &quot;vm_name&quot;: &quot;OpenJDK 64-Bit Server VM&quot;,
+          &quot;vm_version&quot;: &quot;25.352-b08&quot;,
+          &quot;vm_vendor&quot;: &quot;Red Hat, Inc.&quot;,
+          &quot;bundled_jdk&quot;: true,
+          &quot;using_bundled_jdk&quot;: false,
+          &quot;count&quot;: 3
+        }
+      ],
+      &quot;mem&quot;: {
+        &quot;heap_used_in_bytes&quot;: 1671452984,
+        &quot;heap_max_in_bytes&quot;: 3113877504
+      },
+      &quot;threads&quot;: 197
+    },
+    &quot;fs&quot;: {
+      &quot;total_in_bytes&quot;: 126144983040,
+      &quot;free_in_bytes&quot;: 115344986112,
+      &quot;available_in_bytes&quot;: 115344986112
+    },
+    &quot;plugins&quot;: [],
+    &quot;network_types&quot;: {
+      &quot;transport_types&quot;: {
+        &quot;netty4&quot;: 3
+      },
+      &quot;http_types&quot;: {
+        &quot;netty4&quot;: 3
+      }
+    },
+    &quot;discovery_types&quot;: {
+      &quot;zen&quot;: 3
+    },
+    &quot;packaging_types&quot;: [
+      {
+        &quot;flavor&quot;: &quot;default&quot;,
+        &quot;type&quot;: &quot;tar&quot;,
+        &quot;count&quot;: 3
+      }
+    ],
+    &quot;ingest&quot;: {
+      &quot;number_of_pipelines&quot;: 2,
+      &quot;processor_stats&quot;: {
+        &quot;gsub&quot;: {
+          &quot;count&quot;: 0,
+          &quot;failed&quot;: 0,
+          &quot;current&quot;: 0,
+          &quot;time_in_millis&quot;: 0
+        },
+        &quot;script&quot;: {
+          &quot;count&quot;: 0,
+          &quot;failed&quot;: 0,
+          &quot;current&quot;: 0,
+          &quot;time_in_millis&quot;: 0
+        }
+      }
+    }
+  }
+}
+</code></pre>
+<h2 id="node-stats">Node stats</h2>
+<pre><code class="language-shell">$ curl -q -s http://10.10.10.1:39200/_nodes
+$ curl -q -s http://10.10.10.1:39200/_nodes/usage
+$ curl -q -s http://10.10.10.2:39200/_nodes/stats/fs?pretty
+{
+  &quot;_nodes&quot; : {
+    &quot;total&quot; : 3,
+    &quot;successful&quot; : 3,
+    &quot;failed&quot; : 0
+  },
+  &quot;cluster_name&quot; : &quot;rally-benchmark&quot;,
+  &quot;nodes&quot; : {
+    &quot;Zyv-MlSUQeOpU-__o2NblA&quot; : {
+      &quot;timestamp&quot; : 1667082588000,
+      &quot;name&quot; : &quot;rally-node-1&quot;,
+      &quot;transport_address&quot; : &quot;10.10.10.2:39300&quot;,
+      &quot;host&quot; : &quot;10.10.10.2&quot;,
+      &quot;ip&quot; : &quot;10.10.10.2:39300&quot;,
+      &quot;roles&quot; : [
+        &quot;data&quot;,
+        &quot;data_cold&quot;,
+        &quot;data_content&quot;,
+        &quot;data_frozen&quot;,
+        &quot;data_hot&quot;,
+        &quot;data_warm&quot;,
+        &quot;ingest&quot;,
+        &quot;master&quot;,
+        &quot;remote_cluster_client&quot;,
+        &quot;transform&quot;
+      ],
+      &quot;attributes&quot; : {
+        &quot;xpack.installed&quot; : &quot;true&quot;,
+        &quot;transform.node&quot; : &quot;true&quot;
+      },
+      &quot;fs&quot; : {
+        &quot;timestamp&quot; : 1667082588001,
+        &quot;total&quot; : {
+          &quot;total_in_bytes&quot; : 42048327680,
+          &quot;free_in_bytes&quot; : 39852097536,
+          &quot;available_in_bytes&quot; : 39852097536
+        },
+        &quot;data&quot; : [
+          {
+            &quot;path&quot; : &quot;/home/es/.rally/benchmarks/races/53e2ac0b-c648-4153-97d4-46749f90daed/rally-node-1/install/elasticsearch-7.17.0/data/nodes/0&quot;,
+            &quot;mount&quot; : &quot;/home (/dev/mapper/centos-home)&quot;,
+            &quot;type&quot; : &quot;xfs&quot;,
+            &quot;total_in_bytes&quot; : 42048327680,
+            &quot;free_in_bytes&quot; : 39852097536,
+            &quot;available_in_bytes&quot; : 39852097536
+          }
+        ],
+        &quot;io_stats&quot; : {
+          &quot;devices&quot; : [
+            {
+              &quot;device_name&quot; : &quot;dm-2&quot;,
+              &quot;operations&quot; : 52115,
+              &quot;read_operations&quot; : 0,
+              &quot;write_operations&quot; : 52115,
+              &quot;read_kilobytes&quot; : 0,
+              &quot;write_kilobytes&quot; : 7926721,
+              &quot;io_time_in_millis&quot; : 8549
+            }
+          ],
+          &quot;total&quot; : {
+            &quot;operations&quot; : 52115,
+            &quot;read_operations&quot; : 0,
+            &quot;write_operations&quot; : 52115,
+            &quot;read_kilobytes&quot; : 0,
+            &quot;write_kilobytes&quot; : 7926721,
+            &quot;io_time_in_millis&quot; : 8549
+          }
+        }
+      }
+    },
+    [..]
+  }
+}
+</code></pre>
+<p>The data path can also be checked in node-config.json.</p>
+<pre><code class="language-shell">$ cat races/aa826112-d371-4f09-9b68-f9084e7c9e0b/node-config.json
+{
+  &quot;build-type&quot;: &quot;tar&quot;,
+  &quot;car-runtime-jdks&quot;: &quot;17,16,15,14,13,12,11,8&quot;,
+  &quot;car-provides-bundled-jdk&quot;: true,
+  &quot;ip&quot;: &quot;10.10.10.1&quot;,
+  &quot;node-name&quot;: &quot;rally-node-0&quot;,
+  &quot;node-root-path&quot;: &quot;/home/es/.rally/benchmarks/races/aa826112-d371-4f09-9b68-f9084e7c9e0b/rally-node-0&quot;,
+  &quot;binary-path&quot;: &quot;/home/es/.rally/benchmarks/races/aa826112-d371-4f09-9b68-f9084e7c9e0b/rally-node-0/install/elasticsearch-7.17.0&quot;,
+  &quot;data-paths&quot;: [
+    &quot;/home/es/.rally/benchmarks/races/aa826112-d371-4f09-9b68-f9084e7c9e0b/rally-node-0/install/elasticsearch-7.17.0/data&quot;
+  ]
+}
+</code></pre>
+<h2 id="shards-and-replicas">Shards and Replicas</h2>
+<p>List all the available shards</p>
+<pre><code class="language-shell">$ curl -q -s http://10.10.10.1:39200/_cat/shards
+.geoip_databases                                              0 p STARTED      41  39.1mb 10.10.10.2 rally-node-1
+.geoip_databases                                              0 r STARTED      41  39.1mb 10.10.10.3 rally-node-2
+geonames                                                      4 p STARTED 2279907 610.1mb 10.10.10.1  rally-node-0
+geonames                                                      3 p STARTED 2282121 605.1mb 10.10.10.2 rally-node-1
+geonames                                                      2 p STARTED 2280777 603.3mb 10.10.10.3 rally-node-2
+geonames                                                      1 p STARTED 2277042 609.3mb 10.10.10.1  rally-node-0
+geonames                                                      0 p STARTED 2276656 605.3mb 10.10.10.2 rally-node-1
+.ds-.logs-deprecation.elasticsearch-default-2022.10.29-000001 0 r STARTED                 10.10.10.1  rally-node-0
+.ds-.logs-deprecation.elasticsearch-default-2022.10.29-000001 0 p STARTED                 10.10.10.3 rally-node-2
+.ds-ilm-history-5-2022.10.29-000001                           0 r STARTED                 10.10.10.2 rally-node-1
+.ds-ilm-history-5-2022.10.29-000001                           0 p STARTED                 10.10.10.1  rally-node-0                        0 p STARTED                 10.10.10.1  rally-node-0
+</code></pre>
+<p>List all the available shards for the target index</p>
+<p>By default, there are 5 primary shards for the target index.</p>
+<pre><code class="language-shell">$ curl -q -s http://10.10.10.1:39200/_cat/shards/geonames
+geonames 4 p STARTED 2279907 610.1mb 10.10.10.1 rally-node-0
+geonames 3 p STARTED 2282121 605.1mb 10.10.10.2 rally-node-1
+geonames 2 p STARTED 2280777 603.3mb 10.10.10.3 rally-node-2
+geonames 1 p STARTED 2277042 609.3mb 10.10.10.1 rally-node-0
+geonames 0 p STARTED 2276656 605.3mb 10.10.10.2 rally-node-1
+</code></pre>
+<p>Check the settings of target index</p>
+<p>By default, there are 5 primary shards and no replica shards for the target index.</p>
+<pre><code class="language-shell">$ curl -q -s http://10.10.10.1:39200/geonames/_settings | jq -r
+{
+  &quot;geonames&quot;: {
+    &quot;settings&quot;: {
+      &quot;index&quot;: {
+        &quot;routing&quot;: {
+          &quot;allocation&quot;: {
+            &quot;include&quot;: {
+              &quot;_tier_preference&quot;: &quot;data_content&quot;
+            }
+          }
+        },
+        &quot;number_of_shards&quot;: &quot;5&quot;,
+        &quot;provided_name&quot;: &quot;geonames&quot;,
+        &quot;creation_date&quot;: &quot;1667016351070&quot;,
+        &quot;requests&quot;: {
+          &quot;cache&quot;: {
+            &quot;enable&quot;: &quot;false&quot;
+          }
+        },
+        &quot;store&quot;: {
+          &quot;type&quot;: &quot;fs&quot;
+        },
+        &quot;number_of_replicas&quot;: &quot;0&quot;,
+        &quot;uuid&quot;: &quot;ecaI9RlcSvqu0Lwo4f3nOA&quot;,
+        &quot;version&quot;: {
+          &quot;created&quot;: &quot;7170099&quot;
+        }
+      }
+    }
+  }
+}
+</code></pre>
+<p>Change number_of_replicas for the target index</p>
+<pre><code class="language-shell">$ curl -X PUT -H &quot;Content-Type: application/json&quot; &quot;http://10.10.10.1:39200/geonames/_settings&quot; -d '{&quot;number_of_replicas&quot;:1}'
+{&quot;acknowledged&quot;:true}
+
+$ curl -q -s http://10.10.10.1:39200/geonames/_settings | jq -r
+{
+  &quot;geonames&quot;: {
+    &quot;settings&quot;: {
+      &quot;index&quot;: {
+        &quot;routing&quot;: {
+          &quot;allocation&quot;: {
+            &quot;include&quot;: {
+              &quot;_tier_preference&quot;: &quot;data_content&quot;
+            }
+          }
+        },
+        &quot;number_of_shards&quot;: &quot;5&quot;,
+        &quot;provided_name&quot;: &quot;geonames&quot;,
+        &quot;creation_date&quot;: &quot;1667016351070&quot;,
+        &quot;requests&quot;: {
+          &quot;cache&quot;: {
+            &quot;enable&quot;: &quot;false&quot;
+          }
+        },
+        &quot;store&quot;: {
+          &quot;type&quot;: &quot;fs&quot;
+        },
+        &quot;number_of_replicas&quot;: &quot;1&quot;,
+        &quot;uuid&quot;: &quot;ecaI9RlcSvqu0Lwo4f3nOA&quot;,
+        &quot;version&quot;: {
+          &quot;created&quot;: &quot;7170099&quot;
+        }
+      }
+    }
+  }
+}
+</code></pre>
+<p>Verify the index replicas</p>
+<p>After changing number_of_replicas from 0 to 1, one replica shard is created for each primary shard. The primary shard and replica shard are located on different nodes. If a node goes down, the replica shards will automatically become primary shards and the cluster still works properly.</p>
+<pre><code class="language-shell">$ curl -q -s http://10.10.10.1:39200/_cat/shards/geonames
+geonames 3 p STARTED 2282121 605.1mb 10.10.10.2 rally-node-1
+geonames 3 r STARTED 2282121 605.1mb 10.10.10.1 rally-node-0
+geonames 4 r STARTED 2279907 610.1mb 10.10.10.2 rally-node-1
+geonames 4 p STARTED 2279907 610.1mb 10.10.10.1 rally-node-0
+geonames 2 r STARTED 2280777 603.3mb 10.10.10.2 rally-node-1
+geonames 2 p STARTED 2280777 603.3mb 10.10.10.3 rally-node-2
+geonames 1 p STARTED 2277042 609.3mb 10.10.10.1 rally-node-0
+geonames 1 r STARTED 2277042 609.3mb 10.10.10.3 rally-node-2
+geonames 0 p STARTED 2276656 605.3mb 10.10.10.2 rally-node-1
+geonames 0 r STARTED 2276656 605.3mb 10.10.10.3 rally-node-2
+</code></pre>
+<h2 id="task-management">Task management</h2>
+<pre><code class="language-shell">$ curl -q -s http://10.10.10.1:39200/_tasks
+{
+  &quot;nodes&quot;: {
+    &quot;Zyv-MlSUQeOpU-__o2NblA&quot;: {
+      &quot;name&quot;: &quot;rally-node-1&quot;,
+      &quot;transport_address&quot;: &quot;10.10.10.2:39300&quot;,
+      &quot;host&quot;: &quot;10.10.10.2&quot;,
+      &quot;ip&quot;: &quot;10.10.10.2:39300&quot;,
+      &quot;roles&quot;: [
+        &quot;data&quot;,
+        &quot;data_cold&quot;,
+        &quot;data_content&quot;,
+        &quot;data_frozen&quot;,
+        &quot;data_hot&quot;,
+        &quot;data_warm&quot;,
+        &quot;ingest&quot;,
+        &quot;master&quot;,
+        &quot;remote_cluster_client&quot;,
+        &quot;transform&quot;
+      ],
+      &quot;attributes&quot;: {
+        &quot;xpack.installed&quot;: &quot;true&quot;,
+        &quot;transform.node&quot;: &quot;true&quot;
+      },
+      &quot;tasks&quot;: {
+        &quot;Zyv-MlSUQeOpU-__o2NblA:500850&quot;: {
+          &quot;node&quot;: &quot;Zyv-MlSUQeOpU-__o2NblA&quot;,
+          &quot;id&quot;: 500850,
+          &quot;type&quot;: &quot;transport&quot;,
+          &quot;action&quot;: &quot;cluster:monitor/tasks/lists[n]&quot;,
+          &quot;start_time_in_millis&quot;: 1667176733761,
+          &quot;running_time_in_nanos&quot;: 125953,
+          &quot;cancellable&quot;: false,
+          &quot;parent_task_id&quot;: &quot;viZm_2hlQbib6qqccdXgNA:324323&quot;,
+          &quot;headers&quot;: {}
+        }
+      }
+    },
+    [..]
+  }
+}
+</code></pre>
+<h2 id="reference">Reference</h2>
+<ul>
+<li><a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/rest-apis.html">https://www.elastic.co/guide/en/elasticsearch/reference/current/rest-apis.html</a></li>
+<li><a href="https://stackoverflow.com/questions/15694724/shards-and-replicas-in-elasticsearch">Shards and replics in Elasticsearch</a></li>
+</ul>
+<!--kg-card-end: markdown-->
+            </section>
+
+        </article>
+
+                <div class="gh-read-next gh-canvas">
+                <section class="gh-pagehead">
+                    <h4 class="gh-pagehead-title">Read next</h4>
+                </section>
+
+                <div class="gh-topic gh-topic-grid">
+                    <div class="gh-topic-content">
+                            <article class="gh-card post featured">
+    <a class="gh-card-link" href="/getting-started-with-elasticsearch/">
+            <figure class="gh-card-image">
+                <img
+                    srcset="https://images.unsplash.com/photo-1643042945810-1119948eeabc?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDd8fGVsYXN0aWN8ZW58MHx8fHwxNjcyNDY0MDk3&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;300 300w,
+                            https://images.unsplash.com/photo-1643042945810-1119948eeabc?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDd8fGVsYXN0aWN8ZW58MHx8fHwxNjcyNDY0MDk3&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720 720w,
+                            https://images.unsplash.com/photo-1643042945810-1119948eeabc?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDd8fGVsYXN0aWN8ZW58MHx8fHwxNjcyNDY0MDk3&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;960 960w,
+                            https://images.unsplash.com/photo-1643042945810-1119948eeabc?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDd8fGVsYXN0aWN8ZW58MHx8fHwxNjcyNDY0MDk3&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1200 1200w,
+                            https://images.unsplash.com/photo-1643042945810-1119948eeabc?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDd8fGVsYXN0aWN8ZW58MHx8fHwxNjcyNDY0MDk3&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000 2000w"
+                    sizes="(max-width: 1200px) 100vw, 1200px"
+                    src="https://images.unsplash.com/photo-1643042945810-1119948eeabc?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDd8fGVsYXN0aWN8ZW58MHx8fHwxNjcyNDY0MDk3&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720"
+                    alt="Getting started with Elasticsearch and Kibana"
+                >
+            </figure>
+
+        <div class="gh-card-wrapper">
+            <header class="gh-card-header">
+                <h3 class="gh-card-title">Getting started with Elasticsearch and Kibana</h3>
+            </header>
+
+                    <div class="gh-card-excerpt">Install elasticsearch
+
+
+
+Add user for elasticsearch
+
+
+[root@vm1 home]# groupadd es
+[root@vm1 home]# useradd es -g es
+[root@vm1 home]# passwd es
+[root@vm1 home]# cd es
+
+
+
+
+Download elasticsearch
+
+
+[root@vm1 es]# wget https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-8.4.3-linux-x86_64.tar.gz
+[root@vm1 es]# tar</div>
+
+            <footer class="gh-card-footer">
+                <span class="gh-card-author">relentlesstorm</span>
+                <time class="gh-card-date" datetime="2022-10-17">Oct 17, 2022</time>
+            </footer>
+        </div>
+    </a>
+</article>                            <article class="gh-card post">
+    <a class="gh-card-link" href="/how-to-setup-grafana-and-prometheus/">
+            <figure class="gh-card-image">
+                <img
+                    srcset="https://images.unsplash.com/photo-1608222351212-18fe0ec7b13b?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDJ8fGRhc2hib2FyZHxlbnwwfHx8fDE2NzI0NjUzODU&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;300 300w,
+                            https://images.unsplash.com/photo-1608222351212-18fe0ec7b13b?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDJ8fGRhc2hib2FyZHxlbnwwfHx8fDE2NzI0NjUzODU&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720 720w,
+                            https://images.unsplash.com/photo-1608222351212-18fe0ec7b13b?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDJ8fGRhc2hib2FyZHxlbnwwfHx8fDE2NzI0NjUzODU&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;960 960w,
+                            https://images.unsplash.com/photo-1608222351212-18fe0ec7b13b?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDJ8fGRhc2hib2FyZHxlbnwwfHx8fDE2NzI0NjUzODU&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1200 1200w,
+                            https://images.unsplash.com/photo-1608222351212-18fe0ec7b13b?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDJ8fGRhc2hib2FyZHxlbnwwfHx8fDE2NzI0NjUzODU&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000 2000w"
+                    sizes="(max-width: 1200px) 100vw, 1200px"
+                    src="https://images.unsplash.com/photo-1608222351212-18fe0ec7b13b?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDJ8fGRhc2hib2FyZHxlbnwwfHx8fDE2NzI0NjUzODU&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720"
+                    alt="How to setup the Grafana and Prometheus dashboard"
+                >
+            </figure>
+
+        <div class="gh-card-wrapper">
+            <header class="gh-card-header">
+                <h3 class="gh-card-title">How to setup the Grafana and Prometheus dashboard</h3>
+            </header>
+
+                    <div class="gh-card-excerpt">Install node-exporter on each target nodes
+
+
+$ docker run --restart=always --name nd-export -d -p 9100:9100 -v /proc:/host/proc -v /sys:/host/sys -v /:/rootfs:ro,rslave --net=host quay.io/prometheus/node-exporter
+$ docker ps -a
+CONTAINER ID   IMAGE                              COMMAND                CREATED          STATUS          PORTS     NAMES
+d8c7fc8a4e40   quay.io/prometheus/node-exporter</div>
+
+            <footer class="gh-card-footer">
+                <span class="gh-card-author">relentlesstorm</span>
+                <time class="gh-card-date" datetime="2022-10-15">Oct 15, 2022</time>
+            </footer>
+        </div>
+    </a>
+</article>                    </div>
+                </div>
+            </div>
+
+        </main>
+
+    <footer class="gh-foot gh-outer">
+        <div class="gh-foot-inner gh-inner">
+
+            <!--<nav class="gh-foot-menu">
+                <<ul class="nav">
+    <li class="nav-sign-up"><a href="#/portal/">Sign up</a></li>
+</ul>
+
+            </nav>-->
+
+            <div class="gh-copyright">
+                    Flamingbytes © 2022. Powered by <a href="https://ghost.org/" target="_blank" rel="noopener">Ghost</a>
+            </div>
+        </div>
+    </footer>
+
+</div>
+
+    <div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="pswp__bg"></div>
+
+    <div class="pswp__scroll-wrap">
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)"></button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)"></button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="/assets/built/main.min.js?v=ed85671088"></script>
+
+
+
+</body>
+
+</html>

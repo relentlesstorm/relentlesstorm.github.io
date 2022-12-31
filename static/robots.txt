@@ -1,6 +1,0 @@
-User-agent: *
-Sitemap: http://relentlesstorm.github.io/sitemap.xml
-Disallow: /ghost/
-Disallow: /p/
-Disallow: /email/
-Disallow: /r/
