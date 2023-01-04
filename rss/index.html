@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:media="http://search.yahoo.com/mrss/"><channel><title><![CDATA[Flamingbytes]]></title><description><![CDATA[Thoughts, stories and ideas.]]></description><link>https://relentlesstorm.github.io/</link><image><url>https://relentlesstorm.github.io/favicon.png</url><title>Flamingbytes</title><link>https://relentlesstorm.github.io/</link></image><generator>Ghost 5.26</generator><lastBuildDate>Wed, 04 Jan 2023 06:27:35 GMT</lastBuildDate><atom:link href="https://relentlesstorm.github.io/rss/" rel="self" type="application/rss+xml"/><ttl>60</ttl><item><title><![CDATA[Using virtctl to access virtual machine in Kubernetes]]></title><description><![CDATA[<!--kg-card-begin: markdown--><h2 id="install-the-virtctl-client-tool">Install the virtctl client tool</h2>
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:media="http://search.yahoo.com/mrss/"><channel><title><![CDATA[Flamingbytes]]></title><description><![CDATA[Thoughts, stories and ideas.]]></description><link>https://relentlesstorm.github.io/</link><image><url>https://relentlesstorm.github.io/favicon.png</url><title>Flamingbytes</title><link>https://relentlesstorm.github.io/</link></image><generator>Ghost 5.26</generator><lastBuildDate>Wed, 04 Jan 2023 18:23:26 GMT</lastBuildDate><atom:link href="https://relentlesstorm.github.io/rss/" rel="self" type="application/rss+xml"/><ttl>60</ttl><item><title><![CDATA[Using virtctl to access virtual machine in Kubernetes]]></title><description><![CDATA[<!--kg-card-begin: markdown--><h2 id="install-the-virtctl-client-tool">Install the virtctl client tool</h2>
 <p>Basic VirtualMachineInstance operations can be performed with the stock kubectl utility. However, the virtctl binary utility is required to use advanced features such as:</p>
 <ul>
 <li>Serial and graphical console access</li>
@@ -97,11 +97,11 @@ worker1    Ready                      worker   45h   v1.20.11+63f841a   &lt;omit
 &lt;omitted..&gt;
 </code></pre>
 <p>This can also be done through openshift web console by clicking the &quot;edit labels&quot; option on a node.<br>
-<img src="https://relentlesstorm.github.io/content/images/posts/edit-labels.png" alt="Using node selector to assign virtual machines to a node" loading="lazy">{:.shadow}</p>
+<img src="https://relentlesstorm.github.io/content/images/posts/edit-labels.png" alt="Using node selector to assign virtual machines to a node" loading="lazy"></p>
 <h2 id="add-a-nodeselector-field-to-the-virtual-machine">Add a nodeSelector field to the virtual machine</h2>
 <p>A node selector can be added through openshift web console.</p>
-<p><img src="https://relentlesstorm.github.io/content/images/posts/node-selector-1.png" alt="Using node selector to assign virtual machines to a node" loading="lazy">{:.shadow}</p>
-<p><img src="https://relentlesstorm.github.io/content/images/posts/nodeselector.png" alt="Using node selector to assign virtual machines to a node" loading="lazy">{:.shadow}</p>
+<p><img src="https://relentlesstorm.github.io/content/images/posts/node-selector-1.png" alt="Using node selector to assign virtual machines to a node" loading="lazy"></p>
+<p><img src="https://relentlesstorm.github.io/content/images/posts/nodeselector.png" alt="Using node selector to assign virtual machines to a node" loading="lazy"></p>
 <pre><code class="language-shell">$ oc describe vm vm1
     Spec:
       Node Selector:
