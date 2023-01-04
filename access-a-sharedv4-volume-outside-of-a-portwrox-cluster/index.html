@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Access a sharedv4 volume outside of a Portwrox cluster</title>
+    <link rel="stylesheet" href="/assets/built/screen.css?v=e1adcf5302">
+
+    <link rel="canonical" href="https://relentlesstorm.github.io/access-a-sharedv4-volume-outside-of-a-portwrox-cluster/" />
+    <meta name="referrer" content="no-referrer-when-downgrade" />
+    
+    <meta property="og:site_name" content="Flamingbytes" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="Access a sharedv4 volume outside of a Portwrox cluster" />
+    <meta property="og:description" content="To access a sharedv4 volume outside of the Portworx cluster, add the allow_ips label to the volume you wish to export, specifying a semi-colon separated list of IP addresses of non-Portworx nodes you wish to mount your sharedv4 volume to:
+
+
+$ /opt/pwx/bin/pxctl -j volume create datavol --sharedv4" />
+    <meta property="og:url" content="https://relentlesstorm.github.io/access-a-sharedv4-volume-outside-of-a-portwrox-cluster/" />
+    <meta property="og:image" content="https://images.unsplash.com/photo-1614902333346-d0caef873a11?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDIzfHxuZnN8ZW58MHx8fHwxNjcyNzc4ODEx&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000" />
+    <meta property="article:published_time" content="2022-04-20T00:00:00.000Z" />
+    <meta property="article:modified_time" content="2023-01-03T21:35:41.000Z" />
+    <meta property="article:tag" content="Cloud Storage" />
+    
+    <meta property="article:publisher" content="https://www.facebook.com/ghost" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Access a sharedv4 volume outside of a Portwrox cluster" />
+    <meta name="twitter:description" content="To access a sharedv4 volume outside of the Portworx cluster, add the allow_ips label to the volume you wish to export, specifying a semi-colon separated list of IP addresses of non-Portworx nodes you wish to mount your sharedv4 volume to:
+
+
+$ /opt/pwx/bin/pxctl -j volume create datavol --sharedv4" />
+    <meta name="twitter:url" content="https://relentlesstorm.github.io/access-a-sharedv4-volume-outside-of-a-portwrox-cluster/" />
+    <meta name="twitter:image" content="https://images.unsplash.com/photo-1614902333346-d0caef873a11?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDIzfHxuZnN8ZW58MHx8fHwxNjcyNzc4ODEx&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000" />
+    <meta name="twitter:label1" content="Written by" />
+    <meta name="twitter:data1" content="relentlesstorm" />
+    <meta name="twitter:label2" content="Filed under" />
+    <meta name="twitter:data2" content="Cloud Storage" />
+    <meta name="twitter:site" content="@ghost" />
+    <meta property="og:image:width" content="2000" />
+    <meta property="og:image:height" content="1333" />
+    
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "publisher": {
+        "@type": "Organization",
+        "name": "Flamingbytes",
+        "url": "https://relentlesstorm.github.io/",
+        "logo": {
+            "@type": "ImageObject",
+            "url": "https://relentlesstorm.github.io/favicon.ico",
+            "width": 48,
+            "height": 48
+        }
+    },
+    "author": {
+        "@type": "Person",
+        "name": "relentlesstorm",
+        "url": "https://relentlesstorm.github.io/author/relentlesstorm/",
+        "sameAs": []
+    },
+    "headline": "Access a sharedv4 volume outside of a Portwrox cluster",
+    "url": "https://relentlesstorm.github.io/access-a-sharedv4-volume-outside-of-a-portwrox-cluster/",
+    "datePublished": "2022-04-20T00:00:00.000Z",
+    "dateModified": "2023-01-03T21:35:41.000Z",
+    "image": {
+        "@type": "ImageObject",
+        "url": "https://images.unsplash.com/photo-1614902333346-d0caef873a11?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxMTc3M3wwfDF8c2VhcmNofDIzfHxuZnN8ZW58MHx8fHwxNjcyNzc4ODEx&ixlib=rb-4.0.3&q=80&w=2000",
+        "width": 2000,
+        "height": 1333
+    },
+    "keywords": "Cloud Storage",
+    "description": "To access a sharedv4 volume outside of the Portworx cluster, add the allow_ips label to the volume you wish to export, specifying a semi-colon separated list of IP addresses of non-Portworx nodes you wish to mount your sharedv4 volume to:\n\n\n$ /opt/pwx/bin/pxctl -j volume create datavol --sharedv4 --label name&#x3D;data --size 500 --fs ext4 --repl 2 --nodes node1,node2\n$ /opt/pwx/bin/pxctl -j volume update datavol --sharedv4_mount_options&#x3D;&quot;vers&#x3D;4.0&quot;\n$ /opt/pwx/bin/pxctl volume update datavol --label &quot;",
+    "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https://relentlesstorm.github.io/"
+    }
+}
+    </script>
+
+    <meta name="generator" content="Ghost 5.26" />
+    <link rel="alternate" type="application/rss+xml" title="Flamingbytes" href="https://relentlesstorm.github.io/rss/" />
+    
+    <script defer src="https://cdn.jsdelivr.net/ghost/sodo-search@~1.1/umd/sodo-search.min.js" data-key="321a1d1aea33fd468f6e61f563" data-styles="https://cdn.jsdelivr.net/ghost/sodo-search@~1.1/umd/main.css" data-sodo-search="https://relentlesstorm.github.io/" crossorigin="anonymous"></script>
+    <script defer src="/public/cards.min.js?v=e1adcf5302"></script><style>:root {--ghost-accent-color: #6a13ec;}</style>
+    <link rel="stylesheet" type="text/css" href="/public/cards.min.css?v=e1adcf5302">
+</head>
+
+<body class="post-template tag-cloud-storage is-head-left-logo has-serif-body">
+<div class="gh-site">
+
+    <header id="gh-head" class="gh-head gh-outer">
+        <div class="gh-head-inner gh-inner">
+            <div class="gh-head-brand">
+                <div class="gh-head-brand-wrapper">
+                    <a class="gh-head-logo" href="https://relentlesstorm.github.io">
+                            Flamingbytes
+                    </a>
+                </div>
+                <button class="gh-search gh-icon-btn" data-ghost-search><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" width="20" height="20"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg></button>
+                <button class="gh-burger"></button>
+            </div>
+
+            <nav class="gh-head-menu">
+                <ul class="nav">
+    <li class="nav-home"><a href="https://relentlesstorm.github.io/">Home</a></li>
+    <li class="nav-tags"><a href="https://relentlesstorm.github.io/tags/">Tags</a></li>
+    <li class="nav-archive"><a href="https://relentlesstorm.github.io/archive/">Archive</a></li>
+    <li class="nav-about"><a href="https://relentlesstorm.github.io/about/">About</a></li>
+</ul>
+
+            </nav>
+
+            <div class="gh-head-actions">
+                        <button class="gh-search gh-icon-btn" data-ghost-search><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" width="20" height="20"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg></button>
+            </div>
+        </div>
+    </header>
+
+    
+<main class="gh-main">
+        <article class="gh-article post tag-cloud-storage">
+
+            <header class="gh-article-header gh-canvas">
+                    <a class="gh-article-tag" href="https://relentlesstorm.github.io/tag/cloud-storage/">Cloud Storage</a>
+
+                <h1 class="gh-article-title">Access a sharedv4 volume outside of a Portwrox cluster</h1>
+
+                    <aside class="gh-article-sidebar">
+
+        <div class="gh-author-image-list">
+                <a class="gh-author-image" href="/author/relentlesstorm/">
+                        <div class="gh-author-icon"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="64" height="64"><g fill="none" fill-rule="evenodd"><path d="M3.513 18.998C4.749 15.504 8.082 13 12 13s7.251 2.504 8.487 5.998C18.47 21.442 15.417 23 12 23s-6.47-1.558-8.487-4.002zM12 12c2.21 0 4-2.79 4-5s-1.79-4-4-4-4 1.79-4 4 1.79 5 4 5z" fill="#FFF"/></g></svg>
+</div>
+                </a>
+        </div>
+
+        <div class="gh-author-name-list">
+                <h4 class="gh-author-name">
+                    <a href="/author/relentlesstorm/">relentlesstorm</a>
+                </h4>
+                
+        </div>
+
+        <div class="gh-article-meta">
+            <div class="gh-article-meta-inner">
+                <time class="gh-article-date" datetime="2022-04-20">Apr 20, 2022</time>
+                    <span class="gh-article-meta-sep"></span>
+                    <span class="gh-article-length">1 min</span>
+            </div>
+        </div>
+
+    </aside>
+
+
+                    <figure class="gh-article-image">
+        <img
+            srcset="https://images.unsplash.com/photo-1614902333346-d0caef873a11?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDIzfHxuZnN8ZW58MHx8fHwxNjcyNzc4ODEx&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;300 300w,
+                    https://images.unsplash.com/photo-1614902333346-d0caef873a11?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDIzfHxuZnN8ZW58MHx8fHwxNjcyNzc4ODEx&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720 720w,
+                    https://images.unsplash.com/photo-1614902333346-d0caef873a11?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDIzfHxuZnN8ZW58MHx8fHwxNjcyNzc4ODEx&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;960 960w,
+                    https://images.unsplash.com/photo-1614902333346-d0caef873a11?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDIzfHxuZnN8ZW58MHx8fHwxNjcyNzc4ODEx&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1200 1200w,
+                    https://images.unsplash.com/photo-1614902333346-d0caef873a11?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDIzfHxuZnN8ZW58MHx8fHwxNjcyNzc4ODEx&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000 2000w"
+            sizes="(max-width: 1200px) 100vw, 1200px"
+            src="https://images.unsplash.com/photo-1614902333346-d0caef873a11?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDIzfHxuZnN8ZW58MHx8fHwxNjcyNzc4ODEx&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1200"
+            alt="Access a sharedv4 volume outside of a Portwrox cluster"
+        >
+            <figcaption>Photo by <a href="https://unsplash.com/@grafikci?utm_source=ghost&utm_medium=referral&utm_campaign=api-credit">Ali Yasar isgoren</a> / <a href="https://unsplash.com/?utm_source=ghost&utm_medium=referral&utm_campaign=api-credit">Unsplash</a></figcaption>
+    </figure>
+            </header>
+
+            <section class="gh-content gh-canvas">
+                <!--kg-card-begin: markdown--><p>To access a sharedv4 volume outside of the Portworx cluster, add the allow_ips label to the volume you wish to export, specifying a semi-colon separated list of IP addresses of non-Portworx nodes you wish to mount your sharedv4 volume to:</p>
+<pre><code class="language-shell">$ /opt/pwx/bin/pxctl -j volume create datavol --sharedv4 --label name=data --size 500 --fs ext4 --repl 2 --nodes node1,node2
+$ /opt/pwx/bin/pxctl -j volume update datavol --sharedv4_mount_options=&quot;vers=4.0&quot;
+$ /opt/pwx/bin/pxctl volume update datavol --label &quot;allow_ips=&lt;node3_ip&gt;&quot;
+$ /opt/pwx/bin/pxctl host attach datavol
+$ mkdir /mnt/datavol
+$ /opt/pwx/bin/pxctl host mount --path /mnt/datavol datavol
+
+$ mount | grep datavol
+/dev/pxd/pxd229379759785727331 on /mnt/datavol type ext4 (rw,relatime,discard,data=ordered)
+
+$ cat /etc/exports
+/var/lib/osd/pxns/229379759785727331 node1(fsid=123e4567-e89b-12d3-002e-ebad1cb15563,rw,no_root_squash,no_subtree_check) node3(fsid=123e4567-e89b-12d3-002e-ebad1cb15563,rw,no_root_squash,no_subtree_check)
+</code></pre>
+<p>To mount the NFS shared volume on non-Portworx node(node3):</p>
+<pre><code class="language-shell">$ showmount -e node1
+Export list for node1:
+/var/lib/osd/pxns/229379759785727331 node1,node3
+
+$ mkdir /mnt/data
+$ mount -t nfs node1:/var/lib/osd/pxns/229379759785727331 /mnt/data
+$ mount | grep data
+node1:/var/lib/osd/pxns/229379759785727331 on /mnt/data type nfs4 (rw,relatime,vers=4.1,rsize=1048576,wsize=1048576,namlen=255,hard,proto=tcp,timeo=600,retrans=2,sec=sys,clientaddr=node3,local_lock=none,addr=node1)
+</code></pre>
+<h2 id="reference">Reference</h2>
+<ul>
+<li><a href="https://docs.portworx.com/reference/cli/updating-volumes/">https://docs.portworx.com/reference/cli/updating-volumes/</a></li>
+</ul>
+<!--kg-card-end: markdown-->
+            </section>
+
+        </article>
+
+                <div class="gh-read-next gh-canvas">
+                <section class="gh-pagehead">
+                    <h4 class="gh-pagehead-title">Read next</h4>
+                </section>
+
+                <div class="gh-topic gh-topic-grid">
+                    <div class="gh-topic-content">
+                            <article class="gh-card post">
+    <a class="gh-card-link" href="/understanding-azure-disk-bursting/">
+            <figure class="gh-card-image">
+                <img
+                    srcset="https://images.unsplash.com/photo-1615293889204-6db03c596147?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDR8fGhhcmRkaXNrfGVufDB8fHx8MTY3Mjc3NzYzNA&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;300 300w,
+                            https://images.unsplash.com/photo-1615293889204-6db03c596147?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDR8fGhhcmRkaXNrfGVufDB8fHx8MTY3Mjc3NzYzNA&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720 720w,
+                            https://images.unsplash.com/photo-1615293889204-6db03c596147?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDR8fGhhcmRkaXNrfGVufDB8fHx8MTY3Mjc3NzYzNA&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;960 960w,
+                            https://images.unsplash.com/photo-1615293889204-6db03c596147?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDR8fGhhcmRkaXNrfGVufDB8fHx8MTY3Mjc3NzYzNA&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1200 1200w,
+                            https://images.unsplash.com/photo-1615293889204-6db03c596147?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDR8fGhhcmRkaXNrfGVufDB8fHx8MTY3Mjc3NzYzNA&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000 2000w"
+                    sizes="(max-width: 1200px) 100vw, 1200px"
+                    src="https://images.unsplash.com/photo-1615293889204-6db03c596147?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDR8fGhhcmRkaXNrfGVufDB8fHx8MTY3Mjc3NzYzNA&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720"
+                    alt="Understanding Azure disk bursting"
+                >
+            </figure>
+
+        <div class="gh-card-wrapper">
+            <header class="gh-card-header">
+                <h3 class="gh-card-title">Understanding Azure disk bursting</h3>
+            </header>
+
+                    <div class="gh-card-excerpt">Currently, there are two managed disk types that can burst, premium SSDs, and standard SSDs. Other disk types cannot currently burst. There are two models of bursting for disks:
+
+
+An on-demand bursting model, where the disk bursts whenever its needs exceed its current capacity. This model incurs additional charges anytime</div>
+
+            <footer class="gh-card-footer">
+                <span class="gh-card-author">relentlesstorm</span>
+                <time class="gh-card-date" datetime="2022-09-15">Sep 15, 2022</time>
+            </footer>
+        </div>
+    </a>
+</article>                            <article class="gh-card post">
+    <a class="gh-card-link" href="/understanding-rpo-and-rto/">
+            <figure class="gh-card-image">
+                <img
+                    srcset="https://images.unsplash.com/photo-1586974175094-0a7259238613?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDJ8fHJlY292ZXJ5fGVufDB8fHx8MTY3Mjc3OTU4Ng&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;300 300w,
+                            https://images.unsplash.com/photo-1586974175094-0a7259238613?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDJ8fHJlY292ZXJ5fGVufDB8fHx8MTY3Mjc3OTU4Ng&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720 720w,
+                            https://images.unsplash.com/photo-1586974175094-0a7259238613?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDJ8fHJlY292ZXJ5fGVufDB8fHx8MTY3Mjc3OTU4Ng&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;960 960w,
+                            https://images.unsplash.com/photo-1586974175094-0a7259238613?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDJ8fHJlY292ZXJ5fGVufDB8fHx8MTY3Mjc3OTU4Ng&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1200 1200w,
+                            https://images.unsplash.com/photo-1586974175094-0a7259238613?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDJ8fHJlY292ZXJ5fGVufDB8fHx8MTY3Mjc3OTU4Ng&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000 2000w"
+                    sizes="(max-width: 1200px) 100vw, 1200px"
+                    src="https://images.unsplash.com/photo-1586974175094-0a7259238613?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDJ8fHJlY292ZXJ5fGVufDB8fHx8MTY3Mjc3OTU4Ng&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720"
+                    alt="Understanding RPO and RTO"
+                >
+            </figure>
+
+        <div class="gh-card-wrapper">
+            <header class="gh-card-header">
+                <h3 class="gh-card-title">Understanding RPO and RTO</h3>
+            </header>
+
+                    <div class="gh-card-excerpt">The disasters could occur unexpectedly and it could take down the whole data center in an application region. In the real world, a well designed disaster recovery solution would help restore the applications and related data at the time of disaster.
+
+
+There are two critical metrics to measure how timely</div>
+
+            <footer class="gh-card-footer">
+                <span class="gh-card-author">relentlesstorm</span>
+                <time class="gh-card-date" datetime="2022-05-01">May 1, 2022</time>
+            </footer>
+        </div>
+    </a>
+</article>                            <article class="gh-card post">
+    <a class="gh-card-link" href="/openzfs-a-pooled-storage-file-system/">
+            <figure class="gh-card-image">
+                <img
+                    srcset="https://images.unsplash.com/photo-1461360228754-6e81c478b882?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDF8fGZpbGUlMjBzeXN0ZW18ZW58MHx8fHwxNjcyNzgyMTAz&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;300 300w,
+                            https://images.unsplash.com/photo-1461360228754-6e81c478b882?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDF8fGZpbGUlMjBzeXN0ZW18ZW58MHx8fHwxNjcyNzgyMTAz&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720 720w,
+                            https://images.unsplash.com/photo-1461360228754-6e81c478b882?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDF8fGZpbGUlMjBzeXN0ZW18ZW58MHx8fHwxNjcyNzgyMTAz&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;960 960w,
+                            https://images.unsplash.com/photo-1461360228754-6e81c478b882?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDF8fGZpbGUlMjBzeXN0ZW18ZW58MHx8fHwxNjcyNzgyMTAz&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1200 1200w,
+                            https://images.unsplash.com/photo-1461360228754-6e81c478b882?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDF8fGZpbGUlMjBzeXN0ZW18ZW58MHx8fHwxNjcyNzgyMTAz&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000 2000w"
+                    sizes="(max-width: 1200px) 100vw, 1200px"
+                    src="https://images.unsplash.com/photo-1461360228754-6e81c478b882?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDF8fGZpbGUlMjBzeXN0ZW18ZW58MHx8fHwxNjcyNzgyMTAz&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720"
+                    alt="OpenZFS - A pooled storage file system"
+                >
+            </figure>
+
+        <div class="gh-card-wrapper">
+            <header class="gh-card-header">
+                <h3 class="gh-card-title">OpenZFS - A pooled storage file system</h3>
+            </header>
+
+                    <div class="gh-card-excerpt">OpenZFS
+
+
+The OpenZFS project is an open source derivative of the Oracle ZFS project. OpenZFS is an outstanding storage platform that encompasses the functionality of traditional filesystems, volume managers, and more, with consistent reliability, functionality and performance across all distributions.
+
+
+Source1
+
+Source2
+
+
+
+ZFS and ZFS Pooled Storage
+
+
+The ZFS file</div>
+
+            <footer class="gh-card-footer">
+                <span class="gh-card-author">relentlesstorm</span>
+                <time class="gh-card-date" datetime="2022-03-16">Mar 16, 2022</time>
+            </footer>
+        </div>
+    </a>
+</article>                    </div>
+                </div>
+            </div>
+
+        </main>
+
+    <footer class="gh-foot gh-outer">
+        <div class="gh-foot-inner gh-inner">
+
+            <!--<nav class="gh-foot-menu">
+                <<ul class="nav">
+    <li class="nav-sign-up"><a href="#/portal/">Sign up</a></li>
+</ul>
+
+            </nav>-->
+
+            <div class="gh-copyright">
+                    Flamingbytes © 2023. Powered by <a href="https://ghost.org/" target="_blank" rel="noopener">Ghost</a>
+            </div>
+        </div>
+    </footer>
+
+</div>
+
+    <div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="pswp__bg"></div>
+
+    <div class="pswp__scroll-wrap">
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)"></button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)"></button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="/assets/built/main.min.js?v=e1adcf5302"></script>
+
+
+
+</body>
+
+</html>

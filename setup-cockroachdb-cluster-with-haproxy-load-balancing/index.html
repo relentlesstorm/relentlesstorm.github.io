@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Setup CockroachDB cluster with HAProxy load balancing</title>
+    <link rel="stylesheet" href="/assets/built/screen.css?v=e1adcf5302">
+
+    <link rel="canonical" href="https://relentlesstorm.github.io/setup-cockroachdb-cluster-with-haproxy-load-balancing/" />
+    <meta name="referrer" content="no-referrer-when-downgrade" />
+    
+    <meta property="og:site_name" content="Flamingbytes" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="Setup CockroachDB cluster with HAProxy load balancing" />
+    <meta property="og:description" content="Each CockroachDB node is an equally suitable SQL gateway to your cluster, but to ensure client performance and reliability, it&#x27;s important to use load balancing.
+
+
+ * 
+   
+   
+   Performance: Load balancers spread client traffic across nodes. This prevents any one node from being overwhelmed by requests and improves overall cluster performance (queries per" />
+    <meta property="og:url" content="https://relentlesstorm.github.io/setup-cockroachdb-cluster-with-haproxy-load-balancing/" />
+    <meta property="og:image" content="https://images.unsplash.com/photo-1472494731104-3ba69e52845b?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDN8fGxvYWQlMjBiYWxhbmNlfGVufDB8fHx8MTY3Mjc3NzE3OA&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000" />
+    <meta property="article:published_time" content="2022-12-01T00:00:00.000Z" />
+    <meta property="article:modified_time" content="2023-01-04T04:18:11.000Z" />
+    <meta property="article:tag" content="Big Data" />
+    
+    <meta property="article:publisher" content="https://www.facebook.com/ghost" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Setup CockroachDB cluster with HAProxy load balancing" />
+    <meta name="twitter:description" content="Each CockroachDB node is an equally suitable SQL gateway to your cluster, but to ensure client performance and reliability, it&#x27;s important to use load balancing.
+
+
+ * 
+   
+   
+   Performance: Load balancers spread client traffic across nodes. This prevents any one node from being overwhelmed by requests and improves overall cluster performance (queries per" />
+    <meta name="twitter:url" content="https://relentlesstorm.github.io/setup-cockroachdb-cluster-with-haproxy-load-balancing/" />
+    <meta name="twitter:image" content="https://images.unsplash.com/photo-1472494731104-3ba69e52845b?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDN8fGxvYWQlMjBiYWxhbmNlfGVufDB8fHx8MTY3Mjc3NzE3OA&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000" />
+    <meta name="twitter:label1" content="Written by" />
+    <meta name="twitter:data1" content="relentlesstorm" />
+    <meta name="twitter:label2" content="Filed under" />
+    <meta name="twitter:data2" content="Big Data" />
+    <meta name="twitter:site" content="@ghost" />
+    <meta property="og:image:width" content="2000" />
+    <meta property="og:image:height" content="1334" />
+    
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "publisher": {
+        "@type": "Organization",
+        "name": "Flamingbytes",
+        "url": "https://relentlesstorm.github.io/",
+        "logo": {
+            "@type": "ImageObject",
+            "url": "https://relentlesstorm.github.io/favicon.ico",
+            "width": 48,
+            "height": 48
+        }
+    },
+    "author": {
+        "@type": "Person",
+        "name": "relentlesstorm",
+        "url": "https://relentlesstorm.github.io/author/relentlesstorm/",
+        "sameAs": []
+    },
+    "headline": "Setup CockroachDB cluster with HAProxy load balancing",
+    "url": "https://relentlesstorm.github.io/setup-cockroachdb-cluster-with-haproxy-load-balancing/",
+    "datePublished": "2022-12-01T00:00:00.000Z",
+    "dateModified": "2023-01-04T04:18:11.000Z",
+    "image": {
+        "@type": "ImageObject",
+        "url": "https://images.unsplash.com/photo-1472494731104-3ba69e52845b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxMTc3M3wwfDF8c2VhcmNofDN8fGxvYWQlMjBiYWxhbmNlfGVufDB8fHx8MTY3Mjc3NzE3OA&ixlib=rb-4.0.3&q=80&w=2000",
+        "width": 2000,
+        "height": 1334
+    },
+    "keywords": "Big Data",
+    "description": "Each CockroachDB node is an equally suitable SQL gateway to your cluster, but to ensure client performance and reliability, it&#x27;s important to use load balancing.\n\n\n * \n   \n   \n   Performance: Load balancers spread client traffic across nodes. This prevents any one node from being overwhelmed by requests and improves overall cluster performance (queries per second).\n   \n\n * \n   \n   \n   Reliability: Load balancers decouple client health from the health of a single CockroachDB node. In cases where ",
+    "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https://relentlesstorm.github.io/"
+    }
+}
+    </script>
+
+    <meta name="generator" content="Ghost 5.26" />
+    <link rel="alternate" type="application/rss+xml" title="Flamingbytes" href="https://relentlesstorm.github.io/rss/" />
+    
+    <script defer src="https://cdn.jsdelivr.net/ghost/sodo-search@~1.1/umd/sodo-search.min.js" data-key="321a1d1aea33fd468f6e61f563" data-styles="https://cdn.jsdelivr.net/ghost/sodo-search@~1.1/umd/main.css" data-sodo-search="https://relentlesstorm.github.io/" crossorigin="anonymous"></script>
+    <script defer src="/public/cards.min.js?v=e1adcf5302"></script><style>:root {--ghost-accent-color: #6a13ec;}</style>
+    <link rel="stylesheet" type="text/css" href="/public/cards.min.css?v=e1adcf5302">
+</head>
+
+<body class="post-template tag-big-data is-head-left-logo has-serif-body">
+<div class="gh-site">
+
+    <header id="gh-head" class="gh-head gh-outer">
+        <div class="gh-head-inner gh-inner">
+            <div class="gh-head-brand">
+                <div class="gh-head-brand-wrapper">
+                    <a class="gh-head-logo" href="https://relentlesstorm.github.io">
+                            Flamingbytes
+                    </a>
+                </div>
+                <button class="gh-search gh-icon-btn" data-ghost-search><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" width="20" height="20"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg></button>
+                <button class="gh-burger"></button>
+            </div>
+
+            <nav class="gh-head-menu">
+                <ul class="nav">
+    <li class="nav-home"><a href="https://relentlesstorm.github.io/">Home</a></li>
+    <li class="nav-tags"><a href="https://relentlesstorm.github.io/tags/">Tags</a></li>
+    <li class="nav-archive"><a href="https://relentlesstorm.github.io/archive/">Archive</a></li>
+    <li class="nav-about"><a href="https://relentlesstorm.github.io/about/">About</a></li>
+</ul>
+
+            </nav>
+
+            <div class="gh-head-actions">
+                        <button class="gh-search gh-icon-btn" data-ghost-search><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" width="20" height="20"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg></button>
+            </div>
+        </div>
+    </header>
+
+    
+<main class="gh-main">
+        <article class="gh-article post tag-big-data">
+
+            <header class="gh-article-header gh-canvas">
+                    <a class="gh-article-tag" href="https://relentlesstorm.github.io/tag/big-data/">Big Data</a>
+
+                <h1 class="gh-article-title">Setup CockroachDB cluster with HAProxy load balancing</h1>
+
+                    <aside class="gh-article-sidebar">
+
+        <div class="gh-author-image-list">
+                <a class="gh-author-image" href="/author/relentlesstorm/">
+                        <div class="gh-author-icon"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="64" height="64"><g fill="none" fill-rule="evenodd"><path d="M3.513 18.998C4.749 15.504 8.082 13 12 13s7.251 2.504 8.487 5.998C18.47 21.442 15.417 23 12 23s-6.47-1.558-8.487-4.002zM12 12c2.21 0 4-2.79 4-5s-1.79-4-4-4-4 1.79-4 4 1.79 5 4 5z" fill="#FFF"/></g></svg>
+</div>
+                </a>
+        </div>
+
+        <div class="gh-author-name-list">
+                <h4 class="gh-author-name">
+                    <a href="/author/relentlesstorm/">relentlesstorm</a>
+                </h4>
+                
+        </div>
+
+        <div class="gh-article-meta">
+            <div class="gh-article-meta-inner">
+                <time class="gh-article-date" datetime="2022-12-01">Dec 1, 2022</time>
+                    <span class="gh-article-meta-sep"></span>
+                    <span class="gh-article-length">8 min</span>
+            </div>
+        </div>
+
+    </aside>
+
+
+                    <figure class="gh-article-image">
+        <img
+            srcset="https://images.unsplash.com/photo-1472494731104-3ba69e52845b?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDN8fGxvYWQlMjBiYWxhbmNlfGVufDB8fHx8MTY3Mjc3NzE3OA&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;300 300w,
+                    https://images.unsplash.com/photo-1472494731104-3ba69e52845b?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDN8fGxvYWQlMjBiYWxhbmNlfGVufDB8fHx8MTY3Mjc3NzE3OA&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720 720w,
+                    https://images.unsplash.com/photo-1472494731104-3ba69e52845b?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDN8fGxvYWQlMjBiYWxhbmNlfGVufDB8fHx8MTY3Mjc3NzE3OA&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;960 960w,
+                    https://images.unsplash.com/photo-1472494731104-3ba69e52845b?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDN8fGxvYWQlMjBiYWxhbmNlfGVufDB8fHx8MTY3Mjc3NzE3OA&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1200 1200w,
+                    https://images.unsplash.com/photo-1472494731104-3ba69e52845b?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDN8fGxvYWQlMjBiYWxhbmNlfGVufDB8fHx8MTY3Mjc3NzE3OA&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000 2000w"
+            sizes="(max-width: 1200px) 100vw, 1200px"
+            src="https://images.unsplash.com/photo-1472494731104-3ba69e52845b?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDN8fGxvYWQlMjBiYWxhbmNlfGVufDB8fHx8MTY3Mjc3NzE3OA&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1200"
+            alt="Setup CockroachDB cluster with HAProxy load balancing"
+        >
+            <figcaption>Photo by <a href="https://unsplash.com/@arstyy?utm_source=ghost&utm_medium=referral&utm_campaign=api-credit">Austin Neill</a> / <a href="https://unsplash.com/?utm_source=ghost&utm_medium=referral&utm_campaign=api-credit">Unsplash</a></figcaption>
+    </figure>
+            </header>
+
+            <section class="gh-content gh-canvas">
+                <!--kg-card-begin: markdown--><p>Each CockroachDB node is an equally suitable SQL gateway to your cluster, but to ensure client performance and reliability, it's important to use load balancing.</p>
+<ul>
+<li>
+<p>Performance: Load balancers spread client traffic across nodes. This prevents any one node from being overwhelmed by requests and improves overall cluster performance (queries per second).</p>
+</li>
+<li>
+<p>Reliability: Load balancers decouple client health from the health of a single CockroachDB node. In cases where a node fails, the load balancer redirects client traffic to available nodes.</p>
+</li>
+</ul>
+<p>HAProxy is one of the most popular open-source TCP load balancers, and CockroachDB includes a built-in command for generating a configuration file that is preset to work with your running cluster.</p>
+<p>With a single load balancer, client connections are resilient to node failure, but the load balancer itself is a point of failure. It's therefore best to make load balancing resilient as well by using multiple load balancing instances, with a mechanism like floating IPs or DNS to select load balancers for clients.</p>
+<p>For performance and availability reasons, it is not recommended to run the HAproxy on the same node as the cockroachDB.</p>
+<p>This post shows a detailed steps how to deploy a HAProxy load balancer for CockroachDB cluster.</p>
+<h2 id="deploy-the-cockroachdb-cluster">Deploy the CockroachDB cluster</h2>
+<pre><code class="language-shell">[root@host1 ~]# ps -ef | grep cockroach | grep -v grep
+root      4783     1 99 18:59 ?        2-17:35:59 cockroach start --log-dir=/var/log/cockroachdb_logs/1 --store=/mnt/cockroachdb_mnt1 --insecure --listen-addr=host1:26257 --http-addr=host1:8080 --join=host1:26257,host1:26258,host1:26259,host1:26260,host1:26261,host1:26262,host1:26263,host1:26264,host2:26257,host2:26258,host2:26259,host2:26260,host2:26261,host2:26262,host2:26263,host2:26264,host3:26257,host3:26258,host3:26259,host3:26260,host3:26261,host3:26262,host3:26263,host3:26264 --cache=2GiB --max-sql-memory=2GiB
+root      4876     1 95 18:59 ?        03:33:42 cockroach start --log-dir=/var/log/cockroachdb_logs/2 --store=/mnt/cockroachdb_mnt2 --insecure --listen-addr=host1:26258 --http-addr=host1:8081 --join=host1:26257,host1:26258,host1:26259,host1:26260,host1:26261,host1:26262,host1:26263,host1:26264,host2:26257,host2:26258,host2:26259,host2:26260,host2:26261,host2:26262,host2:26263,host2:26264,host3:26257,host3:26258,host3:26259,host3:26260,host3:26261,host3:26262,host3:26263,host3:26264 --cache=2GiB --max-sql-memory=2GiB
+root      4932     1 77 18:59 ?        02:53:13 cockroach start --log-dir=/var/log/cockroachdb_logs/3 --store=/mnt/cockroachdb_mnt3 --insecure --listen-addr=host1:26259 --http-addr=host1:8082 --join=host1:26257,host1:26258,host1:26259,host1:26260,host1:26261,host1:26262,host1:26263,host1:26264,host2:26257,host2:26258,host2:26259,host2:26260,host2:26261,host2:26262,host2:26263,host2:26264,host3:26257,host3:26258,host3:26259,host3:26260,host3:26261,host3:26262,host3:26263,host3:26264 --cache=2GiB --max-sql-memory=2GiB
+root      5049     1 99 18:59 ?        06:02:17 cockroach start --log-dir=/var/log/cockroachdb_logs/4 --store=/mnt/cockroachdb_mnt4 --insecure --listen-addr=host1:26260 --http-addr=host1:8083 --join=host1:26257,host1:26258,host1:26259,host1:26260,host1:26261,host1:26262,host1:26263,host1:26264,host2:26257,host2:26258,host2:26259,host2:26260,host2:26261,host2:26262,host2:26263,host2:26264,host3:26257,host3:26258,host3:26259,host3:26260,host3:26261,host3:26262,host3:26263,host3:26264 --cache=2GiB --max-sql-memory=2GiB
+root      5131     1 94 18:59 ?        03:31:51 cockroach start --log-dir=/var/log/cockroachdb_logs/5 --store=/mnt/cockroachdb_mnt5 --insecure --listen-addr=host1:26261 --http-addr=host1:8084 --join=host1:26257,host1:26258,host1:26259,host1:26260,host1:26261,host1:26262,host1:26263,host1:26264,host2:26257,host2:26258,host2:26259,host2:26260,host2:26261,host2:26262,host2:26263,host2:26264,host3:26257,host3:26258,host3:26259,host3:26260,host3:26261,host3:26262,host3:26263,host3:26264 --cache=2GiB --max-sql-memory=2GiB
+root      5220     1 72 18:59 ?        02:42:39 cockroach start --log-dir=/var/log/cockroachdb_logs/6 --store=/mnt/cockroachdb_mnt6 --insecure --listen-addr=host1:26262 --http-addr=host1:8085 --join=host1:26257,host1:26258,host1:26259,host1:26260,host1:26261,host1:26262,host1:26263,host1:26264,host2:26257,host2:26258,host2:26259,host2:26260,host2:26261,host2:26262,host2:26263,host2:26264,host3:26257,host3:26258,host3:26259,host3:26260,host3:26261,host3:26262,host3:26263,host3:26264 --cache=2GiB --max-sql-memory=2GiB
+root      5309     1 94 18:59 ?        03:30:22 cockroach start --log-dir=/var/log/cockroachdb_logs/7 --store=/mnt/cockroachdb_mnt7 --insecure --listen-addr=host1:26263 --http-addr=host1:8086 --join=host1:26257,host1:26258,host1:26259,host1:26260,host1:26261,host1:26262,host1:26263,host1:26264,host2:26257,host2:26258,host2:26259,host2:26260,host2:26261,host2:26262,host2:26263,host2:26264,host3:26257,host3:26258,host3:26259,host3:26260,host3:26261,host3:26262,host3:26263,host3:26264 --cache=2GiB --max-sql-memory=2GiB
+root      5358     1 58 18:59 ?        02:11:20 cockroach start --log-dir=/var/log/cockroachdb_logs/8 --store=/mnt/cockroachdb_mnt8 --insecure --listen-addr=host1:26264 --http-addr=host1:8087 --join=host1:26257,host1:26258,host1:26259,host1:26260,host1:26261,host1:26262,host1:26263,host1:26264,host2:26257,host2:26258,host2:26259,host2:26260,host2:26261,host2:26262,host2:26263,host2:26264,host3:26257,host3:26258,host3:26259,host3:26260,host3:26261,host3:26262,host3:26263,host3:26264 --cache=2GiB --max-sql-memory=2GiB
+
+[root@host1 ~]# cockroach node status --insecure --host=host1:26257
+  id |       address       |     sql_address     |  build  |         started_at         |         updated_at         | locality | is_available | is_live
+-----+---------------------+---------------------+---------+----------------------------+----------------------------+----------+--------------+----------
+   1 | host1:26257 | host1:26257 | v22.1.6 | 2022-09-17 18:59:37.989384 | 2022-09-17 22:43:39.507057 |          | true         | true
+   2 | host1:26258 | host1:26258 | v22.1.6 | 2022-09-17 18:59:39.128398 | 2022-09-17 22:43:40.640431 |          | true         | true
+   3 | host1:26259 | host1:26259 | v22.1.6 | 2022-09-17 18:59:39.374127 | 2022-09-17 22:43:40.885678 |          | true         | true
+   4 | host1:26260 | host1:26260 | v22.1.6 | 2022-09-17 18:59:39.726667 | 2022-09-17 22:43:36.73931  |          | true         | true
+   5 | host1:26261 | host1:26261 | v22.1.6 | 2022-09-17 18:59:39.971549 | 2022-09-17 22:43:36.983538 |          | true         | true
+   6 | host1:26262 | host1:26262 | v22.1.6 | 2022-09-17 18:59:40.225358 | 2022-09-17 22:43:37.235768 |          | true         | true
+   7 | host1:26263 | host1:26263 | v22.1.6 | 2022-09-17 18:59:40.447688 | 2022-09-17 22:43:37.459962 |          | true         | true
+   8 | host1:26264 | host1:26264 | v22.1.6 | 2022-09-17 18:59:40.677217 | 2022-09-17 22:43:37.690883 |          | true         | true
+   9 | host2:26257 | host2:26257 | v22.1.6 | 2022-09-17 18:59:41.604348 | 2022-09-17 22:43:38.613662 |          | true         | true
+  10 | host2:26258 | host2:26258 | v22.1.6 | 2022-09-17 18:59:41.904071 | 2022-09-17 22:43:38.912773 |          | true         | true
+  11 | host2:26259 | host2:26259 | v22.1.6 | 2022-09-17 18:59:42.194446 | 2022-09-17 22:43:39.202688 |          | true         | true
+  12 | host2:26260 | host2:26260 | v22.1.6 | 2022-09-17 18:59:42.512201 | 2022-09-17 22:43:39.519727 |          | true         | true
+  13 | host2:26261 | host2:26261 | v22.1.6 | 2022-09-17 18:59:42.850974 | 2022-09-17 22:43:39.860063 |          | true         | true
+  14 | host2:26262 | host2:26262 | v22.1.6 | 2022-09-17 18:59:43.177162 | 2022-09-17 22:43:40.191082 |          | true         | true
+  15 | host2:26263 | host2:26263 | v22.1.6 | 2022-09-17 18:59:43.543973 | 2022-09-17 22:43:40.553146 |          | true         | true
+  16 | host2:26264 | host2:26264 | v22.1.6 | 2022-09-17 18:59:43.858993 | 2022-09-17 22:43:40.86705  |          | true         | true
+  17 | host3:26257 | host3:26257 | v22.1.6 | 2022-09-17 18:59:44.807641 | 2022-09-17 22:43:37.315927 |          | true         | true
+  18 | host3:26258 | host3:26258 | v22.1.6 | 2022-09-17 18:59:45.119533 | 2022-09-17 22:43:37.628497 |          | true         | true
+  19 | host3:26259 | host3:26259 | v22.1.6 | 2022-09-17 18:59:45.508535 | 2022-09-17 22:43:38.015714 |          | true         | true
+  20 | host3:26260 | host3:26260 | v22.1.6 | 2022-09-17 18:59:45.901631 | 2022-09-17 22:43:38.409443 |          | true         | true
+  21 | host3:26261 | host3:26261 | v22.1.6 | 2022-09-17 18:59:46.191724 | 2022-09-17 22:43:38.700531 |          | true         | true
+  22 | host3:26262 | host3:26262 | v22.1.6 | 2022-09-17 18:59:46.540504 | 2022-09-17 22:43:39.048942 |          | true         | true
+  23 | host3:26263 | host3:26263 | v22.1.6 | 2022-09-17 18:59:46.944353 | 2022-09-17 22:43:39.453175 |          | true         | true
+  24 | host3:26264 | host3:26264 | v22.1.6 | 2022-09-17 18:59:47.274458 | 2022-09-17 22:43:39.782378 |          | true         | true
+(24 rows)
+</code></pre>
+<h2 id="generate-haproxy-configuration-file">Generate HAProxy configuration file</h2>
+<p>Install HAProxy on one of the CockroachDB nodes:</p>
+<pre><code class="language-shell">[root@host1 ~]# yum install haproxy
+[root@host1 ~]# haproxy -v
+HA-Proxy version 1.5.18 2016/05/10
+Copyright 2000-2016 Willy Tarreau &lt;willy@haproxy.org&gt;
+</code></pre>
+<p>Generate the HAProxy configuration file:</p>
+<pre><code class="language-shell">[root@host1 ~]# cockroach gen haproxy --host=host1:26257 --insecure
+
+[root@host1 ~]# cat haproxy.cfg
+
+global
+  maxconn 4096
+
+defaults
+    mode                tcp
+
+    # Timeout values should be configured for your specific use.
+    # See: https://cbonte.github.io/haproxy-dconv/1.8/configuration.html#4-timeout%20connect
+
+    # With the timeout connect 5 secs,
+    # if the backend server is not responding, haproxy will make a total
+    # of 3 connection attempts waiting 5s each time before giving up on the server,
+    # for a total of 15 seconds.
+    retries             2
+    timeout connect     5s
+
+    # timeout client and server govern the maximum amount of time of TCP inactivity.
+    # The server node may idle on a TCP connection either because it takes time to
+    # execute a query before the first result set record is emitted, or in case of
+    # some trouble on the server. So these timeout settings should be larger than the
+    # time to execute the longest (most complex, under substantial concurrent workload)
+    # query, yet not too large so truly failed connections are lingering too long
+    # (resources associated with failed connections should be freed reasonably promptly).
+    timeout client      10m
+    timeout server      10m
+
+    # TCP keep-alive on client side. Server already enables them.
+    option              clitcpka
+
+listen psql
+    bind :26257
+    mode tcp
+    balance roundrobin
+    option httpchk GET /health?ready=1
+    server cockroach1 host1:26257 check port 8080
+    server cockroach2 host1:26258 check port 8081
+    server cockroach3 host1:26259 check port 8082
+    server cockroach4 host1:26260 check port 8083
+    server cockroach5 host1:26261 check port 8084
+    server cockroach6 host1:26262 check port 8085
+    server cockroach7 host1:26263 check port 8086
+    server cockroach8 host1:26264 check port 8087
+    server cockroach9 host2:26257 check port 8080
+    server cockroach10 host2:26258 check port 8081
+    server cockroach11 host2:26259 check port 8082
+    server cockroach12 host2:26260 check port 8083
+    server cockroach13 host2:26261 check port 8084
+    server cockroach14 host2:26262 check port 8085
+    server cockroach15 host2:26263 check port 8086
+    server cockroach16 host2:26264 check port 8087
+    server cockroach17 host3:26257 check port 8080
+    server cockroach18 host3:26258 check port 8081
+    server cockroach19 host3:26259 check port 8082
+    server cockroach20 host3:26260 check port 8083
+    server cockroach21 host3:26261 check port 8084
+    server cockroach22 host3:26262 check port 8085
+    server cockroach23 host3:26263 check port 8086
+    server cockroach24 host3:26264 check port 8087
+</code></pre>
+<h2 id="start-haproxy">Start HAProxy</h2>
+<p>It's not recommended to deploy HAProxy on the same node as CockroachDB for performance and availability reasons. Thus, we are going to start the HAProxy  on a dedicated node.</p>
+<p>Connect to the dedicated HAProxy node and install the proxy on it:</p>
+<pre><code class="language-shell">[root@host4 ~]# yum install haproxy
+</code></pre>
+<p>Start HAproxy with the generated configuration file:</p>
+<pre><code class="language-shell">[root@host4 ~]# scp host1:/root/haproxy.cfg ./
+[root@host4 ~]# haproxy -f haproxy.cfg
+</code></pre>
+<h2 id="verify-the-haproxy">Verify the HAProxy</h2>
+<p>The Load Balancer distributes the requests sent to the cluster equally between the different nodes.</p>
+<p>From primary node, we can check which node is being connected as below:</p>
+<pre><code class="language-shell">[root@host1 ~]# cockroach sql --host=host4 --insecure
+root@host4:26257/defaultdb&gt; SHOW node_id;
+  node_id
+-----------
+  1
+
+root@host4:26257/defaultdb&gt; exit
+[root@host1 ~]# cockroach sql --host=host4 --insecure
+root@host4:26257/defaultdb&gt; SHOW node_id;
+  node_id
+-----------
+  2
+
+[root@host1 ~]# cockroach sql --host=host4 --insecure
+root@host4:26257/defaultdb&gt; SHOW node_id;
+  node_id
+-----------
+  3
+</code></pre>
+<h2 id="run-tpcc-through-the-haproxy-load-balancer">Run TPCC through the HAProxy load balancer</h2>
+<pre><code class="language-shell">[root@host4 cockroachdb]# cockroach workload run tpcc --warehouses=5000 --split --scatter --ramp=30s --duration=5m 'postgresql://root@host4:26257/tpcc?sslmode=disable'
+</code></pre>
+<h2 id="reference">Reference</h2>
+<ul>
+<li><a href="https://www.cockroachlabs.com/docs/v22.1/deploy-cockroachdb-on-premises-insecure">https://www.cockroachlabs.com/docs/v22.1/deploy-cockroachdb-on-premises-insecure</a></li>
+<li><a href="https://www.scaleway.com/en/docs/tutorials/setup-cockroachdb-cluster/">Install a multi-node Cockroach database with HA Proxy</a></li>
+<li><a href="http://www.haproxy.org/">http://www.haproxy.org/</a></li>
+</ul>
+<!--kg-card-end: markdown-->
+            </section>
+
+        </article>
+
+                <div class="gh-read-next gh-canvas">
+                <section class="gh-pagehead">
+                    <h4 class="gh-pagehead-title">Read next</h4>
+                </section>
+
+                <div class="gh-topic gh-topic-grid">
+                    <div class="gh-topic-content">
+                            <article class="gh-card post">
+    <a class="gh-card-link" href="/using-virtctl-to-access-virtual-machine-in-kubernetes/">
+            <figure class="gh-card-image">
+                <img
+                    srcset="https://images.unsplash.com/photo-1667372335936-3dc4ff716017?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDEwfHxrdWJlcm5ldGVzfGVufDB8fHx8MTY3Mjc3NzAxNg&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;300 300w,
+                            https://images.unsplash.com/photo-1667372335936-3dc4ff716017?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDEwfHxrdWJlcm5ldGVzfGVufDB8fHx8MTY3Mjc3NzAxNg&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720 720w,
+                            https://images.unsplash.com/photo-1667372335936-3dc4ff716017?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDEwfHxrdWJlcm5ldGVzfGVufDB8fHx8MTY3Mjc3NzAxNg&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;960 960w,
+                            https://images.unsplash.com/photo-1667372335936-3dc4ff716017?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDEwfHxrdWJlcm5ldGVzfGVufDB8fHx8MTY3Mjc3NzAxNg&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1200 1200w,
+                            https://images.unsplash.com/photo-1667372335936-3dc4ff716017?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDEwfHxrdWJlcm5ldGVzfGVufDB8fHx8MTY3Mjc3NzAxNg&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000 2000w"
+                    sizes="(max-width: 1200px) 100vw, 1200px"
+                    src="https://images.unsplash.com/photo-1667372335936-3dc4ff716017?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDEwfHxrdWJlcm5ldGVzfGVufDB8fHx8MTY3Mjc3NzAxNg&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720"
+                    alt="Using virtctl to access virtual machine in Kubernetes"
+                >
+            </figure>
+
+        <div class="gh-card-wrapper">
+            <header class="gh-card-header">
+                <h3 class="gh-card-title">Using virtctl to access virtual machine in Kubernetes</h3>
+            </header>
+
+                    <div class="gh-card-excerpt">Install the virtctl client tool
+
+
+Basic VirtualMachineInstance operations can be performed with the stock kubectl utility. However, the virtctl binary utility is required to use advanced features such as:
+
+
+ * Serial and graphical console access
+
+
+It also provides convenience commands for:
+
+
+ * Starting and stopping VirtualMachineInstances
+ * Live migrating VirtualMachineInstances
+ * Uploading virtual machine</div>
+
+            <footer class="gh-card-footer">
+                <span class="gh-card-author">relentlesstorm</span>
+                <time class="gh-card-date" datetime="2023-01-02">Jan 2, 2023</time>
+            </footer>
+        </div>
+    </a>
+</article>                            <article class="gh-card post">
+    <a class="gh-card-link" href="/using-node-selector-to-assign-virtual-mahcines-to-a-node/">
+            <figure class="gh-card-image">
+                <img
+                    srcset="https://images.unsplash.com/photo-1667372335962-5fd503a8ae5b?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDh8fGt1YmVybmV0ZXN8ZW58MHx8fHwxNjcyNzc3MDE2&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;300 300w,
+                            https://images.unsplash.com/photo-1667372335962-5fd503a8ae5b?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDh8fGt1YmVybmV0ZXN8ZW58MHx8fHwxNjcyNzc3MDE2&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720 720w,
+                            https://images.unsplash.com/photo-1667372335962-5fd503a8ae5b?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDh8fGt1YmVybmV0ZXN8ZW58MHx8fHwxNjcyNzc3MDE2&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;960 960w,
+                            https://images.unsplash.com/photo-1667372335962-5fd503a8ae5b?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDh8fGt1YmVybmV0ZXN8ZW58MHx8fHwxNjcyNzc3MDE2&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1200 1200w,
+                            https://images.unsplash.com/photo-1667372335962-5fd503a8ae5b?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDh8fGt1YmVybmV0ZXN8ZW58MHx8fHwxNjcyNzc3MDE2&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000 2000w"
+                    sizes="(max-width: 1200px) 100vw, 1200px"
+                    src="https://images.unsplash.com/photo-1667372335962-5fd503a8ae5b?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDh8fGt1YmVybmV0ZXN8ZW58MHx8fHwxNjcyNzc3MDE2&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720"
+                    alt="Using node selector to assign virtual machines to a node"
+                >
+            </figure>
+
+        <div class="gh-card-wrapper">
+            <header class="gh-card-header">
+                <h3 class="gh-card-title">Using node selector to assign virtual machines to a node</h3>
+            </header>
+
+                    <div class="gh-card-excerpt">In some circumstances, we want to control which node the virtual machine or pod deploys to. The node selector can be used to assign virtual machine or pod to a node.
+
+
+
+Add label to a node
+
+
+The label can be added to a node from either command line or openshift</div>
+
+            <footer class="gh-card-footer">
+                <span class="gh-card-author">relentlesstorm</span>
+                <time class="gh-card-date" datetime="2022-12-30">Dec 30, 2022</time>
+            </footer>
+        </div>
+    </a>
+</article>                            <article class="gh-card post">
+    <a class="gh-card-link" href="/deploy-application-with-kubernetes-statefulset/">
+            <figure class="gh-card-image">
+                <img
+                    srcset="https://images.unsplash.com/photo-1667372525724-16cede94db0b?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDJ8fGt1YmVybmV0ZXN8ZW58MHx8fHwxNjcyNzc3MDE2&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;300 300w,
+                            https://images.unsplash.com/photo-1667372525724-16cede94db0b?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDJ8fGt1YmVybmV0ZXN8ZW58MHx8fHwxNjcyNzc3MDE2&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720 720w,
+                            https://images.unsplash.com/photo-1667372525724-16cede94db0b?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDJ8fGt1YmVybmV0ZXN8ZW58MHx8fHwxNjcyNzc3MDE2&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;960 960w,
+                            https://images.unsplash.com/photo-1667372525724-16cede94db0b?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDJ8fGt1YmVybmV0ZXN8ZW58MHx8fHwxNjcyNzc3MDE2&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1200 1200w,
+                            https://images.unsplash.com/photo-1667372525724-16cede94db0b?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDJ8fGt1YmVybmV0ZXN8ZW58MHx8fHwxNjcyNzc3MDE2&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000 2000w"
+                    sizes="(max-width: 1200px) 100vw, 1200px"
+                    src="https://images.unsplash.com/photo-1667372525724-16cede94db0b?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDJ8fGt1YmVybmV0ZXN8ZW58MHx8fHwxNjcyNzc3MDE2&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720"
+                    alt="Deploy application with kubernetes statefulset"
+                >
+            </figure>
+
+        <div class="gh-card-wrapper">
+            <header class="gh-card-header">
+                <h3 class="gh-card-title">Deploy application with kubernetes statefulset</h3>
+            </header>
+
+                    <div class="gh-card-excerpt">StatefulSet is the workload API object used to manage stateful applications.
+
+
+Like a Deployment, a StatefulSet manages Pods that are based on an identical container spec. Unlike a Deployment, a StatefulSet maintains a sticky identity for each of their Pods. These pods are created from the same spec, but are</div>
+
+            <footer class="gh-card-footer">
+                <span class="gh-card-author">relentlesstorm</span>
+                <time class="gh-card-date" datetime="2022-12-29">Dec 29, 2022</time>
+            </footer>
+        </div>
+    </a>
+</article>                    </div>
+                </div>
+            </div>
+
+        </main>
+
+    <footer class="gh-foot gh-outer">
+        <div class="gh-foot-inner gh-inner">
+
+            <!--<nav class="gh-foot-menu">
+                <<ul class="nav">
+    <li class="nav-sign-up"><a href="#/portal/">Sign up</a></li>
+</ul>
+
+            </nav>-->
+
+            <div class="gh-copyright">
+                    Flamingbytes © 2023. Powered by <a href="https://ghost.org/" target="_blank" rel="noopener">Ghost</a>
+            </div>
+        </div>
+    </footer>
+
+</div>
+
+    <div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="pswp__bg"></div>
+
+    <div class="pswp__scroll-wrap">
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)"></button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)"></button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="/assets/built/main.min.js?v=e1adcf5302"></script>
+
+
+
+</body>
+
+</html>

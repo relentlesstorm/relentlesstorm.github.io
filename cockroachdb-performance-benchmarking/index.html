@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>CockroachDB performance benchmarking</title>
+    <link rel="stylesheet" href="/assets/built/screen.css?v=e1adcf5302">
+
+    <link rel="canonical" href="https://relentlesstorm.github.io/cockroachdb-performance-benchmarking/" />
+    <meta name="referrer" content="no-referrer-when-downgrade" />
+    
+    <meta property="og:site_name" content="Flamingbytes" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="CockroachDB performance benchmarking" />
+    <meta property="og:description" content="CockroachDB key concepts
+
+
+ * 
+   
+   
+   Range - CockroachDB stores all user data (tables, indexes, etc.) and almost all system data in a giant sorted map of key-value pairs. This keyspace is divided into &quot;ranges&quot;, contiguous chunks of the keyspace, so that every key can always be found in a single range.
+   
+   
+   From" />
+    <meta property="og:url" content="https://relentlesstorm.github.io/cockroachdb-performance-benchmarking/" />
+    <meta property="og:image" content="https://images.unsplash.com/photo-1505570554449-69ce7d4fa36b?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDIxfHwlMjBwZXJmb3JtYW5jZXxlbnwwfHx8fDE2NzI3Nzc0NzQ&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000" />
+    <meta property="article:published_time" content="2022-12-04T00:00:00.000Z" />
+    <meta property="article:modified_time" content="2023-01-04T04:15:38.000Z" />
+    <meta property="article:tag" content="Benchmarking" />
+    
+    <meta property="article:publisher" content="https://www.facebook.com/ghost" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="CockroachDB performance benchmarking" />
+    <meta name="twitter:description" content="CockroachDB key concepts
+
+
+ * 
+   
+   
+   Range - CockroachDB stores all user data (tables, indexes, etc.) and almost all system data in a giant sorted map of key-value pairs. This keyspace is divided into &quot;ranges&quot;, contiguous chunks of the keyspace, so that every key can always be found in a single range.
+   
+   
+   From" />
+    <meta name="twitter:url" content="https://relentlesstorm.github.io/cockroachdb-performance-benchmarking/" />
+    <meta name="twitter:image" content="https://images.unsplash.com/photo-1505570554449-69ce7d4fa36b?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDIxfHwlMjBwZXJmb3JtYW5jZXxlbnwwfHx8fDE2NzI3Nzc0NzQ&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000" />
+    <meta name="twitter:label1" content="Written by" />
+    <meta name="twitter:data1" content="relentlesstorm" />
+    <meta name="twitter:label2" content="Filed under" />
+    <meta name="twitter:data2" content="Benchmarking" />
+    <meta name="twitter:site" content="@ghost" />
+    <meta property="og:image:width" content="2000" />
+    <meta property="og:image:height" content="1333" />
+    
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "publisher": {
+        "@type": "Organization",
+        "name": "Flamingbytes",
+        "url": "https://relentlesstorm.github.io/",
+        "logo": {
+            "@type": "ImageObject",
+            "url": "https://relentlesstorm.github.io/favicon.ico",
+            "width": 48,
+            "height": 48
+        }
+    },
+    "author": {
+        "@type": "Person",
+        "name": "relentlesstorm",
+        "url": "https://relentlesstorm.github.io/author/relentlesstorm/",
+        "sameAs": []
+    },
+    "headline": "CockroachDB performance benchmarking",
+    "url": "https://relentlesstorm.github.io/cockroachdb-performance-benchmarking/",
+    "datePublished": "2022-12-04T00:00:00.000Z",
+    "dateModified": "2023-01-04T04:15:38.000Z",
+    "image": {
+        "@type": "ImageObject",
+        "url": "https://images.unsplash.com/photo-1505570554449-69ce7d4fa36b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxMTc3M3wwfDF8c2VhcmNofDIxfHwlMjBwZXJmb3JtYW5jZXxlbnwwfHx8fDE2NzI3Nzc0NzQ&ixlib=rb-4.0.3&q=80&w=2000",
+        "width": 2000,
+        "height": 1333
+    },
+    "keywords": "Benchmarking",
+    "description": "CockroachDB key concepts\n\n\n * \n   \n   \n   Range - CockroachDB stores all user data (tables, indexes, etc.) and almost all system data in a giant sorted map of key-value pairs. This keyspace is divided into &quot;ranges&quot;, contiguous chunks of the keyspace, so that every key can always be found in a single range.\n   \n   \n   From a SQL perspective, a table and its secondary indexes initially map to a single range, where each key-value pair in the range represents a single row in the table (also called t",
+    "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https://relentlesstorm.github.io/"
+    }
+}
+    </script>
+
+    <meta name="generator" content="Ghost 5.26" />
+    <link rel="alternate" type="application/rss+xml" title="Flamingbytes" href="https://relentlesstorm.github.io/rss/" />
+    
+    <script defer src="https://cdn.jsdelivr.net/ghost/sodo-search@~1.1/umd/sodo-search.min.js" data-key="321a1d1aea33fd468f6e61f563" data-styles="https://cdn.jsdelivr.net/ghost/sodo-search@~1.1/umd/main.css" data-sodo-search="https://relentlesstorm.github.io/" crossorigin="anonymous"></script>
+    <script defer src="/public/cards.min.js?v=e1adcf5302"></script><style>:root {--ghost-accent-color: #6a13ec;}</style>
+    <link rel="stylesheet" type="text/css" href="/public/cards.min.css?v=e1adcf5302">
+</head>
+
+<body class="post-template tag-benchmarking is-head-left-logo has-serif-body">
+<div class="gh-site">
+
+    <header id="gh-head" class="gh-head gh-outer">
+        <div class="gh-head-inner gh-inner">
+            <div class="gh-head-brand">
+                <div class="gh-head-brand-wrapper">
+                    <a class="gh-head-logo" href="https://relentlesstorm.github.io">
+                            Flamingbytes
+                    </a>
+                </div>
+                <button class="gh-search gh-icon-btn" data-ghost-search><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" width="20" height="20"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg></button>
+                <button class="gh-burger"></button>
+            </div>
+
+            <nav class="gh-head-menu">
+                <ul class="nav">
+    <li class="nav-home"><a href="https://relentlesstorm.github.io/">Home</a></li>
+    <li class="nav-tags"><a href="https://relentlesstorm.github.io/tags/">Tags</a></li>
+    <li class="nav-archive"><a href="https://relentlesstorm.github.io/archive/">Archive</a></li>
+    <li class="nav-about"><a href="https://relentlesstorm.github.io/about/">About</a></li>
+</ul>
+
+            </nav>
+
+            <div class="gh-head-actions">
+                        <button class="gh-search gh-icon-btn" data-ghost-search><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" width="20" height="20"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg></button>
+            </div>
+        </div>
+    </header>
+
+    
+<main class="gh-main">
+        <article class="gh-article post tag-benchmarking">
+
+            <header class="gh-article-header gh-canvas">
+                    <a class="gh-article-tag" href="https://relentlesstorm.github.io/tag/benchmarking/">Benchmarking</a>
+
+                <h1 class="gh-article-title">CockroachDB performance benchmarking</h1>
+
+                    <aside class="gh-article-sidebar">
+
+        <div class="gh-author-image-list">
+                <a class="gh-author-image" href="/author/relentlesstorm/">
+                        <div class="gh-author-icon"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="64" height="64"><g fill="none" fill-rule="evenodd"><path d="M3.513 18.998C4.749 15.504 8.082 13 12 13s7.251 2.504 8.487 5.998C18.47 21.442 15.417 23 12 23s-6.47-1.558-8.487-4.002zM12 12c2.21 0 4-2.79 4-5s-1.79-4-4-4-4 1.79-4 4 1.79 5 4 5z" fill="#FFF"/></g></svg>
+</div>
+                </a>
+        </div>
+
+        <div class="gh-author-name-list">
+                <h4 class="gh-author-name">
+                    <a href="/author/relentlesstorm/">relentlesstorm</a>
+                </h4>
+                
+        </div>
+
+        <div class="gh-article-meta">
+            <div class="gh-article-meta-inner">
+                <time class="gh-article-date" datetime="2022-12-04">Dec 4, 2022</time>
+                    <span class="gh-article-meta-sep"></span>
+                    <span class="gh-article-length">12 min</span>
+            </div>
+        </div>
+
+    </aside>
+
+
+                    <figure class="gh-article-image">
+        <img
+            srcset="https://images.unsplash.com/photo-1505570554449-69ce7d4fa36b?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDIxfHwlMjBwZXJmb3JtYW5jZXxlbnwwfHx8fDE2NzI3Nzc0NzQ&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;300 300w,
+                    https://images.unsplash.com/photo-1505570554449-69ce7d4fa36b?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDIxfHwlMjBwZXJmb3JtYW5jZXxlbnwwfHx8fDE2NzI3Nzc0NzQ&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720 720w,
+                    https://images.unsplash.com/photo-1505570554449-69ce7d4fa36b?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDIxfHwlMjBwZXJmb3JtYW5jZXxlbnwwfHx8fDE2NzI3Nzc0NzQ&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;960 960w,
+                    https://images.unsplash.com/photo-1505570554449-69ce7d4fa36b?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDIxfHwlMjBwZXJmb3JtYW5jZXxlbnwwfHx8fDE2NzI3Nzc0NzQ&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1200 1200w,
+                    https://images.unsplash.com/photo-1505570554449-69ce7d4fa36b?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDIxfHwlMjBwZXJmb3JtYW5jZXxlbnwwfHx8fDE2NzI3Nzc0NzQ&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000 2000w"
+            sizes="(max-width: 1200px) 100vw, 1200px"
+            src="https://images.unsplash.com/photo-1505570554449-69ce7d4fa36b?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDIxfHwlMjBwZXJmb3JtYW5jZXxlbnwwfHx8fDE2NzI3Nzc0NzQ&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1200"
+            alt="CockroachDB performance benchmarking"
+        >
+            <figcaption>Photo by <a href="https://unsplash.com/@armstrong99?utm_source=ghost&utm_medium=referral&utm_campaign=api-credit">David Armstrong</a> / <a href="https://unsplash.com/?utm_source=ghost&utm_medium=referral&utm_campaign=api-credit">Unsplash</a></figcaption>
+    </figure>
+            </header>
+
+            <section class="gh-content gh-canvas">
+                <!--kg-card-begin: markdown--><h2 id="cockroachdb-key-concepts">CockroachDB key concepts</h2>
+<ul>
+<li>
+<p>Range -	CockroachDB stores all user data (tables, indexes, etc.) and almost all system data in a giant sorted map of key-value pairs. This keyspace is divided into &quot;ranges&quot;, contiguous chunks of the keyspace, so that every key can always be found in a single range.</p>
+<p>From a SQL perspective, a table and its secondary indexes initially map to a single range, where each key-value pair in the range represents a single row in the table (also called the primary index because the table is sorted by the primary key) or a single row in a secondary index. As soon as that range reaches 512 MiB in size, it splits into two ranges. This process continues for these new ranges as the table and its indexes continue growing.</p>
+<pre><code class="language-shell">[root@host1 ~]# tail -f /var/log/cockroachdb_logs/cockroach.log
+I220908 17:54:02.220498 5523606 kv/kvserver/pkg/kv/kvserver/replica_command.go:420 ⋮ [n1,split,s1,r499/1:‹/Table/113/1/4{394/6…-693/6…}›] 1700  initiating a split of this range at key ‹/Table/113/1/4402/59627› [r501] (‹512 MiB above threshold size 512 MiB›)‹›
+</code></pre>
+</li>
+<li>
+<p>Replica -	CockroachDB replicates each range (3 times by default) and stores each replica on a different node.</p>
+</li>
+</ul>
+<p>Refer to <a href="https://www.cockroachlabs.com/docs/stable/architecture/reads-and-writes-overview.html#cockroachdb-architecture-terms">here</a> for more.</p>
+<p><img src="https://relentlesstorm.github.io/content/images/posts/cockroachdb-arch-terms.png" alt="Image" loading="lazy"></p>
+<h2 id="production-checklist">Production checklist</h2>
+<p>Check <a href="https://www.cockroachlabs.com/docs/stable/recommended-production-settings.html">here</a> for the important recommendations for production deployments of CockroachDB. The following only lists some of the recommended settings.</p>
+<h3 id="memory">Memory</h3>
+<ul>
+<li>Disable Linux memory swapping. Over-allocating memory on production machines can lead to unexpected performance issues when pages have to be read back into memory.</li>
+<li>For production deployments, set --cache to 25% or higher. Avoid setting --cache and --max-sql-memory to a combined value of more than 75% of a machine's total RAM. Doing so increases the risk of memory-related failures.</li>
+</ul>
+<h3 id="storage">Storage</h3>
+<ul>
+<li>The maximum recommended storage capacity per node is 2.5 TiB, regardless of the number of vCPUs.</li>
+<li>Use dedicated volumes for the CockroachDB store. Do not share the store volume with any other I/O activity.</li>
+<li>Store CockroachDB log files in a separate volume from the main data store so that logging is not impacted by I/O throttling.</li>
+<li>The recommended Linux filesystems are ext4 and XFS.</li>
+</ul>
+<h3 id="disk-io">Disk I/O</h3>
+<ul>
+<li>Use sysbench to benchmark IOPS on your cluster. If IOPS decrease, add more nodes to your cluster to increase IOPS.</li>
+<li>Do not use LVM in the I/O path. Dynamically resizing CockroachDB store volumes can result in significant performance degradation. Using LVM snapshots in lieu of CockroachDB backup and restore is also not supported.</li>
+<li>The optimal configuration for striping more than one device is RAID 10. RAID 0 and 1 are also acceptable from a performance perspective.</li>
+</ul>
+<h3 id="network">Network</h3>
+<p>When starting a node, two main flags are used to control its network connections:</p>
+<ul>
+<li>--listen-addr determines which address(es) to listen on for connections from other nodes and clients.</li>
+<li>--advertise-addr determines which address to tell other nodes to use.</li>
+</ul>
+<p><img src="https://relentlesstorm.github.io/content/images/posts/cockroachdb-network.png" alt="Image" loading="lazy"></p>
+<h3 id="load-balancing">Load balancing</h3>
+<p>Each CockroachDB node is an equally suitable SQL gateway to a cluster, but to ensure client performance and reliability, it's important to use load balancing:</p>
+<ul>
+<li>Performance: Load balancers spread client traffic across nodes. This prevents any one node from being overwhelmed by requests and improves overall cluster performance (queries per second).</li>
+<li>Reliability: Load balancers decouple client health from the health of a single CockroachDB node. To ensure that traffic is not directed to failed nodes or nodes that are not ready to receive requests, load balancers should use CockroachDB's readiness health check.</li>
+</ul>
+<h3 id="cache-and-sql-memory-size">Cache and SQL memory size</h3>
+<p>CockroachDB manages its own memory caches, independently of the operating system. These are configured via the --cache and --max-sql-memory flags.</p>
+<p>Each node has a default cache size of 128MiB that is passively consumed. The default was chosen to facilitate development and testing, where users are likely to run multiple CockroachDB nodes on a single machine. Increasing the cache size will generally improve the node's read performance.</p>
+<p>Each node has a default SQL memory size of 25%. This memory is used as-needed by active operations to store temporary data for SQL queries.</p>
+<ul>
+<li>Increasing a node's cache size will improve the node's read performance.</li>
+<li>Increasing a node's SQL memory size will increase the number of simultaneous client connections it allows, as well as the node's capacity for in-memory processing of rows when using ORDER BY, GROUP BY, DISTINCT, joins, and window functions.</li>
+</ul>
+<p>You can check cache size and SQL memory pool size in the log. In the following example output, it matches with the specified 25% cache and SQL memory size setting.</p>
+<pre><code class="language-shell">$ vim cockroach.log
+I220905 17:49:33.671304 1 server/config.go:487 ⋮ [n?] 6  system total memory: 1008 GiB
+I220905 17:49:33.671318 1 server/config.go:489 ⋮ [n?] 7  server configuration:
+I220905 17:49:33.671318 1 server/config.go:489 ⋮ [n?] 7 +‹max offset             500000000›
+I220905 17:49:33.671318 1 server/config.go:489 ⋮ [n?] 7 +‹cache size             252 GiB›
+I220905 17:49:33.671318 1 server/config.go:489 ⋮ [n?] 7 +‹SQL memory pool size   252 GiB›
+</code></pre>
+<h2 id="cockroachdb-workloads">CockroachDB workloads</h2>
+<p><img src="https://relentlesstorm.github.io/content/images/posts/rockroachdb_workloads.png" alt="Image" loading="lazy"></p>
+<h3 id="bank-workload">bank workload</h3>
+<pre><code class="language-shell">$ cockroach workload init bank 'postgresql://root@host1:26257?sslmode=disable'
+I220831 23:52:14.593170 1 workload/workloadsql/dataload.go:146  [-] 1  imported bank (0s, 1000 rows)
+I220831 23:52:14.609421 1 workload/workloadsql/workloadsql.go:136  [-] 2  starting 9 splits
+</code></pre>
+<pre><code class="language-shell">$ cockroach workload run bank --duration=1m 'postgresql://root@host1:26257?sslmode=disable'
+I220831 23:52:55.378492 1 workload/cli/run.go:414  [-] 1  creating load generator...
+I220831 23:52:55.380594 1 workload/cli/run.go:445  [-] 2  creating load generator... done (took 2.103665ms)
+_elapsed___errors__ops/sec(inst)___ops/sec(cum)__p50(ms)__p95(ms)__p99(ms)_pMax(ms)
+    1.0s        0         2929.8         2936.4      3.0     15.2     50.3    234.9 transfer
+    2.0s        0         3387.3         3161.8      3.4     13.6     23.1     54.5 transfer
+    3.0s        0         2755.2         3026.3      3.9     13.6     23.1    302.0 transfer
+    4.0s        0         3295.5         3093.6      3.3     13.6     33.6    469.8 transfer
+    5.0s        0         3536.5         3182.2      3.5     12.1     18.9     35.7 transfer
+    6.0s        0         3558.1         3244.8      3.5     11.0     21.0     39.8 transfer
+    7.0s        0         3566.9         3290.8      3.7     11.0     17.8     39.8 transfer
+    8.0s        0         3317.6         3294.2      3.7     12.6     24.1     62.9 transfer
+    9.0s        0         2992.9         3260.7      4.1     14.7     22.0     39.8 transfer
+   10.0s        0         3628.2         3297.4      3.5     11.5     19.9     39.8 transfer
+   11.0s        0         3604.5         3325.3      3.5     11.5     17.8     37.7 transfer
+   12.0s        0         3668.4         3353.9      3.5     11.0     17.8     31.5 transfer
+   13.0s        0         3485.9         3364.1      3.7     11.5     18.9     31.5 transfer
+   14.0s        0         3377.9         3365.1      3.7     12.6     21.0     56.6 transfer
+   15.0s        0         3084.4         3346.3      4.1     13.6     21.0     92.3 transfer
+   16.0s        0         3650.1         3365.3      3.4     11.5     17.8     44.0 transfer
+   17.0s        0         3662.7         3382.8      3.5     11.5     17.8     37.7 transfer
+   18.0s        0         3461.8         3387.2      3.7     11.0     19.9    159.4 transfer
+   19.0s        0         3426.3         3389.3      3.7     12.1     19.9     41.9 transfer
+   20.0s        0         3196.0         3379.6      3.9     13.1     19.9     35.7 transfer
+&lt;omitted..&gt;
+
+_elapsed___errors_____ops(total)___ops/sec(cum)__avg(ms)__p50(ms)__p95(ms)__p99(ms)_pMax(ms)__total
+   60.0s        0         206551         3442.5      4.6      3.7     12.1     19.9    469.8  transfer
+
+_elapsed___errors_____ops(total)___ops/sec(cum)__avg(ms)__p50(ms)__p95(ms)__p99(ms)_pMax(ms)__result
+   60.0s        0         206551         3442.5      4.6      3.7     12.1     19.9    469.8
+</code></pre>
+<h3 id="tpc-c-workload">TPC-C workload</h3>
+<blockquote>
+<p>--warehouses</p>
+<blockquote>
+<p>The number of warehouses for loading initial data, at approximately 200 MB per warehouse.<br>
+Applicable commands: init or run<br>
+Default: 1</p>
+</blockquote>
+</blockquote>
+<blockquote>
+<p>--workers</p>
+<blockquote>
+<p>The number of concurrent workers.<br>
+Applicable commands: init or run<br>
+Default: --warehouses * 10</p>
+</blockquote>
+</blockquote>
+<p>The number os wareshouses can be specified by &quot;--warehouses&quot; option. By default, only one warehouse is created.</p>
+<pre><code class="language-shell">$ cockroach workload init tpcc 'postgresql://root@host1:26257?sslmode=disable'
+Error: failed insert into warehouse: pq: duplicate key value violates unique constraint &quot;warehouse_pkey&quot;
+
+$ cockroach workload init tpcc 'postgresql://root@host1:26257?sslmode=disable' --drop
+I220901 00:32:56.365593 1 workload/workloadsql/dataload.go:146  [-] 1  imported warehouse (0s, 1 rows)
+I220901 00:32:56.372727 1 workload/workloadsql/dataload.go:146  [-] 2  imported district (0s, 10 rows)
+I220901 00:32:57.034349 1 workload/workloadsql/dataload.go:146  [-] 3  imported customer (1s, 30000 rows)
+I220901 00:32:57.248382 1 workload/workloadsql/dataload.go:146  [-] 4  imported history (0s, 30000 rows)
+I220901 00:32:57.462320 1 workload/workloadsql/dataload.go:146  [-] 5  imported order (0s, 30000 rows)
+I220901 00:32:57.490476 1 workload/workloadsql/dataload.go:146  [-] 6  imported new_order (0s, 9000 rows)
+I220901 00:32:57.921658 1 workload/workloadsql/dataload.go:146  [-] 7  imported item (0s, 100000 rows)
+I220901 00:32:59.267268 1 workload/workloadsql/dataload.go:146  [-] 8  imported stock (1s, 100000 rows)
+I220901 00:33:00.916392 1 workload/workloadsql/dataload.go:146  [-] 9  imported order_line (2s, 300343 rows)
+</code></pre>
+<pre><code class="language-shell">$ cockroach workload run tpcc --duration=10m 'postgresql://root@host1:26257?sslmode=disable'
+I220901 00:34:17.147411 1 workload/cli/run.go:414  [-] 1  creating load generator...
+Initializing 2 connections...
+Initializing 0 idle connections...
+Initializing 10 workers and preparing statements...
+I220901 00:34:17.151817 1 workload/cli/run.go:445  [-] 2  creating load generator... done (took 4.411152ms)
+&lt;omitted..&gt;
+
+_elapsed___errors_____ops(total)___ops/sec(cum)__avg(ms)__p50(ms)__p95(ms)__p99(ms)_pMax(ms)__total
+  600.0s        0             12            0.0     32.6     31.5     44.0     44.0     44.0  delivery
+
+_elapsed___errors_____ops(total)___ops/sec(cum)__avg(ms)__p50(ms)__p95(ms)__p99(ms)_pMax(ms)__total
+  600.0s        0            120            0.2     17.9     17.8     26.2     41.9     54.5  newOrder
+
+_elapsed___errors_____ops(total)___ops/sec(cum)__avg(ms)__p50(ms)__p95(ms)__p99(ms)_pMax(ms)__total
+  600.0s        0             13            0.0      6.7      5.8     14.2     15.2     15.2  orderStatus
+
+_elapsed___errors_____ops(total)___ops/sec(cum)__avg(ms)__p50(ms)__p95(ms)__p99(ms)_pMax(ms)__total
+  600.0s        0            131            0.2     10.8     11.0     14.7     24.1     29.4  payment
+
+_elapsed___errors_____ops(total)___ops/sec(cum)__avg(ms)__p50(ms)__p95(ms)__p99(ms)_pMax(ms)__total
+  600.0s        0             13            0.0     10.8     10.5     15.7     15.7     15.7  stockLevel
+
+_elapsed___errors_____ops(total)___ops/sec(cum)__avg(ms)__p50(ms)__p95(ms)__p99(ms)_pMax(ms)__result
+  600.0s        0            289            0.5     14.4     13.1     28.3     41.9     54.5
+Audit check 9.2.1.7: SKIP: not enough delivery transactions to be statistically significant
+Audit check 9.2.2.5.1: SKIP: not enough orders to be statistically significant
+Audit check 9.2.2.5.2: SKIP: not enough orders to be statistically significant
+Audit check 9.2.2.5.5: SKIP: not enough payments to be statistically significant
+Audit check 9.2.2.5.6: SKIP: not enough order status transactions to be statistically significant
+Audit check 9.2.2.5.3: PASS
+Audit check 9.2.2.5.4: PASS
+
+_elapsed_______tpmC____efc__avg(ms)__p50(ms)__p90(ms)__p95(ms)__p99(ms)_pMax(ms)
+  600.0s       12.0  93.3%     17.9     17.8     23.1     26.2     41.9     54.5
+</code></pre>
+<h3 id="ycsb-workload">YCSB workload</h3>
+<pre><code class="language-shell">$ cockroach workload init ycsb 'postgresql://root@host1:26257?sslmode=disable'
+I220831 23:57:53.909658 1 workload/workloadsql/dataload.go:146  [-] 1  imported usertable (2s, 10000 rows)
+</code></pre>
+<pre><code class="language-shell">$ cockroach workload run ycsb --duration=10m 'postgresql://root@host1:26257?sslmode=disable'
+I220831 23:58:24.410319 1 workload/cli/run.go:414  [-] 1  creating load generator...
+I220831 23:58:24.427528 1 workload/cli/run.go:445  [-] 2  creating load generator... done (took 17.212701ms)
+_elapsed___errors__ops/sec(inst)___ops/sec(cum)__p50(ms)__p95(ms)__p99(ms)_pMax(ms)
+    1.0s        0        11011.5        11243.7      1.1      2.4      3.8     11.0 read
+    1.0s        0          581.7          593.9      3.0      5.5      7.3     12.6 update
+    2.0s        0        12105.1        11674.4      1.1      1.8      3.4     10.0 read
+    2.0s        0          636.9          615.4      2.8      3.9      6.6     11.0 update
+    3.0s        0        11590.6        11646.5      1.1      2.0      4.5     14.2 read
+    3.0s        0          607.1          612.7      2.8      6.0      9.4     12.1 update
+    4.0s        0        11813.5        11688.2      1.1      1.9      3.5     13.1 read
+    4.0s        0          622.0          615.0      2.8      4.5      7.6     13.6 update
+    5.0s        0        11959.5        11742.5      1.1      2.0      3.3      8.1 read
+    5.0s        0          607.0          613.4      2.6      4.7      7.1     12.1 update
+    6.0s        0        12186.2        11816.5      1.0      1.8      3.5     12.6 read
+    6.0s        0          638.0          617.5      2.6      4.1     10.0     16.8 update
+    7.0s        0        11815.8        11816.3      1.1      2.0      3.7      8.4 read
+    7.0s        0          646.0          621.6      2.8      4.7      6.8      9.4 update
+    8.0s        0        11850.8        11820.6      1.1      2.0      3.3      7.6 read
+    8.0s        0          617.9          621.1      2.8      4.5      6.6      9.4 update
+    9.0s        0        11713.5        11808.7      1.1      2.0      3.9     11.0 read
+    9.0s        0          609.1          619.8      2.8      4.5      7.6     11.5 update
+   10.0s        0        11949.6        11822.8      1.1      2.0      3.3     13.1 read
+   10.0s        0          622.0          620.0      2.8      4.2      6.0      8.4 update
+
+&lt;omitted..&gt;
+
+_elapsed___errors_____ops(total)___ops/sec(cum)__avg(ms)__p50(ms)__p95(ms)__p99(ms)_pMax(ms)__total
+  600.0s        0        8576709        14294.5      1.0      1.0      1.6      2.9     62.9  read
+
+_elapsed___errors_____ops(total)___ops/sec(cum)__avg(ms)__p50(ms)__p95(ms)__p99(ms)_pMax(ms)__total
+  600.0s        0         451026          751.7      2.5      2.5      3.8      6.6     27.3  update
+
+_elapsed___errors_____ops(total)___ops/sec(cum)__avg(ms)__p50(ms)__p95(ms)__p99(ms)_pMax(ms)__result
+  600.0s        0        9027735        15046.2      1.1      1.0      2.2      3.5     62.9
+</code></pre>
+<h2 id="restart-cockroachdb-cluster">Restart CockroachDB cluster</h2>
+<ol>
+<li>Stop the process on each node</li>
+</ol>
+<pre><code class="language-shell">$ ps -ef | grep cock | grep -v grep
+root     12217     1 99 Sep06 ?        2-20:28:09 cockroach start --log-dir=/var/log/cockroachdb_logs --store=/mnt/cockroachdb_mnt1 --insecure --advertise-addr=host1 --join=host1,host2,host3 --cache=.25 --max-sql-memory=.25
+
+$ kill -9 12217
+$ ps -ef | grep cock | grep -v grep
+</code></pre>
+<ol start="2">
+<li>Start the process on each node</li>
+</ol>
+<pre><code class="language-shell">$ cockroach start --store=/mnt/cockroanchdb_mnt1 --insecure --advertise-addr=host1 --join=host1,host2,host3 --cache=.25 -max-sql-memory=.25 --background
+</code></pre>
+<h2 id="cockroachdb-commands">CockroachDB commands</h2>
+<p>List node IDs:</p>
+<pre><code class="language-shell">$ cockroach node ls --insecure
+  id
+------
+   1
+   2
+   3
+(3 rows)
+</code></pre>
+<p>Show node status:</p>
+<pre><code class="language-shell">$ cockroach node status --insecure
+  id |       address       |     sql_address     |  build  |         started_at         |         updated_at         | locality | is_available | is_live
+-----+---------------------+---------------------+---------+----------------------------+----------------------------+----------+--------------+----------
+   1 | host1:26257 | host1:26257 | v22.1.6 | 2022-09-03 16:24:12.001861 | 2022-09-03 22:23:09.022236 |          | true         | true
+   2 | host2:26257 | host2:26257 | v22.1.6 | 2022-09-03 16:24:12.04249  | 2022-09-03 22:23:09.048582 |          | true         | true
+   3 | host3:26257 | host3:26257 | v22.1.6 | 2022-09-03 16:24:12.390521 | 2022-09-03 22:23:09.402081 |          | true         | true
+(3 rows)
+</code></pre>
+<p>Show status and range/replica details:</p>
+<pre><code class="language-shell">$ cockroach node status --ranges --insecure
+  id |       address       |     sql_address     |  build  |         started_at         |         updated_at         | locality | is_available | is_live | replicas_leaders | replicas_leaseholders | ranges | ranges_unavailable | ranges_underreplicated
+-----+---------------------+---------------------+---------+----------------------------+----------------------------+----------+--------------+---------
+   1 | host1:26257 | host1:26257 | v22.1.6 | 2022-09-03 16:24:12.001861 | 2022-09-03 22:23:36.022463 |          | true         | true    |         306 |                   306 |    941 |                  0 |                      0
+   2 | host2:26257 | host2:26257 | v22.1.6 | 2022-09-03 16:24:12.04249  | 2022-09-03 22:23:36.048508 |          | true         | true    |              310 |                   310 |    941 |                  0 |                      0
+   3 | host3:26257 | host3:26257 | v22.1.6 | 2022-09-03 16:24:12.390521 | 2022-09-03 22:23:36.40421  |          | true         | true    |              325 |                   325 |    941 |                  0 |                      0
+(3 rows)
+</code></pre>
+<p>Show status and disk usage details:</p>
+<pre><code class="language-shell">$ cockroach node status --stats --insecure
+  id |       address       |     sql_address     |  build  |         started_at         |         updated_at         | locality | is_available | is_live |  live_bytes  |  key_bytes  | value_bytes  | intent_bytes | system_bytes
+-----+---------------------+---------------------+---------+----------------------------+----------------------------+----------+--------------+---------+--------------+-------------+--------------+--------------+---------------
+   1 | host1:26257 | host1:26257 | v22.1.6 | 2022-09-03 16:24:12.001861 | 2022-09-03 22:23:45.022008 |          | true         | true    | 246665681135 | 47930398573 | 220956161393 |        40331 |       812555
+   2 | host2:26257 | host2:26257 | v22.1.6 | 2022-09-03 16:24:12.04249  | 2022-09-03 22:23:45.048777 |          | true         | true    | 246665683880 | 47930401894 | 220956192532 |        28025 |       817028
+   3 | host3:26257 | host3:26257 | v22.1.6 | 2022-09-03 16:24:12.390521 | 2022-09-03 22:23:45.40156  |          | true         | true    | 246666008478 | 47930560065 | 220957658233 |        74382 |       741028
+(3 rows)
+</code></pre>
+<p>Show status and decommissioning details for active and inactive nodes:</p>
+<pre><code class="language-shell">$ cockroach node status --decommission --insecure
+  id |       address       |     sql_address     |  build  |         started_at         |         updated_at         | locality | is_available | is_live | gossiped_replicas | is_decommissioning | membership | is_draining
+-----+---------------------+---------------------+---------+----------------------------+----------------------------+----------+--------------+---------
+   1 | host1:26257 | host1:26257 | v22.1.6 | 2022-09-03 16:24:12.001861 | 2022-09-03 22:24:03.043432 |          | true         | true    |               941 | false              | active     | false
+   2 | host2:26257 | host2:26257 | v22.1.6 | 2022-09-03 16:24:12.04249  | 2022-09-03 22:24:03.048948 |          | true         | true    |               941 | false              | active     | false
+   3 | host3:26257 | host3:26257 | v22.1.6 | 2022-09-03 16:24:12.390521 | 2022-09-03 22:24:03.401953 |          | true         | true    |               941 | false              | active     | false
+(3 rows)
+</code></pre>
+<p>Show complete status details for active and inactive nodes:</p>
+<pre><code class="language-shell">$ cockroach node status --all --insecure
+  id |       address       |     sql_address     |  build  |         started_at         |         updated_at         | locality | is_available | is_live | replicas_leaders | replicas_leaseholders | ranges | ranges_unavailable | ranges_underreplicated |  live_bytes  |  key_bytes  | value_bytes  | intent_bytes | system_bytes | gossiped_replicas | is_decommissioning | membership | is_draining
+-----+---------------------+---------------------+---------+----------------------------+----------------------------+----------+--------------+---------
+   1 | host1:26257 | host1:26257 | v22.1.6 | 2022-09-03 16:24:12.001861 | 2022-09-03 22:24:07.539077 |          |         true |    true |              306 |                   306 |    942 |                  0 |                      0 | 246677946612 | 47939212836 | 221027696131 |        81398 |       722359 |        941        |              false |   active   |    false
+   2 | host2:26257 | host2:26257 | v22.1.6 | 2022-09-03 16:24:12.04249  | 2022-09-03 22:24:07.548886 |          |         true |    true |              311 |                   311 |    942 |                  0 |                      0 | 246677952989 | 47939228198 | 221027812276 |        67816 |       731258 |        941        |              false |   active   |    false
+   3 | host3:26257 | host3:26257 | v22.1.6 | 2022-09-03 16:24:12.390521 | 2022-09-03 22:24:07.901765 |          |         true |    true |              325 |                   325 |    942 |                  0 |                      0 | 246678252011 | 47939394591 | 221029217819 |        55249 |       869542 |        941        |              false |   active   |    false
+(3 rows)
+</code></pre>
+<p>Show status details for a specific node:</p>
+<pre><code class="language-shell">$ cockroach node status 1 --insecure
+  id |       address       |     sql_address     |  build  |         started_at         |         updated_at         | locality | is_available | is_live
+-----+---------------------+---------------------+---------+----------------------------+----------------------------+----------+--------------+----------
+   1 | host1:26257 | host1:26257 | v22.1.6 | 2022-09-03 16:24:12.001861 | 2022-09-03 22:24:30.044382 |          | true         | true
+(1 row)
+</code></pre>
+<h2 id="reference">Reference</h2>
+<ul>
+<li><a href="https://github.com/cockroachdb/cockroach/blob/master/docs/design.md">https://github.com/cockroachdb/cockroach/blob/master/docs/design.md</a></li>
+</ul>
+<!--kg-card-end: markdown-->
+            </section>
+
+        </article>
+
+                <div class="gh-read-next gh-canvas">
+                <section class="gh-pagehead">
+                    <h4 class="gh-pagehead-title">Read next</h4>
+                </section>
+
+                <div class="gh-topic gh-topic-grid">
+                    <div class="gh-topic-content">
+                            <article class="gh-card post featured">
+    <a class="gh-card-link" href="/crdb-sysbench/">
+            <figure class="gh-card-image">
+                <img
+                    srcset="https://images.unsplash.com/photo-1597852074816-d933c7d2b988?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDR8fGRhdGFiYXNlfGVufDB8fHx8MTY3MjQ2Mjg3Mg&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;300 300w,
+                            https://images.unsplash.com/photo-1597852074816-d933c7d2b988?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDR8fGRhdGFiYXNlfGVufDB8fHx8MTY3MjQ2Mjg3Mg&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720 720w,
+                            https://images.unsplash.com/photo-1597852074816-d933c7d2b988?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDR8fGRhdGFiYXNlfGVufDB8fHx8MTY3MjQ2Mjg3Mg&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;960 960w,
+                            https://images.unsplash.com/photo-1597852074816-d933c7d2b988?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDR8fGRhdGFiYXNlfGVufDB8fHx8MTY3MjQ2Mjg3Mg&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1200 1200w,
+                            https://images.unsplash.com/photo-1597852074816-d933c7d2b988?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDR8fGRhdGFiYXNlfGVufDB8fHx8MTY3MjQ2Mjg3Mg&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000 2000w"
+                    sizes="(max-width: 1200px) 100vw, 1200px"
+                    src="https://images.unsplash.com/photo-1597852074816-d933c7d2b988?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDR8fGRhdGFiYXNlfGVufDB8fHx8MTY3MjQ2Mjg3Mg&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720"
+                    alt="Use sysbench for CockroachDB performance benchmarking"
+                >
+            </figure>
+
+        <div class="gh-card-wrapper">
+            <header class="gh-card-header">
+                <h3 class="gh-card-title">Use sysbench for CockroachDB performance benchmarking</h3>
+            </header>
+
+                    <div class="gh-card-excerpt">Intro
+
+
+Cockroach uses TPC-C as the official OLTP workload benchmark since it's a more realistic measurement by modeling the real world applications.
+
+
+However, sysbench is a straight-forward throughput/latency benchmarking tool. It is a scriptable multi-threaded benchmark tool based on LuaJIT. It is most frequently used for database benchmarks, but</div>
+
+            <footer class="gh-card-footer">
+                <span class="gh-card-author">relentlesstorm</span>
+                <time class="gh-card-date" datetime="2022-12-08">Dec 8, 2022</time>
+            </footer>
+        </div>
+    </a>
+</article>                            <article class="gh-card post featured">
+    <a class="gh-card-link" href="/benchmark-es-cluster-with-rally/">
+            <figure class="gh-card-image">
+                <img
+                    srcset="https://images.unsplash.com/photo-1496096265110-f83ad7f96608?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDMwfHx0ZWNobm9sb2d5fGVufDB8fHx8MTY3MjQ2NDY5NQ&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;300 300w,
+                            https://images.unsplash.com/photo-1496096265110-f83ad7f96608?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDMwfHx0ZWNobm9sb2d5fGVufDB8fHx8MTY3MjQ2NDY5NQ&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720 720w,
+                            https://images.unsplash.com/photo-1496096265110-f83ad7f96608?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDMwfHx0ZWNobm9sb2d5fGVufDB8fHx8MTY3MjQ2NDY5NQ&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;960 960w,
+                            https://images.unsplash.com/photo-1496096265110-f83ad7f96608?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDMwfHx0ZWNobm9sb2d5fGVufDB8fHx8MTY3MjQ2NDY5NQ&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1200 1200w,
+                            https://images.unsplash.com/photo-1496096265110-f83ad7f96608?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDMwfHx0ZWNobm9sb2d5fGVufDB8fHx8MTY3MjQ2NDY5NQ&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000 2000w"
+                    sizes="(max-width: 1200px) 100vw, 1200px"
+                    src="https://images.unsplash.com/photo-1496096265110-f83ad7f96608?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDMwfHx0ZWNobm9sb2d5fGVufDB8fHx8MTY3MjQ2NDY5NQ&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720"
+                    alt="Benchmarking Elasticsearch cluster with Rally"
+                >
+            </figure>
+
+        <div class="gh-card-wrapper">
+            <header class="gh-card-header">
+                <h3 class="gh-card-title">Benchmarking Elasticsearch cluster with Rally</h3>
+            </header>
+
+                    <div class="gh-card-excerpt">Install Rally on each node
+
+
+Prerequisites
+
+
+$ yum update
+$ yum install openssl-devel bzip2-devel libffi-devel
+$ yum groupinstall "Development Tools"
+
+
+
+Install Python 3.8+
+
+
+$ wget https://www.python.org/ftp/python/3.8.15/Python-3.8.15.tar.xz
+$ tar xf Python-3.8.15.tar.xz
+$ vim Python-3.8.15/Modules/Setup
+SSL=</div>
+
+            <footer class="gh-card-footer">
+                <span class="gh-card-author">relentlesstorm</span>
+                <time class="gh-card-date" datetime="2022-10-26">Oct 26, 2022</time>
+            </footer>
+        </div>
+    </a>
+</article>                            <article class="gh-card post">
+    <a class="gh-card-link" href="/getting-started-with-esrally/">
+            <figure class="gh-card-image">
+                <img
+                    srcset="https://images.unsplash.com/photo-1496065187959-7f07b8353c55?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDd8fHRlY2hub2xvZ3l8ZW58MHx8fHwxNjcyNDY0Njk1&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;300 300w,
+                            https://images.unsplash.com/photo-1496065187959-7f07b8353c55?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDd8fHRlY2hub2xvZ3l8ZW58MHx8fHwxNjcyNDY0Njk1&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720 720w,
+                            https://images.unsplash.com/photo-1496065187959-7f07b8353c55?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDd8fHRlY2hub2xvZ3l8ZW58MHx8fHwxNjcyNDY0Njk1&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;960 960w,
+                            https://images.unsplash.com/photo-1496065187959-7f07b8353c55?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDd8fHRlY2hub2xvZ3l8ZW58MHx8fHwxNjcyNDY0Njk1&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1200 1200w,
+                            https://images.unsplash.com/photo-1496065187959-7f07b8353c55?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDd8fHRlY2hub2xvZ3l8ZW58MHx8fHwxNjcyNDY0Njk1&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000 2000w"
+                    sizes="(max-width: 1200px) 100vw, 1200px"
+                    src="https://images.unsplash.com/photo-1496065187959-7f07b8353c55?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDd8fHRlY2hub2xvZ3l8ZW58MHx8fHwxNjcyNDY0Njk1&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720"
+                    alt="Getting started with Elastic Rally benchmark"
+                >
+            </figure>
+
+        <div class="gh-card-wrapper">
+            <header class="gh-card-header">
+                <h3 class="gh-card-title">Getting started with Elastic Rally benchmark</h3>
+            </header>
+
+                    <div class="gh-card-excerpt">Rally is the macrobenchmarking framework for Elasticsearch. This post follows the instructions here to install Rally and run the very first benchmark(aka race).
+
+
+
+Install python
+
+
+Python 3.8+ including pip3 is required for Rally.
+
+
+$ yum update
+$ yum install openssl-devel bzip2-devel libffi-devel
+$ yum groupinstall "Development Tools"
+
+$ curl -O https://www.</div>
+
+            <footer class="gh-card-footer">
+                <span class="gh-card-author">relentlesstorm</span>
+                <time class="gh-card-date" datetime="2022-10-25">Oct 25, 2022</time>
+            </footer>
+        </div>
+    </a>
+</article>                    </div>
+                </div>
+            </div>
+
+        </main>
+
+    <footer class="gh-foot gh-outer">
+        <div class="gh-foot-inner gh-inner">
+
+            <!--<nav class="gh-foot-menu">
+                <<ul class="nav">
+    <li class="nav-sign-up"><a href="#/portal/">Sign up</a></li>
+</ul>
+
+            </nav>-->
+
+            <div class="gh-copyright">
+                    Flamingbytes © 2023. Powered by <a href="https://ghost.org/" target="_blank" rel="noopener">Ghost</a>
+            </div>
+        </div>
+    </footer>
+
+</div>
+
+    <div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="pswp__bg"></div>
+
+    <div class="pswp__scroll-wrap">
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)"></button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)"></button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="/assets/built/main.min.js?v=e1adcf5302"></script>
+
+
+
+</body>
+
+</html>

@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>btrfs - A modern copy on write(CoW) filesystem for Linux</title>
+    <link rel="stylesheet" href="/assets/built/screen.css?v=e1adcf5302">
+
+    <link rel="canonical" href="https://relentlesstorm.github.io/btrfs-a-modern-copy-on-write-cow-filesystem-for-linux/" />
+    <meta name="referrer" content="no-referrer-when-downgrade" />
+    
+    <meta property="og:site_name" content="Flamingbytes" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="btrfs - A modern copy on write(CoW) filesystem for Linux" />
+    <meta property="og:description" content="Introduction
+
+
+btrfs is a modern copy on write (CoW) filesystem for Linux aimed at implementing advanced features while also focusing on fault tolerance, repair and easy administration. Its main features and benefits are:
+
+
+ * Snapshots which do not make the full copy of files
+ * RAID - support for software-based RAID 0," />
+    <meta property="og:url" content="https://relentlesstorm.github.io/btrfs-a-modern-copy-on-write-cow-filesystem-for-linux/" />
+    <meta property="og:image" content="https://images.unsplash.com/photo-1639762681485-074b7f938ba0?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDc5fHxuZXR3b3JrfGVufDB8fHx8MTY3Mjc5MDY4Mw&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000" />
+    <meta property="article:published_time" content="2021-08-03T00:00:00.000Z" />
+    <meta property="article:modified_time" content="2023-01-04T00:11:59.000Z" />
+    <meta property="article:tag" content="Cloud Storage" />
+    
+    <meta property="article:publisher" content="https://www.facebook.com/ghost" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="btrfs - A modern copy on write(CoW) filesystem for Linux" />
+    <meta name="twitter:description" content="Introduction
+
+
+btrfs is a modern copy on write (CoW) filesystem for Linux aimed at implementing advanced features while also focusing on fault tolerance, repair and easy administration. Its main features and benefits are:
+
+
+ * Snapshots which do not make the full copy of files
+ * RAID - support for software-based RAID 0," />
+    <meta name="twitter:url" content="https://relentlesstorm.github.io/btrfs-a-modern-copy-on-write-cow-filesystem-for-linux/" />
+    <meta name="twitter:image" content="https://images.unsplash.com/photo-1639762681485-074b7f938ba0?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDc5fHxuZXR3b3JrfGVufDB8fHx8MTY3Mjc5MDY4Mw&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000" />
+    <meta name="twitter:label1" content="Written by" />
+    <meta name="twitter:data1" content="relentlesstorm" />
+    <meta name="twitter:label2" content="Filed under" />
+    <meta name="twitter:data2" content="Cloud Storage" />
+    <meta name="twitter:site" content="@ghost" />
+    <meta property="og:image:width" content="2000" />
+    <meta property="og:image:height" content="1125" />
+    
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "publisher": {
+        "@type": "Organization",
+        "name": "Flamingbytes",
+        "url": "https://relentlesstorm.github.io/",
+        "logo": {
+            "@type": "ImageObject",
+            "url": "https://relentlesstorm.github.io/favicon.ico",
+            "width": 48,
+            "height": 48
+        }
+    },
+    "author": {
+        "@type": "Person",
+        "name": "relentlesstorm",
+        "url": "https://relentlesstorm.github.io/author/relentlesstorm/",
+        "sameAs": []
+    },
+    "headline": "btrfs - A modern copy on write(CoW) filesystem for Linux",
+    "url": "https://relentlesstorm.github.io/btrfs-a-modern-copy-on-write-cow-filesystem-for-linux/",
+    "datePublished": "2021-08-03T00:00:00.000Z",
+    "dateModified": "2023-01-04T00:11:59.000Z",
+    "image": {
+        "@type": "ImageObject",
+        "url": "https://images.unsplash.com/photo-1639762681485-074b7f938ba0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxMTc3M3wwfDF8c2VhcmNofDc5fHxuZXR3b3JrfGVufDB8fHx8MTY3Mjc5MDY4Mw&ixlib=rb-4.0.3&q=80&w=2000",
+        "width": 2000,
+        "height": 1125
+    },
+    "keywords": "Cloud Storage",
+    "description": "Introduction\n\n\nbtrfs is a modern copy on write (CoW) filesystem for Linux aimed at implementing advanced features while also focusing on fault tolerance, repair and easy administration. Its main features and benefits are:\n\n\n * Snapshots which do not make the full copy of files\n * RAID - support for software-based RAID 0, RAID 1, RAID 10\n * Self-healing - checksums for data and metadata, automatic detection of silent data corruptions\n\n\nDevelopment of Btrfs started in 2007. Since that time, Btrfs ",
+    "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https://relentlesstorm.github.io/"
+    }
+}
+    </script>
+
+    <meta name="generator" content="Ghost 5.26" />
+    <link rel="alternate" type="application/rss+xml" title="Flamingbytes" href="https://relentlesstorm.github.io/rss/" />
+    
+    <script defer src="https://cdn.jsdelivr.net/ghost/sodo-search@~1.1/umd/sodo-search.min.js" data-key="321a1d1aea33fd468f6e61f563" data-styles="https://cdn.jsdelivr.net/ghost/sodo-search@~1.1/umd/main.css" data-sodo-search="https://relentlesstorm.github.io/" crossorigin="anonymous"></script>
+    <script defer src="/public/cards.min.js?v=e1adcf5302"></script><style>:root {--ghost-accent-color: #6a13ec;}</style>
+    <link rel="stylesheet" type="text/css" href="/public/cards.min.css?v=e1adcf5302">
+</head>
+
+<body class="post-template tag-cloud-storage is-head-left-logo has-serif-body">
+<div class="gh-site">
+
+    <header id="gh-head" class="gh-head gh-outer">
+        <div class="gh-head-inner gh-inner">
+            <div class="gh-head-brand">
+                <div class="gh-head-brand-wrapper">
+                    <a class="gh-head-logo" href="https://relentlesstorm.github.io">
+                            Flamingbytes
+                    </a>
+                </div>
+                <button class="gh-search gh-icon-btn" data-ghost-search><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" width="20" height="20"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg></button>
+                <button class="gh-burger"></button>
+            </div>
+
+            <nav class="gh-head-menu">
+                <ul class="nav">
+    <li class="nav-home"><a href="https://relentlesstorm.github.io/">Home</a></li>
+    <li class="nav-tags"><a href="https://relentlesstorm.github.io/tags/">Tags</a></li>
+    <li class="nav-archive"><a href="https://relentlesstorm.github.io/archive/">Archive</a></li>
+    <li class="nav-about"><a href="https://relentlesstorm.github.io/about/">About</a></li>
+</ul>
+
+            </nav>
+
+            <div class="gh-head-actions">
+                        <button class="gh-search gh-icon-btn" data-ghost-search><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" width="20" height="20"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg></button>
+            </div>
+        </div>
+    </header>
+
+    
+<main class="gh-main">
+        <article class="gh-article post tag-cloud-storage">
+
+            <header class="gh-article-header gh-canvas">
+                    <a class="gh-article-tag" href="https://relentlesstorm.github.io/tag/cloud-storage/">Cloud Storage</a>
+
+                <h1 class="gh-article-title">btrfs - A modern copy on write(CoW) filesystem for Linux</h1>
+
+                    <aside class="gh-article-sidebar">
+
+        <div class="gh-author-image-list">
+                <a class="gh-author-image" href="/author/relentlesstorm/">
+                        <div class="gh-author-icon"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="64" height="64"><g fill="none" fill-rule="evenodd"><path d="M3.513 18.998C4.749 15.504 8.082 13 12 13s7.251 2.504 8.487 5.998C18.47 21.442 15.417 23 12 23s-6.47-1.558-8.487-4.002zM12 12c2.21 0 4-2.79 4-5s-1.79-4-4-4-4 1.79-4 4 1.79 5 4 5z" fill="#FFF"/></g></svg>
+</div>
+                </a>
+        </div>
+
+        <div class="gh-author-name-list">
+                <h4 class="gh-author-name">
+                    <a href="/author/relentlesstorm/">relentlesstorm</a>
+                </h4>
+                
+        </div>
+
+        <div class="gh-article-meta">
+            <div class="gh-article-meta-inner">
+                <time class="gh-article-date" datetime="2021-08-03">Aug 3, 2021</time>
+                    <span class="gh-article-meta-sep"></span>
+                    <span class="gh-article-length">5 min</span>
+            </div>
+        </div>
+
+    </aside>
+
+
+                    <figure class="gh-article-image">
+        <img
+            srcset="https://images.unsplash.com/photo-1639762681485-074b7f938ba0?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDc5fHxuZXR3b3JrfGVufDB8fHx8MTY3Mjc5MDY4Mw&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;300 300w,
+                    https://images.unsplash.com/photo-1639762681485-074b7f938ba0?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDc5fHxuZXR3b3JrfGVufDB8fHx8MTY3Mjc5MDY4Mw&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720 720w,
+                    https://images.unsplash.com/photo-1639762681485-074b7f938ba0?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDc5fHxuZXR3b3JrfGVufDB8fHx8MTY3Mjc5MDY4Mw&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;960 960w,
+                    https://images.unsplash.com/photo-1639762681485-074b7f938ba0?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDc5fHxuZXR3b3JrfGVufDB8fHx8MTY3Mjc5MDY4Mw&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1200 1200w,
+                    https://images.unsplash.com/photo-1639762681485-074b7f938ba0?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDc5fHxuZXR3b3JrfGVufDB8fHx8MTY3Mjc5MDY4Mw&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000 2000w"
+            sizes="(max-width: 1200px) 100vw, 1200px"
+            src="https://images.unsplash.com/photo-1639762681485-074b7f938ba0?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDc5fHxuZXR3b3JrfGVufDB8fHx8MTY3Mjc5MDY4Mw&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1200"
+            alt="btrfs - A modern copy on write(CoW) filesystem for Linux"
+        >
+            <figcaption>Photo by <a href="https://unsplash.com/@theshubhamdhage?utm_source=ghost&utm_medium=referral&utm_campaign=api-credit">Shubham Dhage</a> / <a href="https://unsplash.com/?utm_source=ghost&utm_medium=referral&utm_campaign=api-credit">Unsplash</a></figcaption>
+    </figure>
+            </header>
+
+            <section class="gh-content gh-canvas">
+                <!--kg-card-begin: markdown--><h2 id="introduction">Introduction</h2>
+<p>btrfs is a modern copy on write (CoW) filesystem for Linux aimed at implementing advanced features while also focusing on fault tolerance, repair and easy administration. Its main features and benefits are:</p>
+<ul>
+<li>Snapshots which do not make the full copy of files</li>
+<li>RAID - support for software-based RAID 0, RAID 1, RAID 10</li>
+<li>Self-healing - checksums for data and metadata, automatic detection of silent data corruptions</li>
+</ul>
+<p>Development of Btrfs started in 2007. Since that time, Btrfs is a part of the Linux kernel and is under active development.</p>
+<h2 id="copy-on-write-cow">Copy on Write (CoW)</h2>
+<ul>
+<li>The CoW operation is used on all writes to the filesystem (unless turned off, see below).</li>
+<li>This makes it much easier to implement lazy copies, where the copy is initially just a reference to the original, but as the copy (or the original) is changed, the two versions diverge from each other in the expected way.</li>
+<li>If you just write a file that didn’t exist before, then the data is written to empty space, and some of the metadata blocks that make up the filesystem are CoWed. In a &quot;normal&quot; filesystem, if you then go back and overwrite a piece of that file, then the piece you’re writing is put directly over the data it is replacing. In a CoW filesystem, the new data is written to a piece of free space on the disk, and only then is the file’s metadata changed to refer to the new data. At that point, the old data that was replaced can be freed up because nothing points to it any more.</li>
+<li>If you make a snapshot (or a cp --reflink=always) of a piece of data, you end up with two files that both reference the same data. If you modify one of those files, the CoW operation I described above still happens: the new data is written elsewhere, and the file’s metadata is updated to point at it, but the original data is kept, because it’s still referenced by the other file.
+<ul>
+<li>This leads to fragmentation in heavily updated-in-place files like VM images and database stores.</li>
+<li>Note that this happens even if the data is not shared, because data is stored in segments, and only the newly updated part of a segment is subject to CoW.</li>
+</ul>
+</li>
+<li>If you mount the filesystem with nodatacow, or use chattr +C on the file, then it only does the CoW operation for data if there’s more than one copy referenced.</li>
+<li>Some people insist that Btrfs does &quot;Redirect-on-write&quot; rather than &quot;Copy-on-write&quot; because Btrfs is based on a scheme for redirect-based updates of B-trees by Ohad Rodeh, and because understanding the code is easier with that mindset.</li>
+</ul>
+<h2 id="filesystem-creation">Filesystem creation</h2>
+<p>A Btrfs filesystem can be created on top of many devices, and more devices can be added after the FS has been created.</p>
+<p>By default, metadata will be mirrored across two devices and data will be striped across all of the devices present. This is equivalent to mkfs.btrfs -m raid1 -d raid0.</p>
+<p>If only one device is present, metadata will be duplicated on that one device. For HDD mkfs.btrfs -m dup -d single, for SSD (or non-rotational device) mkfs.btrfs -m single -d single.</p>
+<p>mkfs.btrfs will accept more than one device on the command line. It has options to control the RAID configuration for data (-d) and metadata (-m). Valid choices are raid0, raid1, raid10, raid5, raid6, single and dup. The option -m single means that no duplication is done, which may be desired when using hardware RAID.</p>
+<pre><code class="language-shell"># Create a filesystem across four drives (metadata mirrored, linear data allocation)
+$ mkfs.btrfs -d single /dev/sdb /dev/sdc /dev/sdd /dev/sde
+
+# Stripe the data without mirroring, metadata are mirrored
+$ mkfs.btrfs -d raid0 /dev/sdb /dev/sdc
+
+# Use raid10 for both data and metadata
+$ mkfs.btrfs -m raid10 -d raid10 /dev/sdb /dev/sdc /dev/sdd /dev/sde
+
+# Don't duplicate metadata on a single drive (default on single SSDs)
+$ mkfs.btrfs -m single /dev/sdb
+</code></pre>
+<p>Once you create a multi-device filesystem, you can use any device in the FS for the mount command. The btrfs file system size is the total size of the devices to create it.</p>
+<pre><code class="language-shell">$ mkfs.btrfs /dev/sdb /dev/sdc /dev/sde
+$ mount /dev/sde /mnt
+$ df -h
+</code></pre>
+<p>The following commands can be used to check filesystem usage.</p>
+<pre><code class="language-shell">$ btrfs filesystem show
+$ btrfs filesystem df -h /mnt
+$ btrfs filesystem usage /mnt
+</code></pre>
+<h2 id="filesystem-deletion">Filesystem deletion</h2>
+<pre><code class="language-shell">$ umount -f /mnt
+$ wipefs --all -t btrfs /dev/sdb /dev/sdc /dev/sde
+$ btrfs filesystem show
+</code></pre>
+<h2 id="subvolumes-and-snapshots">Subvolumes and snapshots</h2>
+<p>Creating subvolumes and snapshots are the commonly used operations for btrfs.</p>
+<p>Create btrfs filesystem with two disks:</p>
+<pre><code class="language-shell">$ mkfs.btrfs -d raid0 /dev/sdd /dev/sdf
+btrfs-progs v4.9.1
+See http://btrfs.wiki.kernel.org for more information.
+
+Label:              (null)
+UUID:               6a154e4e-61d4-474e-9839-50d1fcd50bbb
+Node size:          16384
+Sector size:        4096
+Filesystem size:    1.75TiB
+Block group profiles:
+  Data:             RAID0             2.00GiB
+  Metadata:         RAID1             1.00GiB
+  System:           RAID1             8.00MiB
+SSD detected:       yes
+Incompat features:  extref, skinny-metadata
+Number of devices:  2
+Devices:
+   ID        SIZE  PATH
+    1   894.25GiB  /dev/sdd
+    2   894.25GiB  /dev/sdf
+
+$ mkdir /mnt/pool1
+$ mount -t btrfs /dev/sdd /mnt/pool1
+$ df -h  | egrep &quot;Filesystem|pool1&quot;
+Filesystem                 Size  Used Avail Use% Mounted on
+/dev/sdd                   1.8T  4.3M  1.8T   1% /mnt/pool1
+$ ls -la /mnt/pool1
+total 16
+drwxr-xr-x  1 root root  0 Mar 22 21:19 .
+drwxr-xr-x. 7 root root 69 Mar 22 21:20 ..
+</code></pre>
+<p>Create a subvolume:</p>
+<pre><code class="language-shell">$ btrfs subvolume create /mnt/pool1/subvol1
+Create subvolume '/mnt/pool1/subvol1'
+
+$ mkdir /mnt/testbtrfs
+$ mount -t btrfs -o subvol=subvol1 /dev/sdd /mnt/testbtrfs
+
+$ ls -la /mnt/pool1
+total 16
+drwxr-xr-x  1 root root 14 Mar 22 21:19 .
+drwxr-xr-x. 8 root root 86 Mar 22 21:22 ..
+drwxr-xr-x  1 root root  0 Mar 22 21:21 subvol1
+
+$ ls -la /mnt/pool1/subvol1/
+total 16
+drwxr-xr-x 1 root root  0 Mar 22 21:21 .
+drwxr-xr-x 1 root root 14 Mar 22 21:19 ..
+
+$ ls -la /mnt/testbtrfs
+total 0
+drwxr-xr-x  1 root root  0 Mar 22 21:21 .
+drwxr-xr-x. 8 root root 86 Mar 22 21:22 ..
+</code></pre>
+<p>Create snapshot of the subvolume:</p>
+<pre><code class="language-shell">$ btrfs subvolume snapshot
+btrfs subvolume snapshot: too few arguments
+usage: btrfs subvolume snapshot [-r] [-i &lt;qgroupid&gt;] &lt;source&gt; &lt;dest&gt;|[&lt;dest&gt;/]&lt;name&gt;
+
+    Create a snapshot of the subvolume
+
+    Create a writable/readonly snapshot of the subvolume &lt;source&gt; with
+    the name &lt;name&gt; in the &lt;dest&gt; directory.  If only &lt;dest&gt; is given,
+    the subvolume will be named the basename of &lt;source&gt;.
+
+    -r             create a readonly snapshot
+    -i &lt;qgroupid&gt;  add the newly created snapshot to a qgroup. This
+                   option can be given multiple times.
+
+$ btrfs subvolume snapshot /mnt/pool1/subvol1 /mnt/pool1/subvol1/subvol1-snap
+Create a snapshot of '/mnt/pool1/subvol1' in '/mnt/pool1/subvol1/subvol1-snap'
+
+$ ls -la /mnt/pool1/subvol1/
+total 16
+drwxr-xr-x 1 root root 24 Mar 22 21:26 .
+drwxr-xr-x 1 root root 14 Mar 22 21:19 ..
+drwxr-xr-x 1 root root  0 Mar 22 21:21 subvol1-snap
+
+$ ls -la /mnt/pool1/subvol1/subvol1-snap/
+total 0
+drwxr-xr-x 1 root root  0 Mar 22 21:21 .
+drwxr-xr-x 1 root root 24 Mar 22 21:26 ..
+
+$ ls -la /mnt/testbtrfs/
+total 0
+drwxr-xr-x  1 root root 24 Mar 22 21:26 .
+drwxr-xr-x. 8 root root 86 Mar 22 21:22 ..
+drwxr-xr-x  1 root root  0 Mar 22 21:21 subvol1-snap
+
+$ ls -la /mnt/testbtrfs/subvol1-snap/
+total 0
+drwxr-xr-x 1 root root  0 Mar 22 21:21 .
+drwxr-xr-x 1 root root 24 Mar 22 21:26 ..
+</code></pre>
+<p>List the subvoluems and snapshots:</p>
+<pre><code class="language-shell">$  btrfs subvolume list /mnt/pool1
+ID 258 gen 10 top level 5 path subvol1
+ID 259 gen 9 top level 258 path subvol1/subvol1-snap
+</code></pre>
+<h2 id="reference">Reference</h2>
+<ul>
+<li><a href="https://btrfs.wiki.kernel.org/index.php/Main_Page">https://btrfs.wiki.kernel.org/index.php/Main_Page</a></li>
+<li><a href="https://btrfs.wiki.kernel.org/index.php/SysadminGuide">https://btrfs.wiki.kernel.org/index.php/SysadminGuide</a></li>
+<li><a href="http://marc.merlins.org/perso/btrfs/post_2014-05-21_My-Btrfs-Talk-at-Linuxcon-JP-2014.html">http://marc.merlins.org/perso/btrfs/post_2014-05-21_My-Btrfs-Talk-at-Linuxcon-JP-2014.html</a></li>
+<li><a href="http://marc.merlins.org/linux/talks/Btrfs-LC2014-JP/Btrfs.pdf">http://marc.merlins.org/linux/talks/Btrfs-LC2014-JP/Btrfs.pdf</a></li>
+</ul>
+<!--kg-card-end: markdown-->
+            </section>
+
+        </article>
+
+                <div class="gh-read-next gh-canvas">
+                <section class="gh-pagehead">
+                    <h4 class="gh-pagehead-title">Read next</h4>
+                </section>
+
+                <div class="gh-topic gh-topic-grid">
+                    <div class="gh-topic-content">
+                            <article class="gh-card post">
+    <a class="gh-card-link" href="/understanding-azure-disk-bursting/">
+            <figure class="gh-card-image">
+                <img
+                    srcset="https://images.unsplash.com/photo-1615293889204-6db03c596147?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDR8fGhhcmRkaXNrfGVufDB8fHx8MTY3Mjc3NzYzNA&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;300 300w,
+                            https://images.unsplash.com/photo-1615293889204-6db03c596147?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDR8fGhhcmRkaXNrfGVufDB8fHx8MTY3Mjc3NzYzNA&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720 720w,
+                            https://images.unsplash.com/photo-1615293889204-6db03c596147?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDR8fGhhcmRkaXNrfGVufDB8fHx8MTY3Mjc3NzYzNA&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;960 960w,
+                            https://images.unsplash.com/photo-1615293889204-6db03c596147?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDR8fGhhcmRkaXNrfGVufDB8fHx8MTY3Mjc3NzYzNA&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1200 1200w,
+                            https://images.unsplash.com/photo-1615293889204-6db03c596147?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDR8fGhhcmRkaXNrfGVufDB8fHx8MTY3Mjc3NzYzNA&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000 2000w"
+                    sizes="(max-width: 1200px) 100vw, 1200px"
+                    src="https://images.unsplash.com/photo-1615293889204-6db03c596147?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDR8fGhhcmRkaXNrfGVufDB8fHx8MTY3Mjc3NzYzNA&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720"
+                    alt="Understanding Azure disk bursting"
+                >
+            </figure>
+
+        <div class="gh-card-wrapper">
+            <header class="gh-card-header">
+                <h3 class="gh-card-title">Understanding Azure disk bursting</h3>
+            </header>
+
+                    <div class="gh-card-excerpt">Currently, there are two managed disk types that can burst, premium SSDs, and standard SSDs. Other disk types cannot currently burst. There are two models of bursting for disks:
+
+
+An on-demand bursting model, where the disk bursts whenever its needs exceed its current capacity. This model incurs additional charges anytime</div>
+
+            <footer class="gh-card-footer">
+                <span class="gh-card-author">relentlesstorm</span>
+                <time class="gh-card-date" datetime="2022-09-15">Sep 15, 2022</time>
+            </footer>
+        </div>
+    </a>
+</article>                            <article class="gh-card post">
+    <a class="gh-card-link" href="/understanding-rpo-and-rto/">
+            <figure class="gh-card-image">
+                <img
+                    srcset="https://images.unsplash.com/photo-1586974175094-0a7259238613?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDJ8fHJlY292ZXJ5fGVufDB8fHx8MTY3Mjc3OTU4Ng&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;300 300w,
+                            https://images.unsplash.com/photo-1586974175094-0a7259238613?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDJ8fHJlY292ZXJ5fGVufDB8fHx8MTY3Mjc3OTU4Ng&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720 720w,
+                            https://images.unsplash.com/photo-1586974175094-0a7259238613?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDJ8fHJlY292ZXJ5fGVufDB8fHx8MTY3Mjc3OTU4Ng&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;960 960w,
+                            https://images.unsplash.com/photo-1586974175094-0a7259238613?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDJ8fHJlY292ZXJ5fGVufDB8fHx8MTY3Mjc3OTU4Ng&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1200 1200w,
+                            https://images.unsplash.com/photo-1586974175094-0a7259238613?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDJ8fHJlY292ZXJ5fGVufDB8fHx8MTY3Mjc3OTU4Ng&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000 2000w"
+                    sizes="(max-width: 1200px) 100vw, 1200px"
+                    src="https://images.unsplash.com/photo-1586974175094-0a7259238613?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDJ8fHJlY292ZXJ5fGVufDB8fHx8MTY3Mjc3OTU4Ng&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720"
+                    alt="Understanding RPO and RTO"
+                >
+            </figure>
+
+        <div class="gh-card-wrapper">
+            <header class="gh-card-header">
+                <h3 class="gh-card-title">Understanding RPO and RTO</h3>
+            </header>
+
+                    <div class="gh-card-excerpt">The disasters could occur unexpectedly and it could take down the whole data center in an application region. In the real world, a well designed disaster recovery solution would help restore the applications and related data at the time of disaster.
+
+
+There are two critical metrics to measure how timely</div>
+
+            <footer class="gh-card-footer">
+                <span class="gh-card-author">relentlesstorm</span>
+                <time class="gh-card-date" datetime="2022-05-01">May 1, 2022</time>
+            </footer>
+        </div>
+    </a>
+</article>                            <article class="gh-card post">
+    <a class="gh-card-link" href="/access-a-sharedv4-volume-outside-of-a-portwrox-cluster/">
+            <figure class="gh-card-image">
+                <img
+                    srcset="https://images.unsplash.com/photo-1614902333346-d0caef873a11?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDIzfHxuZnN8ZW58MHx8fHwxNjcyNzc4ODEx&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;300 300w,
+                            https://images.unsplash.com/photo-1614902333346-d0caef873a11?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDIzfHxuZnN8ZW58MHx8fHwxNjcyNzc4ODEx&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720 720w,
+                            https://images.unsplash.com/photo-1614902333346-d0caef873a11?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDIzfHxuZnN8ZW58MHx8fHwxNjcyNzc4ODEx&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;960 960w,
+                            https://images.unsplash.com/photo-1614902333346-d0caef873a11?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDIzfHxuZnN8ZW58MHx8fHwxNjcyNzc4ODEx&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1200 1200w,
+                            https://images.unsplash.com/photo-1614902333346-d0caef873a11?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDIzfHxuZnN8ZW58MHx8fHwxNjcyNzc4ODEx&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000 2000w"
+                    sizes="(max-width: 1200px) 100vw, 1200px"
+                    src="https://images.unsplash.com/photo-1614902333346-d0caef873a11?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDIzfHxuZnN8ZW58MHx8fHwxNjcyNzc4ODEx&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720"
+                    alt="Access a sharedv4 volume outside of a Portwrox cluster"
+                >
+            </figure>
+
+        <div class="gh-card-wrapper">
+            <header class="gh-card-header">
+                <h3 class="gh-card-title">Access a sharedv4 volume outside of a Portwrox cluster</h3>
+            </header>
+
+                    <div class="gh-card-excerpt">To access a sharedv4 volume outside of the Portworx cluster, add the allow_ips label to the volume you wish to export, specifying a semi-colon separated list of IP addresses of non-Portworx nodes you wish to mount your sharedv4 volume to:
+
+
+$ /opt/pwx/bin/pxctl -j volume create datavol --sharedv4</div>
+
+            <footer class="gh-card-footer">
+                <span class="gh-card-author">relentlesstorm</span>
+                <time class="gh-card-date" datetime="2022-04-20">Apr 20, 2022</time>
+            </footer>
+        </div>
+    </a>
+</article>                    </div>
+                </div>
+            </div>
+
+        </main>
+
+    <footer class="gh-foot gh-outer">
+        <div class="gh-foot-inner gh-inner">
+
+            <!--<nav class="gh-foot-menu">
+                <<ul class="nav">
+    <li class="nav-sign-up"><a href="#/portal/">Sign up</a></li>
+</ul>
+
+            </nav>-->
+
+            <div class="gh-copyright">
+                    Flamingbytes © 2023. Powered by <a href="https://ghost.org/" target="_blank" rel="noopener">Ghost</a>
+            </div>
+        </div>
+    </footer>
+
+</div>
+
+    <div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="pswp__bg"></div>
+
+    <div class="pswp__scroll-wrap">
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)"></button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)"></button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="/assets/built/main.min.js?v=e1adcf5302"></script>
+
+
+
+</body>
+
+</html>

@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Vdbench performance test on raw device</title>
+    <link rel="stylesheet" href="/assets/built/screen.css?v=e1adcf5302">
+
+    <link rel="canonical" href="https://relentlesstorm.github.io/vdbench-performance-test-on-raw-device/" />
+    <meta name="referrer" content="no-referrer-when-downgrade" />
+    
+    <meta property="og:site_name" content="Flamingbytes" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="Vdbench performance test on raw device" />
+    <meta property="og:description" content="Terminology
+
+
+ * 
+   
+   
+   Master and Slave: Vdbench runs as two or more Java Virtual Machines (JVMs). The JVM that you start is the master. The master takes care of the parsing of all the parameters, it determines which workloads should run, and then will also do all the reporting. The actual workload" />
+    <meta property="og:url" content="https://relentlesstorm.github.io/vdbench-performance-test-on-raw-device/" />
+    <meta property="og:image" content="https://images.unsplash.com/photo-1609923519519-7f470620fa10?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDI4fHxyYWNlfGVufDB8fHx8MTY3Mjc4MTk3Mg&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000" />
+    <meta property="article:published_time" content="2021-08-23T00:00:00.000Z" />
+    <meta property="article:modified_time" content="2023-01-04T00:00:48.000Z" />
+    <meta property="article:tag" content="Benchmarking" />
+    
+    <meta property="article:publisher" content="https://www.facebook.com/ghost" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Vdbench performance test on raw device" />
+    <meta name="twitter:description" content="Terminology
+
+
+ * 
+   
+   
+   Master and Slave: Vdbench runs as two or more Java Virtual Machines (JVMs). The JVM that you start is the master. The master takes care of the parsing of all the parameters, it determines which workloads should run, and then will also do all the reporting. The actual workload" />
+    <meta name="twitter:url" content="https://relentlesstorm.github.io/vdbench-performance-test-on-raw-device/" />
+    <meta name="twitter:image" content="https://images.unsplash.com/photo-1609923519519-7f470620fa10?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDI4fHxyYWNlfGVufDB8fHx8MTY3Mjc4MTk3Mg&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000" />
+    <meta name="twitter:label1" content="Written by" />
+    <meta name="twitter:data1" content="relentlesstorm" />
+    <meta name="twitter:label2" content="Filed under" />
+    <meta name="twitter:data2" content="Benchmarking" />
+    <meta name="twitter:site" content="@ghost" />
+    <meta property="og:image:width" content="2000" />
+    <meta property="og:image:height" content="1333" />
+    
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "publisher": {
+        "@type": "Organization",
+        "name": "Flamingbytes",
+        "url": "https://relentlesstorm.github.io/",
+        "logo": {
+            "@type": "ImageObject",
+            "url": "https://relentlesstorm.github.io/favicon.ico",
+            "width": 48,
+            "height": 48
+        }
+    },
+    "author": {
+        "@type": "Person",
+        "name": "relentlesstorm",
+        "url": "https://relentlesstorm.github.io/author/relentlesstorm/",
+        "sameAs": []
+    },
+    "headline": "Vdbench performance test on raw device",
+    "url": "https://relentlesstorm.github.io/vdbench-performance-test-on-raw-device/",
+    "datePublished": "2021-08-23T00:00:00.000Z",
+    "dateModified": "2023-01-04T00:00:48.000Z",
+    "image": {
+        "@type": "ImageObject",
+        "url": "https://images.unsplash.com/photo-1609923519519-7f470620fa10?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxMTc3M3wwfDF8c2VhcmNofDI4fHxyYWNlfGVufDB8fHx8MTY3Mjc4MTk3Mg&ixlib=rb-4.0.3&q=80&w=2000",
+        "width": 2000,
+        "height": 1333
+    },
+    "keywords": "Benchmarking",
+    "description": "Terminology\n\n\n * \n   \n   \n   Master and Slave: Vdbench runs as two or more Java Virtual Machines (JVMs). The JVM that you start is the master. The master takes care of the parsing of all the parameters, it determines which workloads should run, and then will also do all the reporting. The actual workload is executed by one or more Slaves. A Slave can run on the host where the Master was started, or it can run on any remote host as defined in the parameter file.\n   \n\n * \n   \n   \n   Raw I/O worklo",
+    "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https://relentlesstorm.github.io/"
+    }
+}
+    </script>
+
+    <meta name="generator" content="Ghost 5.26" />
+    <link rel="alternate" type="application/rss+xml" title="Flamingbytes" href="https://relentlesstorm.github.io/rss/" />
+    
+    <script defer src="https://cdn.jsdelivr.net/ghost/sodo-search@~1.1/umd/sodo-search.min.js" data-key="321a1d1aea33fd468f6e61f563" data-styles="https://cdn.jsdelivr.net/ghost/sodo-search@~1.1/umd/main.css" data-sodo-search="https://relentlesstorm.github.io/" crossorigin="anonymous"></script>
+    <script defer src="/public/cards.min.js?v=e1adcf5302"></script><style>:root {--ghost-accent-color: #6a13ec;}</style>
+    <link rel="stylesheet" type="text/css" href="/public/cards.min.css?v=e1adcf5302">
+</head>
+
+<body class="post-template tag-benchmarking is-head-left-logo has-serif-body">
+<div class="gh-site">
+
+    <header id="gh-head" class="gh-head gh-outer">
+        <div class="gh-head-inner gh-inner">
+            <div class="gh-head-brand">
+                <div class="gh-head-brand-wrapper">
+                    <a class="gh-head-logo" href="https://relentlesstorm.github.io">
+                            Flamingbytes
+                    </a>
+                </div>
+                <button class="gh-search gh-icon-btn" data-ghost-search><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" width="20" height="20"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg></button>
+                <button class="gh-burger"></button>
+            </div>
+
+            <nav class="gh-head-menu">
+                <ul class="nav">
+    <li class="nav-home"><a href="https://relentlesstorm.github.io/">Home</a></li>
+    <li class="nav-tags"><a href="https://relentlesstorm.github.io/tags/">Tags</a></li>
+    <li class="nav-archive"><a href="https://relentlesstorm.github.io/archive/">Archive</a></li>
+    <li class="nav-about"><a href="https://relentlesstorm.github.io/about/">About</a></li>
+</ul>
+
+            </nav>
+
+            <div class="gh-head-actions">
+                        <button class="gh-search gh-icon-btn" data-ghost-search><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" width="20" height="20"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg></button>
+            </div>
+        </div>
+    </header>
+
+    
+<main class="gh-main">
+        <article class="gh-article post tag-benchmarking">
+
+            <header class="gh-article-header gh-canvas">
+                    <a class="gh-article-tag" href="https://relentlesstorm.github.io/tag/benchmarking/">Benchmarking</a>
+
+                <h1 class="gh-article-title">Vdbench performance test on raw device</h1>
+
+                    <aside class="gh-article-sidebar">
+
+        <div class="gh-author-image-list">
+                <a class="gh-author-image" href="/author/relentlesstorm/">
+                        <div class="gh-author-icon"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="64" height="64"><g fill="none" fill-rule="evenodd"><path d="M3.513 18.998C4.749 15.504 8.082 13 12 13s7.251 2.504 8.487 5.998C18.47 21.442 15.417 23 12 23s-6.47-1.558-8.487-4.002zM12 12c2.21 0 4-2.79 4-5s-1.79-4-4-4-4 1.79-4 4 1.79 5 4 5z" fill="#FFF"/></g></svg>
+</div>
+                </a>
+        </div>
+
+        <div class="gh-author-name-list">
+                <h4 class="gh-author-name">
+                    <a href="/author/relentlesstorm/">relentlesstorm</a>
+                </h4>
+                
+        </div>
+
+        <div class="gh-article-meta">
+            <div class="gh-article-meta-inner">
+                <time class="gh-article-date" datetime="2021-08-23">Aug 23, 2021</time>
+                    <span class="gh-article-meta-sep"></span>
+                    <span class="gh-article-length">6 min</span>
+            </div>
+        </div>
+
+    </aside>
+
+
+                    <figure class="gh-article-image">
+        <img
+            srcset="https://images.unsplash.com/photo-1609923519519-7f470620fa10?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDI4fHxyYWNlfGVufDB8fHx8MTY3Mjc4MTk3Mg&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;300 300w,
+                    https://images.unsplash.com/photo-1609923519519-7f470620fa10?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDI4fHxyYWNlfGVufDB8fHx8MTY3Mjc4MTk3Mg&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720 720w,
+                    https://images.unsplash.com/photo-1609923519519-7f470620fa10?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDI4fHxyYWNlfGVufDB8fHx8MTY3Mjc4MTk3Mg&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;960 960w,
+                    https://images.unsplash.com/photo-1609923519519-7f470620fa10?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDI4fHxyYWNlfGVufDB8fHx8MTY3Mjc4MTk3Mg&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1200 1200w,
+                    https://images.unsplash.com/photo-1609923519519-7f470620fa10?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDI4fHxyYWNlfGVufDB8fHx8MTY3Mjc4MTk3Mg&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000 2000w"
+            sizes="(max-width: 1200px) 100vw, 1200px"
+            src="https://images.unsplash.com/photo-1609923519519-7f470620fa10?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDI4fHxyYWNlfGVufDB8fHx8MTY3Mjc4MTk3Mg&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1200"
+            alt="Vdbench performance test on raw device"
+        >
+            <figcaption>Photo by <a href="https://unsplash.com/@jo_coenen?utm_source=ghost&utm_medium=referral&utm_campaign=api-credit">Jo Coenen - Studio Dries 2.6</a> / <a href="https://unsplash.com/?utm_source=ghost&utm_medium=referral&utm_campaign=api-credit">Unsplash</a></figcaption>
+    </figure>
+            </header>
+
+            <section class="gh-content gh-canvas">
+                <!--kg-card-begin: markdown--><h2 id="terminology">Terminology</h2>
+<ul>
+<li>
+<p><strong>Master and Slave</strong>: Vdbench runs as two or more Java Virtual Machines (JVMs). The JVM that you start is the master. The master takes care of the parsing of all the parameters, it determines which workloads should run, and then will also do all the reporting. The actual workload is executed by one or more Slaves. A Slave can run on the host where the Master was started, or it can run on any remote host as defined in the parameter file.</p>
+</li>
+<li>
+<p><strong>Raw I/O workload</strong> parameters describe the storage configuration to be used and the workload to be generated. The parameters include <strong>General</strong>, <strong>Host Definition (HD)</strong>, <strong>Replay Group (RG)</strong>, <strong>Storage Definition (SD)</strong>, <strong>Workload Definition (WD)</strong> and <strong>Run Definition (RD)</strong> and must always be entered in the order in which they are listed here. A <strong>Run</strong> is the execution of one workload requested by a <strong>Run Definition</strong>. Multiple Runs can be requested within one Run Definition.</p>
+</li>
+<li>
+<p><strong>File system Workload</strong> parameters describe the file system configuration to be used and the workload to be generated. The parameters include <strong>General</strong>, <strong>Host Definition (HD)</strong>, <strong>File System Definition (FSD)</strong>, <strong>File system Workload Definition (FWD)</strong> and <strong>Run Definition(RD)</strong> and must always be entered in the order in which they are listed here. A <strong>Run</strong> is the execution of one workload requested by a <strong>Run Definition</strong>. Multiple Runs can be requested within one Run Definition.</p>
+</li>
+</ul>
+<h2 id="install-java">Install java</h2>
+<p>java is required by vdbench on both master and slave hosts.</p>
+<pre><code class="language-shell">$ apt install default-jre
+
+$ java -version
+openjdk version &quot;11.0.11&quot; 2021-04-20
+OpenJDK Runtime Environment (build 11.0.11+9-Ubuntu-0ubuntu2.18.04)
+OpenJDK 64-Bit Server VM (build 11.0.11+9-Ubuntu-0ubuntu2.18.04, mixed mode, sharing)
+</code></pre>
+<h2 id="install-vdbench">Install vdbench</h2>
+<p>Vdbench is packaged as a zip file. Unzip the file and you’re ready to go.</p>
+<pre><code class="language-shell">$ ls -la vdbench50407.zip
+-rw-r--r--. 1 root root 3073219 Aug 26 21:23 vdbench50407.zip
+
+$ unzip vdbench50407.zip
+
+$ file vdbench
+vdbench: Bourne-Again shell script, ASCII text executable
+</code></pre>
+<h2 id="vdbench-job-file">Vdbench job file</h2>
+<p>The following is an example job file to run random read I/O for a minute on the raw block device of the remote host.</p>
+<pre><code class="language-shell">$ cat jobfile/dryrun.job
+hd=default,vdbench=/home/tester/vdbench,shell=ssh,user=root
+hd=host1,system=&lt;slave-host-ip&gt;
+sd=sd1,host=host1,lun=/dev/sdd,hitarea=10m,openflag=o_direct,size=20000m
+wd=wd_random_rd1,sd=sd1,seekpct=100
+
+# 4KB random read
+rd=rd_4KB_randread,wd=wd_random_rd1,iorate=max,rdpct=100,xfersize=4K,elapsed=60,interval=10,th=1
+</code></pre>
+<h2 id="benchmark-run-and-result">Benchmark run and result</h2>
+<p>You can run the benchmark job with the following command.</p>
+<pre><code class="language-shell">$ ./vdbench -f jobfile/dryrun.job
+Copyright (c) 2000, 2018, Oracle and/or its affiliates. All rights reserved.
+Vdbench distribution: vdbench50407 Tue June 05  9:49:29 MDT 2018
+For documentation, see 'vdbench.pdf'.
+
+22:06:52.177 input argument scanned: '-fjobfile/dryrun.job'
+22:06:52.353 Starting slave: ssh &lt;slave-host-ip&gt; -l root /home/tester/vdbench/vdbench SlaveJvm -m &lt;master-host-ip&gt; -n &lt;slave-host-ip&gt;-10-210826-22.06.52.140 -l host1-0 -p 5570
+22:06:53.123 Clock synchronization warning: slave host1-0 is 41 seconds out of sync. This can lead to heartbeat issues.
+22:06:53.140 All slaves are now connected
+22:06:54.002 Starting RD=rd_4KB_randread; I/O rate: Uncontrolled MAX; elapsed=60; For loops: rdpct=100 xfersize=4k threads=1
+
+Aug 26, 2021    interval        i/o   MB/sec   bytes   read     resp     read    write     read    write     resp  queue  cpu%  cpu%
+                               rate  1024**2     i/o    pct     time     resp     resp      max      max   stddev  depth sys+u   sys
+22:07:04.055           1     5563.1    21.73    4096 100.00    0.157    0.157    0.000    10.89     0.00    0.342    0.9  16.5   7.6
+22:07:14.011           2     7022.2    27.43    4096 100.00    0.127    0.127    0.000     7.54     0.00    0.108    0.9  10.7   7.5
+22:07:24.009           3     7018.5    27.42    4096 100.00    0.128    0.128    0.000     9.67     0.00    0.087    0.9  10.9   8.2
+22:07:34.009           4     7026.8    27.45    4096 100.00    0.127    0.127    0.000     6.99     0.00    0.105    0.9  10.7   7.9
+22:07:44.008           5     7264.4    28.38    4096 100.00    0.123    0.123    0.000     7.75     0.00    0.082    0.9  10.7   7.7
+22:07:54.014           6     7311.4    28.56    4096 100.00    0.122    0.122    0.000     7.21     0.00    0.076    0.9  10.5   7.4
+22:07:54.024     avg_2-6     7128.7    27.85    4096 100.00    0.126    0.126    0.000     9.67     0.00    0.092    0.9  10.7   7.7
+22:07:54.445 Vdbench execution completed successfully. Output directory: /data/vdbench_test/output
+</code></pre>
+<p>The result is saved in output directory by default. You can also check the result summary by opening &quot;summary.html&quot; in a browser.</p>
+<pre><code class="language-shell">$ ls output/
+config.html    flatfile.html   host1-0.html         host1.html               logfile.html   parmscan.html       sd1.html   status.html   swat_mon_total.txt  totals.html errorlog.html  histogram.html  host1-0.stdout.html  host1.var_adm_msgs.html  parmfile.html  sd1.histogram.html  skew.html  summary.html  swat_mon.txt
+
+$ cat output/summary.html
+&lt;title&gt;Vdbench output/summary.html&lt;/title&gt;&lt;pre&gt;
+Copyright (c) 2000, 2018, Oracle and/or its affiliates. All rights reserved.
+Vdbench summary report, created 22:06:52 Aug 26 2021 UTC (22:06:52 Aug 26 2021 UTC)
+
+Link to logfile:                 &lt;A HREF=&quot;logfile.html&quot;&gt;logfile&lt;/A&gt;
+Run totals:                      &lt;A HREF=&quot;totals.html&quot;&gt;totals&lt;/A&gt;
+Vdbench status:                  &lt;A HREF=&quot;status.html&quot;&gt;status&lt;/A&gt;
+Copy of input parameter files:   &lt;A HREF=&quot;parmfile.html&quot;&gt;parmfile&lt;/A&gt;
+Copy of parameter scan detail:   &lt;A HREF=&quot;parmscan.html&quot;&gt;parmscan&lt;/A&gt;
+Link to errorlog:                &lt;A HREF=&quot;errorlog.html&quot;&gt;errorlog&lt;/A&gt;
+Link to flatfile:                &lt;A HREF=&quot;flatfile.html&quot;&gt;flatfile&lt;/A&gt;
+
+Link to HOST reports:            &lt;A HREF=&quot;host1.html&quot;&gt;host1&lt;/A&gt;
+Link to response time histogram: &lt;A HREF=&quot;histogram.html&quot;&gt;histogram&lt;/A&gt;
+Link to workload skew report:    &lt;A HREF=&quot;skew.html&quot;&gt;skew&lt;/A&gt;
+Link to SD reports:              &lt;A HREF=&quot;sd1.html&quot;&gt;sd1&lt;/A&gt;
+
+Link to Run Definitions:         &lt;A HREF=&quot;#_463345942&quot;&gt;rd_4KB_randread For loops: rdpct=100 xfersize=4k threads=1&lt;/A&gt;
+
+Link to config output:           &lt;A HREF=&quot;config.html&quot;&gt;config&lt;/A&gt;
+
+&lt;a name=&quot;_463345942&quot;&gt;&lt;/a&gt;&lt;i&gt;&lt;b&gt;22:06:54.002 Starting RD=rd_4KB_randread; I/O rate: Uncontrolled MAX; elapsed=60; For loops: rdpct=100 xfersize=4k threads=1&lt;/b&gt;&lt;/i&gt;
+
+
+Aug 26, 2021    interval        i/o   MB/sec   bytes   read     resp     read    write     read    write     resp  queue  cpu%  cpu%
+                               rate  1024**2     i/o    pct     time     resp     resp      max      max   stddev  depth sys+u   sys
+22:07:04.052           1     5563.1    21.73    4096 100.00    0.157    0.157    0.000    10.89     0.00    0.342    0.9  16.5   7.6
+22:07:14.010           2     7022.2    27.43    4096 100.00    0.127    0.127    0.000     7.54     0.00    0.108    0.9  10.7   7.5
+22:07:24.008           3     7018.5    27.42    4096 100.00    0.128    0.128    0.000     9.67     0.00    0.087    0.9  10.9   8.2
+22:07:34.008           4     7026.8    27.45    4096 100.00    0.127    0.127    0.000     6.99     0.00    0.105    0.9  10.7   7.9
+22:07:44.008           5     7264.4    28.38    4096 100.00    0.123    0.123    0.000     7.75     0.00    0.082    0.9  10.7   7.7
+22:07:54.014           6     7311.4    28.56    4096 100.00    0.122    0.122    0.000     7.21     0.00    0.076    0.9  10.5   7.4
+22:07:54.023     avg_2-6     7128.7    27.85    4096 100.00    0.126    0.126    0.000     9.67     0.00    0.092    0.9  10.7   7.7
+22:07:54.445 Vdbench execution completed successfully
+</code></pre>
+<h2 id="reference">Reference</h2>
+<ul>
+<li><a href="https://ubuntu.com/tutorials/install-jre#2-installing-openjdk-jre">https://ubuntu.com/tutorials/install-jre#2-installing-openjdk-jre</a></li>
+<li><a href="https://www.oracle.com/technetwork/server-storage/vdbench-1901683.pdf">https://www.oracle.com/technetwork/server-storage/vdbench-1901683.pdf</a></li>
+</ul>
+<!--kg-card-end: markdown-->
+            </section>
+
+        </article>
+
+                <div class="gh-read-next gh-canvas">
+                <section class="gh-pagehead">
+                    <h4 class="gh-pagehead-title">Read next</h4>
+                </section>
+
+                <div class="gh-topic gh-topic-grid">
+                    <div class="gh-topic-content">
+                            <article class="gh-card post featured">
+    <a class="gh-card-link" href="/crdb-sysbench/">
+            <figure class="gh-card-image">
+                <img
+                    srcset="https://images.unsplash.com/photo-1597852074816-d933c7d2b988?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDR8fGRhdGFiYXNlfGVufDB8fHx8MTY3MjQ2Mjg3Mg&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;300 300w,
+                            https://images.unsplash.com/photo-1597852074816-d933c7d2b988?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDR8fGRhdGFiYXNlfGVufDB8fHx8MTY3MjQ2Mjg3Mg&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720 720w,
+                            https://images.unsplash.com/photo-1597852074816-d933c7d2b988?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDR8fGRhdGFiYXNlfGVufDB8fHx8MTY3MjQ2Mjg3Mg&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;960 960w,
+                            https://images.unsplash.com/photo-1597852074816-d933c7d2b988?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDR8fGRhdGFiYXNlfGVufDB8fHx8MTY3MjQ2Mjg3Mg&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1200 1200w,
+                            https://images.unsplash.com/photo-1597852074816-d933c7d2b988?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDR8fGRhdGFiYXNlfGVufDB8fHx8MTY3MjQ2Mjg3Mg&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000 2000w"
+                    sizes="(max-width: 1200px) 100vw, 1200px"
+                    src="https://images.unsplash.com/photo-1597852074816-d933c7d2b988?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDR8fGRhdGFiYXNlfGVufDB8fHx8MTY3MjQ2Mjg3Mg&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720"
+                    alt="Use sysbench for CockroachDB performance benchmarking"
+                >
+            </figure>
+
+        <div class="gh-card-wrapper">
+            <header class="gh-card-header">
+                <h3 class="gh-card-title">Use sysbench for CockroachDB performance benchmarking</h3>
+            </header>
+
+                    <div class="gh-card-excerpt">Intro
+
+
+Cockroach uses TPC-C as the official OLTP workload benchmark since it's a more realistic measurement by modeling the real world applications.
+
+
+However, sysbench is a straight-forward throughput/latency benchmarking tool. It is a scriptable multi-threaded benchmark tool based on LuaJIT. It is most frequently used for database benchmarks, but</div>
+
+            <footer class="gh-card-footer">
+                <span class="gh-card-author">relentlesstorm</span>
+                <time class="gh-card-date" datetime="2022-12-08">Dec 8, 2022</time>
+            </footer>
+        </div>
+    </a>
+</article>                            <article class="gh-card post">
+    <a class="gh-card-link" href="/cockroachdb-performance-benchmarking/">
+            <figure class="gh-card-image">
+                <img
+                    srcset="https://images.unsplash.com/photo-1505570554449-69ce7d4fa36b?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDIxfHwlMjBwZXJmb3JtYW5jZXxlbnwwfHx8fDE2NzI3Nzc0NzQ&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;300 300w,
+                            https://images.unsplash.com/photo-1505570554449-69ce7d4fa36b?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDIxfHwlMjBwZXJmb3JtYW5jZXxlbnwwfHx8fDE2NzI3Nzc0NzQ&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720 720w,
+                            https://images.unsplash.com/photo-1505570554449-69ce7d4fa36b?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDIxfHwlMjBwZXJmb3JtYW5jZXxlbnwwfHx8fDE2NzI3Nzc0NzQ&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;960 960w,
+                            https://images.unsplash.com/photo-1505570554449-69ce7d4fa36b?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDIxfHwlMjBwZXJmb3JtYW5jZXxlbnwwfHx8fDE2NzI3Nzc0NzQ&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1200 1200w,
+                            https://images.unsplash.com/photo-1505570554449-69ce7d4fa36b?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDIxfHwlMjBwZXJmb3JtYW5jZXxlbnwwfHx8fDE2NzI3Nzc0NzQ&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000 2000w"
+                    sizes="(max-width: 1200px) 100vw, 1200px"
+                    src="https://images.unsplash.com/photo-1505570554449-69ce7d4fa36b?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDIxfHwlMjBwZXJmb3JtYW5jZXxlbnwwfHx8fDE2NzI3Nzc0NzQ&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720"
+                    alt="CockroachDB performance benchmarking"
+                >
+            </figure>
+
+        <div class="gh-card-wrapper">
+            <header class="gh-card-header">
+                <h3 class="gh-card-title">CockroachDB performance benchmarking</h3>
+            </header>
+
+                    <div class="gh-card-excerpt">CockroachDB key concepts
+
+
+ * 
+   
+   
+   Range - CockroachDB stores all user data (tables, indexes, etc.) and almost all system data in a giant sorted map of key-value pairs. This keyspace is divided into "ranges", contiguous chunks of the keyspace, so that every key can always be found in a single range.
+   
+   
+   From</div>
+
+            <footer class="gh-card-footer">
+                <span class="gh-card-author">relentlesstorm</span>
+                <time class="gh-card-date" datetime="2022-12-04">Dec 4, 2022</time>
+            </footer>
+        </div>
+    </a>
+</article>                            <article class="gh-card post featured">
+    <a class="gh-card-link" href="/benchmark-es-cluster-with-rally/">
+            <figure class="gh-card-image">
+                <img
+                    srcset="https://images.unsplash.com/photo-1496096265110-f83ad7f96608?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDMwfHx0ZWNobm9sb2d5fGVufDB8fHx8MTY3MjQ2NDY5NQ&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;300 300w,
+                            https://images.unsplash.com/photo-1496096265110-f83ad7f96608?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDMwfHx0ZWNobm9sb2d5fGVufDB8fHx8MTY3MjQ2NDY5NQ&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720 720w,
+                            https://images.unsplash.com/photo-1496096265110-f83ad7f96608?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDMwfHx0ZWNobm9sb2d5fGVufDB8fHx8MTY3MjQ2NDY5NQ&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;960 960w,
+                            https://images.unsplash.com/photo-1496096265110-f83ad7f96608?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDMwfHx0ZWNobm9sb2d5fGVufDB8fHx8MTY3MjQ2NDY5NQ&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1200 1200w,
+                            https://images.unsplash.com/photo-1496096265110-f83ad7f96608?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDMwfHx0ZWNobm9sb2d5fGVufDB8fHx8MTY3MjQ2NDY5NQ&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000 2000w"
+                    sizes="(max-width: 1200px) 100vw, 1200px"
+                    src="https://images.unsplash.com/photo-1496096265110-f83ad7f96608?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDMwfHx0ZWNobm9sb2d5fGVufDB8fHx8MTY3MjQ2NDY5NQ&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720"
+                    alt="Benchmarking Elasticsearch cluster with Rally"
+                >
+            </figure>
+
+        <div class="gh-card-wrapper">
+            <header class="gh-card-header">
+                <h3 class="gh-card-title">Benchmarking Elasticsearch cluster with Rally</h3>
+            </header>
+
+                    <div class="gh-card-excerpt">Install Rally on each node
+
+
+Prerequisites
+
+
+$ yum update
+$ yum install openssl-devel bzip2-devel libffi-devel
+$ yum groupinstall "Development Tools"
+
+
+
+Install Python 3.8+
+
+
+$ wget https://www.python.org/ftp/python/3.8.15/Python-3.8.15.tar.xz
+$ tar xf Python-3.8.15.tar.xz
+$ vim Python-3.8.15/Modules/Setup
+SSL=</div>
+
+            <footer class="gh-card-footer">
+                <span class="gh-card-author">relentlesstorm</span>
+                <time class="gh-card-date" datetime="2022-10-26">Oct 26, 2022</time>
+            </footer>
+        </div>
+    </a>
+</article>                    </div>
+                </div>
+            </div>
+
+        </main>
+
+    <footer class="gh-foot gh-outer">
+        <div class="gh-foot-inner gh-inner">
+
+            <!--<nav class="gh-foot-menu">
+                <<ul class="nav">
+    <li class="nav-sign-up"><a href="#/portal/">Sign up</a></li>
+</ul>
+
+            </nav>-->
+
+            <div class="gh-copyright">
+                    Flamingbytes © 2023. Powered by <a href="https://ghost.org/" target="_blank" rel="noopener">Ghost</a>
+            </div>
+        </div>
+    </footer>
+
+</div>
+
+    <div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="pswp__bg"></div>
+
+    <div class="pswp__scroll-wrap">
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)"></button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)"></button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="/assets/built/main.min.js?v=e1adcf5302"></script>
+
+
+
+</body>
+
+</html>

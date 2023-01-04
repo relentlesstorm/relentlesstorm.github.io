@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Sorting algorithm</title>
+    <link rel="stylesheet" href="/assets/built/screen.css?v=e1adcf5302">
+
+    <link rel="canonical" href="https://relentlesstorm.github.io/sorting-algorithm/" />
+    <meta name="referrer" content="no-referrer-when-downgrade" />
+    
+    <meta property="og:site_name" content="Flamingbytes" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="Sorting algorithm" />
+    <meta property="og:description" content="In this post, it includes the following sorting algorithms. The code is self explained.
+
+
+ * selection sort
+ * insert sort
+ * bubble sort
+ * quick sort
+ * merge sort
+
+
+import java.util.Arrays;
+
+public class Sort {
+	public static void selection_sort(int[] arr) {
+		for (int i &#x3D; 0; i &lt; arr.length - 1; i++) {
+			int min_" />
+    <meta property="og:url" content="https://relentlesstorm.github.io/sorting-algorithm/" />
+    <meta property="og:image" content="https://images.unsplash.com/photo-1616628188538-0bc97a2f741b?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDN8fHNvcnR8ZW58MHx8fHwxNjcyNzkyNDA4&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000" />
+    <meta property="article:published_time" content="2021-04-16T00:00:00.000Z" />
+    <meta property="article:modified_time" content="2023-01-04T00:33:42.000Z" />
+    <meta property="article:tag" content="Programming" />
+    
+    <meta property="article:publisher" content="https://www.facebook.com/ghost" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Sorting algorithm" />
+    <meta name="twitter:description" content="In this post, it includes the following sorting algorithms. The code is self explained.
+
+
+ * selection sort
+ * insert sort
+ * bubble sort
+ * quick sort
+ * merge sort
+
+
+import java.util.Arrays;
+
+public class Sort {
+	public static void selection_sort(int[] arr) {
+		for (int i &#x3D; 0; i &lt; arr.length - 1; i++) {
+			int min_" />
+    <meta name="twitter:url" content="https://relentlesstorm.github.io/sorting-algorithm/" />
+    <meta name="twitter:image" content="https://images.unsplash.com/photo-1616628188538-0bc97a2f741b?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDN8fHNvcnR8ZW58MHx8fHwxNjcyNzkyNDA4&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000" />
+    <meta name="twitter:label1" content="Written by" />
+    <meta name="twitter:data1" content="relentlesstorm" />
+    <meta name="twitter:label2" content="Filed under" />
+    <meta name="twitter:data2" content="Programming" />
+    <meta name="twitter:site" content="@ghost" />
+    <meta property="og:image:width" content="2000" />
+    <meta property="og:image:height" content="1333" />
+    
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "publisher": {
+        "@type": "Organization",
+        "name": "Flamingbytes",
+        "url": "https://relentlesstorm.github.io/",
+        "logo": {
+            "@type": "ImageObject",
+            "url": "https://relentlesstorm.github.io/favicon.ico",
+            "width": 48,
+            "height": 48
+        }
+    },
+    "author": {
+        "@type": "Person",
+        "name": "relentlesstorm",
+        "url": "https://relentlesstorm.github.io/author/relentlesstorm/",
+        "sameAs": []
+    },
+    "headline": "Sorting algorithm",
+    "url": "https://relentlesstorm.github.io/sorting-algorithm/",
+    "datePublished": "2021-04-16T00:00:00.000Z",
+    "dateModified": "2023-01-04T00:33:42.000Z",
+    "image": {
+        "@type": "ImageObject",
+        "url": "https://images.unsplash.com/photo-1616628188538-0bc97a2f741b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxMTc3M3wwfDF8c2VhcmNofDN8fHNvcnR8ZW58MHx8fHwxNjcyNzkyNDA4&ixlib=rb-4.0.3&q=80&w=2000",
+        "width": 2000,
+        "height": 1333
+    },
+    "keywords": "Programming",
+    "description": "In this post, it includes the following sorting algorithms. The code is self explained.\n\n\n * selection sort\n * insert sort\n * bubble sort\n * quick sort\n * merge sort\n\n\nimport java.util.Arrays;\n\npublic class Sort {\n\tpublic static void selection_sort(int[] arr) {\n\t\tfor (int i &#x3D; 0; i &lt; arr.length - 1; i++) {\n\t\t\tint min_idx &#x3D; i;\n\n\t\t\t// find the minimum value from right of arr[i] and swap with arr[i]\n\t\t\tfor (int j &#x3D; i + 1; j &lt; arr.length; j++) {\n\t\t\t\tif (arr[j] &lt; arr[min_idx]) {\n\t\t\t\t\tmin_idx &#x3D; j;\n\t\t\t\t",
+    "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https://relentlesstorm.github.io/"
+    }
+}
+    </script>
+
+    <meta name="generator" content="Ghost 5.26" />
+    <link rel="alternate" type="application/rss+xml" title="Flamingbytes" href="https://relentlesstorm.github.io/rss/" />
+    
+    <script defer src="https://cdn.jsdelivr.net/ghost/sodo-search@~1.1/umd/sodo-search.min.js" data-key="321a1d1aea33fd468f6e61f563" data-styles="https://cdn.jsdelivr.net/ghost/sodo-search@~1.1/umd/main.css" data-sodo-search="https://relentlesstorm.github.io/" crossorigin="anonymous"></script>
+    <script defer src="/public/cards.min.js?v=e1adcf5302"></script><style>:root {--ghost-accent-color: #6a13ec;}</style>
+    <link rel="stylesheet" type="text/css" href="/public/cards.min.css?v=e1adcf5302">
+</head>
+
+<body class="post-template tag-programming is-head-left-logo has-serif-body">
+<div class="gh-site">
+
+    <header id="gh-head" class="gh-head gh-outer">
+        <div class="gh-head-inner gh-inner">
+            <div class="gh-head-brand">
+                <div class="gh-head-brand-wrapper">
+                    <a class="gh-head-logo" href="https://relentlesstorm.github.io">
+                            Flamingbytes
+                    </a>
+                </div>
+                <button class="gh-search gh-icon-btn" data-ghost-search><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" width="20" height="20"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg></button>
+                <button class="gh-burger"></button>
+            </div>
+
+            <nav class="gh-head-menu">
+                <ul class="nav">
+    <li class="nav-home"><a href="https://relentlesstorm.github.io/">Home</a></li>
+    <li class="nav-tags"><a href="https://relentlesstorm.github.io/tags/">Tags</a></li>
+    <li class="nav-archive"><a href="https://relentlesstorm.github.io/archive/">Archive</a></li>
+    <li class="nav-about"><a href="https://relentlesstorm.github.io/about/">About</a></li>
+</ul>
+
+            </nav>
+
+            <div class="gh-head-actions">
+                        <button class="gh-search gh-icon-btn" data-ghost-search><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" width="20" height="20"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg></button>
+            </div>
+        </div>
+    </header>
+
+    
+<main class="gh-main">
+        <article class="gh-article post tag-programming">
+
+            <header class="gh-article-header gh-canvas">
+                    <a class="gh-article-tag" href="https://relentlesstorm.github.io/tag/programming/">Programming</a>
+
+                <h1 class="gh-article-title">Sorting algorithm</h1>
+
+                    <aside class="gh-article-sidebar">
+
+        <div class="gh-author-image-list">
+                <a class="gh-author-image" href="/author/relentlesstorm/">
+                        <div class="gh-author-icon"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="64" height="64"><g fill="none" fill-rule="evenodd"><path d="M3.513 18.998C4.749 15.504 8.082 13 12 13s7.251 2.504 8.487 5.998C18.47 21.442 15.417 23 12 23s-6.47-1.558-8.487-4.002zM12 12c2.21 0 4-2.79 4-5s-1.79-4-4-4-4 1.79-4 4 1.79 5 4 5z" fill="#FFF"/></g></svg>
+</div>
+                </a>
+        </div>
+
+        <div class="gh-author-name-list">
+                <h4 class="gh-author-name">
+                    <a href="/author/relentlesstorm/">relentlesstorm</a>
+                </h4>
+                
+        </div>
+
+        <div class="gh-article-meta">
+            <div class="gh-article-meta-inner">
+                <time class="gh-article-date" datetime="2021-04-16">Apr 16, 2021</time>
+                    <span class="gh-article-meta-sep"></span>
+                    <span class="gh-article-length">2 min</span>
+            </div>
+        </div>
+
+    </aside>
+
+
+                    <figure class="gh-article-image">
+        <img
+            srcset="https://images.unsplash.com/photo-1616628188538-0bc97a2f741b?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDN8fHNvcnR8ZW58MHx8fHwxNjcyNzkyNDA4&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;300 300w,
+                    https://images.unsplash.com/photo-1616628188538-0bc97a2f741b?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDN8fHNvcnR8ZW58MHx8fHwxNjcyNzkyNDA4&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720 720w,
+                    https://images.unsplash.com/photo-1616628188538-0bc97a2f741b?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDN8fHNvcnR8ZW58MHx8fHwxNjcyNzkyNDA4&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;960 960w,
+                    https://images.unsplash.com/photo-1616628188538-0bc97a2f741b?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDN8fHNvcnR8ZW58MHx8fHwxNjcyNzkyNDA4&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1200 1200w,
+                    https://images.unsplash.com/photo-1616628188538-0bc97a2f741b?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDN8fHNvcnR8ZW58MHx8fHwxNjcyNzkyNDA4&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000 2000w"
+            sizes="(max-width: 1200px) 100vw, 1200px"
+            src="https://images.unsplash.com/photo-1616628188538-0bc97a2f741b?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDN8fHNvcnR8ZW58MHx8fHwxNjcyNzkyNDA4&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1200"
+            alt="Sorting algorithm"
+        >
+            <figcaption>Photo by <a href="https://unsplash.com/@kellysikkema?utm_source=ghost&utm_medium=referral&utm_campaign=api-credit">Kelly Sikkema</a> / <a href="https://unsplash.com/?utm_source=ghost&utm_medium=referral&utm_campaign=api-credit">Unsplash</a></figcaption>
+    </figure>
+            </header>
+
+            <section class="gh-content gh-canvas">
+                <!--kg-card-begin: markdown--><p>In this post, it includes the following sorting algorithms. The code is self explained.</p>
+<ul>
+<li>selection sort</li>
+<li>insert sort</li>
+<li>bubble sort</li>
+<li>quick sort</li>
+<li>merge sort</li>
+</ul>
+<pre><code class="language-java">import java.util.Arrays;
+
+public class Sort {
+	public static void selection_sort(int[] arr) {
+		for (int i = 0; i &lt; arr.length - 1; i++) {
+			int min_idx = i;
+
+			// find the minimum value from right of arr[i] and swap with arr[i]
+			for (int j = i + 1; j &lt; arr.length; j++) {
+				if (arr[j] &lt; arr[min_idx]) {
+					min_idx = j;
+				}
+			}
+
+			// move the min value to the beginning of array
+			int temp = arr[i];
+			arr[i] = arr[min_idx];
+			arr[min_idx] = temp;
+		}
+	}
+
+	public static void insert_sort(int[] arr) {
+		// sort from the second element since the first one is already sorted for itself
+		for (int i = 1; i &lt; arr.length; i++) {
+			int curr = arr[i];
+			int j = i - 1;
+
+			// move all the greater values(than curr) to one position right
+			while (j &gt;= 0 &amp;&amp; arr[j] &gt; curr) {
+				arr[j + 1] = arr[j];
+				j--;
+			}
+
+			arr[j + 1] = curr;
+		}
+	}
+
+	public static void bubble_sort(int[] arr) {
+		// bubble sort for n - 1 rounds
+		for (int i = 0; i &lt; arr.length - 1; i++) {
+			boolean swapped = false;
+			// For each round, bubble up the maximum element to the right
+			for (int j = 0; j &lt; arr.length - i - 1; j++) {
+				if (arr[j] &gt; arr[j + 1]) {
+					int temp = arr[j];
+					arr[j] = arr[j + 1];
+					arr[j + 1] = temp;
+					swapped = true;
+				}
+			}
+
+			if (!swapped)
+				break;
+		}
+	}
+
+	public static void quick_sort(int[] arr, int left, int right) {
+		if (left &lt; right) {
+			int pivot = partition(arr, left, right);
+			quick_sort(arr, left, pivot - 1);
+			quick_sort(arr, pivot + 1, right);
+		}
+	}
+
+	private static int partition(int[] arr, int left, int right) {
+		int pivot = arr[right];
+		int curr = left - 1;
+
+		for (int i = left; i &lt; right; i++) {
+			if (arr[i] &lt;= pivot) {
+				curr++;
+				int temp = arr[curr];
+				arr[curr] = arr[i];
+				arr[i] = temp;
+			}
+		}
+
+		curr++;
+		int temp = arr[curr];
+		arr[curr] = pivot;
+		arr[right] = temp;
+		return curr;
+	}
+
+	public static void merge_sort(int[] arr, int left, int right) {
+		if (left &lt; right) {
+			//int mid = (left + right) / 2;
+			int mid = left + (right - left) / 2; // avoid overflow
+			merge_sort(arr, left, mid);
+			merge_sort(arr, mid + 1, right);
+			merge(arr, left, mid, right);
+		}
+	}
+
+	private static void merge(int[] arr, int left, int mid, int right) {
+		int l1 = mid - left + 1;
+		int l2 = right - mid;
+
+		// copy left and right to the temporary array
+		int[] a1 = new int[l1];
+		int[] a2 = new int[l2];
+
+
+		for (int i = 0; i &lt; l1; i++) {
+			a1[i] = arr[left + i];
+		}
+
+		for (int i = 0; i &lt; l2; i++) {
+			a2[i] = arr[mid + 1 + i];
+		}
+
+		// merge back to the original array
+		int i = 0, j = 0, k = left;
+		while (i &lt; l1 &amp;&amp; j &lt; l2) {
+			if (a1[i] &lt;= a2[j]) {
+				arr[k++] = a1[i++];
+			} else {
+				arr[k++] = a2[j++];
+			}
+		}
+
+		while (i &lt; l1) {
+			arr[k++] = a1[i++];
+		}
+		while (j &lt; l2) {
+			arr[k++] = a2[j++];
+		}
+	}
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		int[] arr = { 11, 25, 12, 22, 64 };
+		selection_sort(arr);
+		System.out.println(Arrays.toString(arr));
+
+		int[] arr1 = { 11, 25, 12, 22, 64 };
+		insert_sort(arr1);
+		System.out.println(Arrays.toString(arr1));
+
+		int[] arr2 = { 11, 25, 12, 22, 64 };
+		bubble_sort(arr2);
+		System.out.println(Arrays.toString(arr2));
+
+		int[] arr3 = { 11, 25, 12, 22, 64 };
+		quick_sort(arr3, 0, arr3.length - 1);
+		System.out.println(Arrays.toString(arr3));
+
+		int[] arr4 = { 11, 25, 12, 22, 64 };
+		merge_sort(arr4, 0, arr4.length - 1);
+		System.out.println(Arrays.toString(arr4));
+	}
+
+}
+</code></pre>
+<!--kg-card-end: markdown-->
+            </section>
+
+        </article>
+
+                <div class="gh-read-next gh-canvas">
+                <section class="gh-pagehead">
+                    <h4 class="gh-pagehead-title">Read next</h4>
+                </section>
+
+                <div class="gh-topic gh-topic-grid">
+                    <div class="gh-topic-content">
+                            <article class="gh-card post">
+    <a class="gh-card-link" href="/a-six-step-framework-to-tackle-any-system-design-questio/">
+            <figure class="gh-card-image">
+                <img
+                    srcset="https://images.unsplash.com/photo-1541462608143-67571c6738dd?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDF8fHN5c3RlbSUyMGRlc2lnbnxlbnwwfHx8fDE2NzI3NzkzNjU&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;300 300w,
+                            https://images.unsplash.com/photo-1541462608143-67571c6738dd?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDF8fHN5c3RlbSUyMGRlc2lnbnxlbnwwfHx8fDE2NzI3NzkzNjU&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720 720w,
+                            https://images.unsplash.com/photo-1541462608143-67571c6738dd?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDF8fHN5c3RlbSUyMGRlc2lnbnxlbnwwfHx8fDE2NzI3NzkzNjU&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;960 960w,
+                            https://images.unsplash.com/photo-1541462608143-67571c6738dd?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDF8fHN5c3RlbSUyMGRlc2lnbnxlbnwwfHx8fDE2NzI3NzkzNjU&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1200 1200w,
+                            https://images.unsplash.com/photo-1541462608143-67571c6738dd?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDF8fHN5c3RlbSUyMGRlc2lnbnxlbnwwfHx8fDE2NzI3NzkzNjU&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000 2000w"
+                    sizes="(max-width: 1200px) 100vw, 1200px"
+                    src="https://images.unsplash.com/photo-1541462608143-67571c6738dd?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDF8fHN5c3RlbSUyMGRlc2lnbnxlbnwwfHx8fDE2NzI3NzkzNjU&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720"
+                    alt="A six-step framework to tackle any system design questio"
+                >
+            </figure>
+
+        <div class="gh-card-wrapper">
+            <header class="gh-card-header">
+                <h3 class="gh-card-title">A six-step framework to tackle any system design questio</h3>
+            </header>
+
+                    <div class="gh-card-excerpt">Introduction
+
+
+In the book of System Design Interview by Lewis C. Lin, a six-step framework called PEDALS is introduced to help answer any system design question.
+
+
+PEDALS stand for:
+
+
+ * Process requirements
+ * Estimate
+ * Design the service
+ * Articulate the data model
+ * List the architectural components
+ * Scale
+
+
+The systematic method will power you</div>
+
+            <footer class="gh-card-footer">
+                <span class="gh-card-author">relentlesstorm</span>
+                <time class="gh-card-date" datetime="2022-05-08">May 8, 2022</time>
+            </footer>
+        </div>
+    </a>
+</article>                            <article class="gh-card post">
+    <a class="gh-card-link" href="/the-complete-guide-to-system-design/">
+            <figure class="gh-card-image">
+                <img
+                    srcset="https://images.unsplash.com/photo-1576595580361-90a855b84b20?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDZ8fHN5c3RlbSUyMGRlc2lnbnxlbnwwfHx8fDE2NzI3NzkzNjU&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;300 300w,
+                            https://images.unsplash.com/photo-1576595580361-90a855b84b20?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDZ8fHN5c3RlbSUyMGRlc2lnbnxlbnwwfHx8fDE2NzI3NzkzNjU&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720 720w,
+                            https://images.unsplash.com/photo-1576595580361-90a855b84b20?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDZ8fHN5c3RlbSUyMGRlc2lnbnxlbnwwfHx8fDE2NzI3NzkzNjU&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;960 960w,
+                            https://images.unsplash.com/photo-1576595580361-90a855b84b20?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDZ8fHN5c3RlbSUyMGRlc2lnbnxlbnwwfHx8fDE2NzI3NzkzNjU&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1200 1200w,
+                            https://images.unsplash.com/photo-1576595580361-90a855b84b20?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDZ8fHN5c3RlbSUyMGRlc2lnbnxlbnwwfHx8fDE2NzI3NzkzNjU&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000 2000w"
+                    sizes="(max-width: 1200px) 100vw, 1200px"
+                    src="https://images.unsplash.com/photo-1576595580361-90a855b84b20?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDZ8fHN5c3RlbSUyMGRlc2lnbnxlbnwwfHx8fDE2NzI3NzkzNjU&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720"
+                    alt="The complete guide to System Design"
+                >
+            </figure>
+
+        <div class="gh-card-wrapper">
+            <header class="gh-card-header">
+                <h3 class="gh-card-title">The complete guide to System Design</h3>
+            </header>
+
+                    <div class="gh-card-excerpt">The complete guide to System Design in 2022 covers:
+
+
+ * What is System Design?
+ * System Design fundamentals
+   
+   * Horizontal and vertical scaling
+   * Microservices
+   * Proxy servers
+   * CAP theorem
+   * Redundancy and replication
+   * Storage
+     
+     * Block storage
+     * File storage
+     * Object storage
+     * Redundant Disk Arrays (RAID)
+     
+   * Message queues
+     
+     * Kafka
+     
+   * File systems
+     
+     * Google File System (GFS)
+     * Hadoop Distributed</div>
+
+            <footer class="gh-card-footer">
+                <span class="gh-card-author">relentlesstorm</span>
+                <time class="gh-card-date" datetime="2022-05-04">May 4, 2022</time>
+            </footer>
+        </div>
+    </a>
+</article>                            <article class="gh-card post">
+    <a class="gh-card-link" href="/angularjs-table-creation-for-dynamic-number-of-columns/">
+            <figure class="gh-card-image">
+                <img
+                    srcset="https://images.unsplash.com/photo-1592609931095-54a2168ae893?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDN8fGphdmFzY3JpcHR8ZW58MHx8fHwxNjcyNzgxNTA3&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;300 300w,
+                            https://images.unsplash.com/photo-1592609931095-54a2168ae893?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDN8fGphdmFzY3JpcHR8ZW58MHx8fHwxNjcyNzgxNTA3&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720 720w,
+                            https://images.unsplash.com/photo-1592609931095-54a2168ae893?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDN8fGphdmFzY3JpcHR8ZW58MHx8fHwxNjcyNzgxNTA3&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;960 960w,
+                            https://images.unsplash.com/photo-1592609931095-54a2168ae893?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDN8fGphdmFzY3JpcHR8ZW58MHx8fHwxNjcyNzgxNTA3&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1200 1200w,
+                            https://images.unsplash.com/photo-1592609931095-54a2168ae893?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDN8fGphdmFzY3JpcHR8ZW58MHx8fHwxNjcyNzgxNTA3&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000 2000w"
+                    sizes="(max-width: 1200px) 100vw, 1200px"
+                    src="https://images.unsplash.com/photo-1592609931095-54a2168ae893?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDN8fGphdmFzY3JpcHR8ZW58MHx8fHwxNjcyNzgxNTA3&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720"
+                    alt="AngularJS table creation for dynamic number of columns"
+                >
+            </figure>
+
+        <div class="gh-card-wrapper">
+            <header class="gh-card-header">
+                <h3 class="gh-card-title">AngularJS table creation for dynamic number of columns</h3>
+            </header>
+
+                    <div class="gh-card-excerpt"><head>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <script src="js/bootstrap.bundle.min.js"></script>
+    <script src="js/angular.min.js"></script>
+</head>
+
+<body ng-app="myApp">
+<div ng-controller="MyCtrl">
+    <div class="table-responsive" id="table1">
+        <table class="table table-sm table-hover">
+            <thead class="thead-light">
+                <tr>
+                    <th ng-repeat="column in cols">{{column}}</th>
+                </tr>
+            </thead></table></div></div></body></div>
+
+            <footer class="gh-card-footer">
+                <span class="gh-card-author">relentlesstorm</span>
+                <time class="gh-card-date" datetime="2022-04-22">Apr 22, 2022</time>
+            </footer>
+        </div>
+    </a>
+</article>                    </div>
+                </div>
+            </div>
+
+        </main>
+
+    <footer class="gh-foot gh-outer">
+        <div class="gh-foot-inner gh-inner">
+
+            <!--<nav class="gh-foot-menu">
+                <<ul class="nav">
+    <li class="nav-sign-up"><a href="#/portal/">Sign up</a></li>
+</ul>
+
+            </nav>-->
+
+            <div class="gh-copyright">
+                    Flamingbytes © 2023. Powered by <a href="https://ghost.org/" target="_blank" rel="noopener">Ghost</a>
+            </div>
+        </div>
+    </footer>
+
+</div>
+
+    <div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="pswp__bg"></div>
+
+    <div class="pswp__scroll-wrap">
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)"></button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)"></button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="/assets/built/main.min.js?v=e1adcf5302"></script>
+
+
+
+</body>
+
+</html>

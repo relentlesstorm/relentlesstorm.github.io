@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>blktrace - A block layer IO tracing utility</title>
+    <link rel="stylesheet" href="/assets/built/screen.css?v=e1adcf5302">
+
+    <link rel="canonical" href="https://relentlesstorm.github.io/blktrace-a-block-layer-io-tracing-utility/" />
+    <meta name="referrer" content="no-referrer-when-downgrade" />
+    
+    <meta property="og:site_name" content="Flamingbytes" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="blktrace - A block layer IO tracing utility" />
+    <meta property="og:description" content="What can blktrace do?
+
+
+Let&#x27;s dive into the block device layer and see how the I/O are handled in disk queues.
+
+
+The following stack shows the I/O paths including the block device layer. The application can issue I/O requests directly to block device or through file systems." />
+    <meta property="og:url" content="https://relentlesstorm.github.io/blktrace-a-block-layer-io-tracing-utility/" />
+    <meta property="og:image" content="https://images.unsplash.com/photo-1533234427049-9e9bb093186d?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDExfHxibG9jayUyMGRldmljZXxlbnwwfHx8fDE2NzI3OTI3NDY&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000" />
+    <meta property="article:published_time" content="2021-03-11T00:00:00.000Z" />
+    <meta property="article:modified_time" content="2023-01-04T00:39:17.000Z" />
+    <meta property="article:tag" content="Performance" />
+    
+    <meta property="article:publisher" content="https://www.facebook.com/ghost" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="blktrace - A block layer IO tracing utility" />
+    <meta name="twitter:description" content="What can blktrace do?
+
+
+Let&#x27;s dive into the block device layer and see how the I/O are handled in disk queues.
+
+
+The following stack shows the I/O paths including the block device layer. The application can issue I/O requests directly to block device or through file systems." />
+    <meta name="twitter:url" content="https://relentlesstorm.github.io/blktrace-a-block-layer-io-tracing-utility/" />
+    <meta name="twitter:image" content="https://images.unsplash.com/photo-1533234427049-9e9bb093186d?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDExfHxibG9jayUyMGRldmljZXxlbnwwfHx8fDE2NzI3OTI3NDY&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000" />
+    <meta name="twitter:label1" content="Written by" />
+    <meta name="twitter:data1" content="relentlesstorm" />
+    <meta name="twitter:label2" content="Filed under" />
+    <meta name="twitter:data2" content="Performance" />
+    <meta name="twitter:site" content="@ghost" />
+    <meta property="og:image:width" content="2000" />
+    <meta property="og:image:height" content="1333" />
+    
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "publisher": {
+        "@type": "Organization",
+        "name": "Flamingbytes",
+        "url": "https://relentlesstorm.github.io/",
+        "logo": {
+            "@type": "ImageObject",
+            "url": "https://relentlesstorm.github.io/favicon.ico",
+            "width": 48,
+            "height": 48
+        }
+    },
+    "author": {
+        "@type": "Person",
+        "name": "relentlesstorm",
+        "url": "https://relentlesstorm.github.io/author/relentlesstorm/",
+        "sameAs": []
+    },
+    "headline": "blktrace - A block layer IO tracing utility",
+    "url": "https://relentlesstorm.github.io/blktrace-a-block-layer-io-tracing-utility/",
+    "datePublished": "2021-03-11T00:00:00.000Z",
+    "dateModified": "2023-01-04T00:39:17.000Z",
+    "image": {
+        "@type": "ImageObject",
+        "url": "https://images.unsplash.com/photo-1533234427049-9e9bb093186d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxMTc3M3wwfDF8c2VhcmNofDExfHxibG9jayUyMGRldmljZXxlbnwwfHx8fDE2NzI3OTI3NDY&ixlib=rb-4.0.3&q=80&w=2000",
+        "width": 2000,
+        "height": 1333
+    },
+    "keywords": "Performance",
+    "description": "What can blktrace do?\n\n\nLet&#x27;s dive into the block device layer and see how the I/O are handled in disk queues.\n\n\nThe following stack shows the I/O paths including the block device layer. The application can issue I/O requests directly to block device or through file systems. In the following sections, let&#x27;s dig into the block device layer with blktrace in order to understand the I/O pattern and disk queue activities.\n\n\n        Applications\n        |      |   |  \n        V      |   | \n  File syst",
+    "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https://relentlesstorm.github.io/"
+    }
+}
+    </script>
+
+    <meta name="generator" content="Ghost 5.26" />
+    <link rel="alternate" type="application/rss+xml" title="Flamingbytes" href="https://relentlesstorm.github.io/rss/" />
+    
+    <script defer src="https://cdn.jsdelivr.net/ghost/sodo-search@~1.1/umd/sodo-search.min.js" data-key="321a1d1aea33fd468f6e61f563" data-styles="https://cdn.jsdelivr.net/ghost/sodo-search@~1.1/umd/main.css" data-sodo-search="https://relentlesstorm.github.io/" crossorigin="anonymous"></script>
+    <script defer src="/public/cards.min.js?v=e1adcf5302"></script><style>:root {--ghost-accent-color: #6a13ec;}</style>
+    <link rel="stylesheet" type="text/css" href="/public/cards.min.css?v=e1adcf5302">
+</head>
+
+<body class="post-template tag-performance is-head-left-logo has-serif-body">
+<div class="gh-site">
+
+    <header id="gh-head" class="gh-head gh-outer">
+        <div class="gh-head-inner gh-inner">
+            <div class="gh-head-brand">
+                <div class="gh-head-brand-wrapper">
+                    <a class="gh-head-logo" href="https://relentlesstorm.github.io">
+                            Flamingbytes
+                    </a>
+                </div>
+                <button class="gh-search gh-icon-btn" data-ghost-search><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" width="20" height="20"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg></button>
+                <button class="gh-burger"></button>
+            </div>
+
+            <nav class="gh-head-menu">
+                <ul class="nav">
+    <li class="nav-home"><a href="https://relentlesstorm.github.io/">Home</a></li>
+    <li class="nav-tags"><a href="https://relentlesstorm.github.io/tags/">Tags</a></li>
+    <li class="nav-archive"><a href="https://relentlesstorm.github.io/archive/">Archive</a></li>
+    <li class="nav-about"><a href="https://relentlesstorm.github.io/about/">About</a></li>
+</ul>
+
+            </nav>
+
+            <div class="gh-head-actions">
+                        <button class="gh-search gh-icon-btn" data-ghost-search><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" width="20" height="20"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg></button>
+            </div>
+        </div>
+    </header>
+
+    
+<main class="gh-main">
+        <article class="gh-article post tag-performance">
+
+            <header class="gh-article-header gh-canvas">
+                    <a class="gh-article-tag" href="https://relentlesstorm.github.io/tag/performance/">Performance</a>
+
+                <h1 class="gh-article-title">blktrace - A block layer IO tracing utility</h1>
+
+                    <aside class="gh-article-sidebar">
+
+        <div class="gh-author-image-list">
+                <a class="gh-author-image" href="/author/relentlesstorm/">
+                        <div class="gh-author-icon"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="64" height="64"><g fill="none" fill-rule="evenodd"><path d="M3.513 18.998C4.749 15.504 8.082 13 12 13s7.251 2.504 8.487 5.998C18.47 21.442 15.417 23 12 23s-6.47-1.558-8.487-4.002zM12 12c2.21 0 4-2.79 4-5s-1.79-4-4-4-4 1.79-4 4 1.79 5 4 5z" fill="#FFF"/></g></svg>
+</div>
+                </a>
+        </div>
+
+        <div class="gh-author-name-list">
+                <h4 class="gh-author-name">
+                    <a href="/author/relentlesstorm/">relentlesstorm</a>
+                </h4>
+                
+        </div>
+
+        <div class="gh-article-meta">
+            <div class="gh-article-meta-inner">
+                <time class="gh-article-date" datetime="2021-03-11">Mar 11, 2021</time>
+                    <span class="gh-article-meta-sep"></span>
+                    <span class="gh-article-length">4 min</span>
+            </div>
+        </div>
+
+    </aside>
+
+
+                    <figure class="gh-article-image">
+        <img
+            srcset="https://images.unsplash.com/photo-1533234427049-9e9bb093186d?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDExfHxibG9jayUyMGRldmljZXxlbnwwfHx8fDE2NzI3OTI3NDY&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;300 300w,
+                    https://images.unsplash.com/photo-1533234427049-9e9bb093186d?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDExfHxibG9jayUyMGRldmljZXxlbnwwfHx8fDE2NzI3OTI3NDY&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720 720w,
+                    https://images.unsplash.com/photo-1533234427049-9e9bb093186d?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDExfHxibG9jayUyMGRldmljZXxlbnwwfHx8fDE2NzI3OTI3NDY&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;960 960w,
+                    https://images.unsplash.com/photo-1533234427049-9e9bb093186d?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDExfHxibG9jayUyMGRldmljZXxlbnwwfHx8fDE2NzI3OTI3NDY&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1200 1200w,
+                    https://images.unsplash.com/photo-1533234427049-9e9bb093186d?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDExfHxibG9jayUyMGRldmljZXxlbnwwfHx8fDE2NzI3OTI3NDY&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000 2000w"
+            sizes="(max-width: 1200px) 100vw, 1200px"
+            src="https://images.unsplash.com/photo-1533234427049-9e9bb093186d?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDExfHxibG9jayUyMGRldmljZXxlbnwwfHx8fDE2NzI3OTI3NDY&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1200"
+            alt="blktrace - A block layer IO tracing utility"
+        >
+            <figcaption>Photo by <a href="https://unsplash.com/@markusspiske?utm_source=ghost&utm_medium=referral&utm_campaign=api-credit">Markus Spiske</a> / <a href="https://unsplash.com/?utm_source=ghost&utm_medium=referral&utm_campaign=api-credit">Unsplash</a></figcaption>
+    </figure>
+            </header>
+
+            <section class="gh-content gh-canvas">
+                <!--kg-card-begin: markdown--><h2 id="what-can-blktrace-do">What can blktrace do?</h2>
+<p>Let's dive into the block device layer and see how the I/O are handled in disk queues.</p>
+<p>The following stack shows the I/O paths including the block device layer. The application can issue I/O requests directly to block device or through file systems. In the following sections, let's dig into the block device layer with blktrace in order to understand the I/O pattern and disk queue activities.</p>
+<pre><code class="language-shell">        Applications
+        |      |   |  
+        V      |   | 
+  File systems |   |
+        |      |   |
+        V      |   |
+ Page Cache &lt;--|   | 
+        |          | 
+        V          V
+Block I/O Layer: Request Queues
+        |
+        V 
+  SCSI Drivers
+        |
+        V
+ Physical Devices               
+</code></pre>
+<h2 id="dont-forget-iostat">Don't forget iostat</h2>
+<p>iostat is always the first place to understand the I/O characteristics before we turn to other advanced utilities like blktrace.</p>
+<p>It provides the following information for the disk IOs.</p>
+<ul>
+<li>Number of read/write merges per second</li>
+<li>Number of reads/writes per second</li>
+<li>Average I/O request size(in sectors)</li>
+<li>Average request queue size</li>
+<li>Average I/O wait time</li>
+</ul>
+<p>If any of the above metrics indicates disk I/O performance concerns and it's not sufficient to help us explain the performance issue, we can turn to blktrace or other tracing utilities for more insights.</p>
+<h2 id="blktrace-and-blkparse">blktrace and blkparse</h2>
+<p>To trace the target block device:</p>
+<pre><code class="language-shell">$ blktrace -d /dev/&lt;sd-device-name&gt; -D &lt;trace-raw-data-save-dir&gt; -w &lt;trace-time-in-seconds&gt;
+</code></pre>
+<p>To parse the blktrace data:</p>
+<pre><code class="language-shell">$ blkparse -i &lt;sd-device-name&gt; -D &lt;trace-raw-data-save-dir&gt; -o blkparse.&lt;sd-device-name&gt;.out -d blktrace.bin
+</code></pre>
+<p>blkparse output snippet:</p>
+<pre><code class="language-shell">  8,0    7        3     0.992335623  4180  A  WS 680911952 + 8 &lt;- (8,2) 679885904
+  8,0    7        4     0.992336407  4180  Q  WS 680911952 + 8 [jbd2/dm-7-8]
+  8,0    7        5     0.992338784  4180  G  WS 680911952 + 8 [jbd2/dm-7-8]
+  8,0    7        6     0.992339977  4180  I  WS 680911952 + 8 [jbd2/dm-7-8]
+  8,0    7        7     0.992341444  4180  D  WS 680911952 + 8 [jbd2/dm-7-8]
+  8,0   56        1     0.992499505     0  C  WS 680911952 + 8 [0]
+  8,0   47        7     0.991930131  4180  A  WS 680911920 + 8 &lt;- (8,2) 679885872
+  8,0   47        8     0.991930522  4180  Q  WS 680911920 + 8 [jbd2/dm-7-8]
+  8,0   47        9     0.991932697  4180  M  WS 680911920 + 8 [jbd2/dm-7-8]
+</code></pre>
+<p>The columns are Dev major,minor, CPU id, Sequence number, Timestamp, PID, Event, Operation, Start block + number of blocks(offset), Process name.</p>
+<p>In the above example, The first IO starts at block 680911952 with the offset of 8 blocks. It is handled in the following sequence.</p>
+<ul>
+<li>Remapped to a different device(8,2)</li>
+<li>Handled by the request queue code</li>
+<li>Get the request</li>
+<li>Inserted to the request queue</li>
+<li>Dispatch to device driver</li>
+<li>Completion</li>
+</ul>
+<p>The second IO starts at block 680911920 with the offset of 8 blocks. It's handled in the following sequence.</p>
+<ul>
+<li>Remapped to a different device(8,2)</li>
+<li>Handled by the request queue code</li>
+<li>Back merged with request on queue</li>
+</ul>
+<p>blkparse output also includes a summary to explain the number of I/Os in each queuing phase. In the following example, there are 86 writes handled by request queue. 19 out of 86 writes are merged with request on queue. Thus, only 67 writes are issued to device to complete the front end requests.</p>
+<pre><code class="language-shell">Total (sda):
+ Reads Queued:           0,        0KiB  Writes Queued:          86,      628KiB
+ Read Dispatches:        0,        0KiB  Write Dispatches:       67,      628KiB
+ Reads Requeued:         0               Writes Requeued:         0
+ Reads Completed:        0,        0KiB  Writes Completed:       67,      628KiB
+ Read Merges:            0,        0KiB  Write Merges:           19,       88KiB
+ IO unplugs:            21               Timer unplugs:           0
+</code></pre>
+<h2 id="btt">btt</h2>
+<p>btt is a post-processing tool for blktrace. blktrace is capable of producing tremendous amounts of output in the form of multiple individual traces per IO executed during the traced run. It is also capable of producing some general statistics concerning IO rates and the like. btt goes further and produces a variety of overall statistics about each of the individual handling of IOs, and provides data we believe is useful to plot to provide visual comparisons for evaluation.</p>
+<p>btt processes the binary file produced by blkparse.The major areas of output measured by btt include:</p>
+<ul>
+<li>Q2Q : Queue-to-Queue time</li>
+<li>Q2G : Queue-to-GetRequest time</li>
+<li>S2G : Sleep-to-GetRequest time</li>
+<li>G2I : GetRequest-to-Insert time</li>
+<li>Q2M : Queue-to-Merge time</li>
+<li>I2D : Insert-to-Issue time</li>
+<li>M2D : Merge-to-Issue time</li>
+<li>D2C : Issue-to-Complete time</li>
+<li>Q2C : Queue-to-Complete time</li>
+</ul>
+<p>For the D2C, it includes the driver and device time. It's the average time from when the actual IO was issued to the driver until is completed (completion trace) back to the block IO layer. The D2C time should be greater than the actual physcial disk I/O latency which is usually measured in disk(array) side.</p>
+<p>In the following exampl, 98.9265% of time is spent on D2C which is expected. The average IO time serviced by the disk is 1.65ms. The max IO time is 5.10ms. We may measure the I2D metric for different I/O scheduler, like noop in SSD case.</p>
+<pre><code class="language-shell">$ btt -i blktrace.bin -B offset -o btt.out
+
+$ ls btt.*.out*
+btt.sda.30s.out.avg  btt.sda.30s.out.dat  btt.sda.30s.out_dhist.dat  btt.sda.30s.out.msg  btt.sda.30s.out_qhist.dat
+
+$ cat btt.out.avg
+==================== All Devices ====================
+
+ALL               MIN           AVG           MAX                  N
+--------------- ------------- ------------- ------------- -----------
+
+Q2Q               0.000001053   0.304967428   5.071043004          85
+Q2G               0.000000338   0.000001928   0.000008143          67
+G2I               0.000000161   0.000008231   0.000126276          67
+Q2M               0.000000178   0.000000664   0.000002175          19
+I2D               0.000000223   0.000003979   0.000024517          67
+M2D               0.000002771   0.000030058   0.000116136          19
+D2C               0.000089761   0.001640496   0.005096214          86
+Q2C               0.000093453   0.001658297   0.005098018          86
+
+==================== Device Overhead ====================
+
+       DEV |       Q2G       G2I       Q2M       I2D       D2C
+---------- | --------- --------- --------- --------- ---------
+ (  8,  0) |   0.0906%   0.3867%   0.0088%   0.1869%  98.9265%
+---------- | --------- --------- --------- --------- ---------
+   Overall |   0.0906%   0.3867%   0.0088%   0.1869%  98.9265%
+[..]   
+</code></pre>
+<!--kg-card-end: markdown-->
+            </section>
+
+        </article>
+
+                <div class="gh-read-next gh-canvas">
+                <section class="gh-pagehead">
+                    <h4 class="gh-pagehead-title">Read next</h4>
+                </section>
+
+                <div class="gh-topic gh-topic-grid">
+                    <div class="gh-topic-content">
+                            <article class="gh-card post">
+    <a class="gh-card-link" href="/using-systemtap-to-analyze-latency-of-the-kernel-module-function/">
+            <figure class="gh-card-image">
+                <img
+                    srcset="https://images.unsplash.com/photo-1604869515882-4d10fa4b0492?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDF8fGxhdGVuY3l8ZW58MHx8fHwxNjcyNzc4MDkw&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;300 300w,
+                            https://images.unsplash.com/photo-1604869515882-4d10fa4b0492?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDF8fGxhdGVuY3l8ZW58MHx8fHwxNjcyNzc4MDkw&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720 720w,
+                            https://images.unsplash.com/photo-1604869515882-4d10fa4b0492?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDF8fGxhdGVuY3l8ZW58MHx8fHwxNjcyNzc4MDkw&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;960 960w,
+                            https://images.unsplash.com/photo-1604869515882-4d10fa4b0492?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDF8fGxhdGVuY3l8ZW58MHx8fHwxNjcyNzc4MDkw&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1200 1200w,
+                            https://images.unsplash.com/photo-1604869515882-4d10fa4b0492?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDF8fGxhdGVuY3l8ZW58MHx8fHwxNjcyNzc4MDkw&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000 2000w"
+                    sizes="(max-width: 1200px) 100vw, 1200px"
+                    src="https://images.unsplash.com/photo-1604869515882-4d10fa4b0492?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDF8fGxhdGVuY3l8ZW58MHx8fHwxNjcyNzc4MDkw&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720"
+                    alt="Using systemtap to analyze latency of the kernel module function"
+                >
+            </figure>
+
+        <div class="gh-card-wrapper">
+            <header class="gh-card-header">
+                <h3 class="gh-card-title">Using systemtap to analyze latency of the kernel module function</h3>
+            </header>
+
+                    <div class="gh-card-excerpt">In this post, we continue to explore how to use SystemTap to analyze the latency of the kernel module function. In the following example, we want to analyze the latency of the function "nfsd_vfs_write" from the kernel module "nfsd".
+
+
+
+Deploy the SystemTap packages
+
+
+Refer to this post to</div>
+
+            <footer class="gh-card-footer">
+                <span class="gh-card-author">relentlesstorm</span>
+                <time class="gh-card-date" datetime="2022-07-16">Jul 16, 2022</time>
+            </footer>
+        </div>
+    </a>
+</article>                            <article class="gh-card post">
+    <a class="gh-card-link" href="/getting-started-with-systemtap-for-linux-system-profiling/">
+            <figure class="gh-card-image">
+                <img
+                    srcset="https://images.unsplash.com/photo-1518186285589-2f7649de83e0?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDE3fHxhbmFseXNpc3xlbnwwfHx8fDE2NzI3NzgxNzI&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;300 300w,
+                            https://images.unsplash.com/photo-1518186285589-2f7649de83e0?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDE3fHxhbmFseXNpc3xlbnwwfHx8fDE2NzI3NzgxNzI&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720 720w,
+                            https://images.unsplash.com/photo-1518186285589-2f7649de83e0?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDE3fHxhbmFseXNpc3xlbnwwfHx8fDE2NzI3NzgxNzI&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;960 960w,
+                            https://images.unsplash.com/photo-1518186285589-2f7649de83e0?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDE3fHxhbmFseXNpc3xlbnwwfHx8fDE2NzI3NzgxNzI&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1200 1200w,
+                            https://images.unsplash.com/photo-1518186285589-2f7649de83e0?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDE3fHxhbmFseXNpc3xlbnwwfHx8fDE2NzI3NzgxNzI&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000 2000w"
+                    sizes="(max-width: 1200px) 100vw, 1200px"
+                    src="https://images.unsplash.com/photo-1518186285589-2f7649de83e0?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDE3fHxhbmFseXNpc3xlbnwwfHx8fDE2NzI3NzgxNzI&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720"
+                    alt="Getting started with systemtap for Linux system profiling"
+                >
+            </figure>
+
+        <div class="gh-card-wrapper">
+            <header class="gh-card-header">
+                <h3 class="gh-card-title">Getting started with systemtap for Linux system profiling</h3>
+            </header>
+
+                    <div class="gh-card-excerpt">Intro to SystemTap
+
+
+SystemTap is a tracing and probing tool that allows users to study and monitor the activities of the operating system (particularly, the kernel) in fine detail. It provides information similar to the output of tools like netstat, ps, top, and iostat; however, SystemTap is designed to provide</div>
+
+            <footer class="gh-card-footer">
+                <span class="gh-card-author">relentlesstorm</span>
+                <time class="gh-card-date" datetime="2022-07-15">Jul 15, 2022</time>
+            </footer>
+        </div>
+    </a>
+</article>                            <article class="gh-card post">
+    <a class="gh-card-link" href="/using-ftrace-to-analyze-latency-of-the-kernel-module-function/">
+            <figure class="gh-card-image">
+                <img
+                    srcset="https://images.unsplash.com/photo-1613083093144-bfa5c3eb8337?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDJ8fHRyYWNlfGVufDB8fHx8MTY3Mjc3ODI2Ng&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;300 300w,
+                            https://images.unsplash.com/photo-1613083093144-bfa5c3eb8337?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDJ8fHRyYWNlfGVufDB8fHx8MTY3Mjc3ODI2Ng&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720 720w,
+                            https://images.unsplash.com/photo-1613083093144-bfa5c3eb8337?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDJ8fHRyYWNlfGVufDB8fHx8MTY3Mjc3ODI2Ng&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;960 960w,
+                            https://images.unsplash.com/photo-1613083093144-bfa5c3eb8337?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDJ8fHRyYWNlfGVufDB8fHx8MTY3Mjc3ODI2Ng&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1200 1200w,
+                            https://images.unsplash.com/photo-1613083093144-bfa5c3eb8337?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDJ8fHRyYWNlfGVufDB8fHx8MTY3Mjc3ODI2Ng&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000 2000w"
+                    sizes="(max-width: 1200px) 100vw, 1200px"
+                    src="https://images.unsplash.com/photo-1613083093144-bfa5c3eb8337?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDJ8fHRyYWNlfGVufDB8fHx8MTY3Mjc3ODI2Ng&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720"
+                    alt="Using ftrace to analyze latency of the kernel module function"
+                >
+            </figure>
+
+        <div class="gh-card-wrapper">
+            <header class="gh-card-header">
+                <h3 class="gh-card-title">Using ftrace to analyze latency of the kernel module function</h3>
+            </header>
+
+                    <div class="gh-card-excerpt">In this example, we study the latency of the function "nfsd_vfs_write" from kernel module "nfsd".
+
+
+
+ftrace configuration
+
+
+The following ftrace options are used in this example. There are 8 nfsd processes to be traced.
+
+
+ * current_tracer: function_graph
+ * pids: 3591 3592 3593 3594 3595 3596 3597 3598
+ * filters:</div>
+
+            <footer class="gh-card-footer">
+                <span class="gh-card-author">relentlesstorm</span>
+                <time class="gh-card-date" datetime="2022-07-14">Jul 14, 2022</time>
+            </footer>
+        </div>
+    </a>
+</article>                    </div>
+                </div>
+            </div>
+
+        </main>
+
+    <footer class="gh-foot gh-outer">
+        <div class="gh-foot-inner gh-inner">
+
+            <!--<nav class="gh-foot-menu">
+                <<ul class="nav">
+    <li class="nav-sign-up"><a href="#/portal/">Sign up</a></li>
+</ul>
+
+            </nav>-->
+
+            <div class="gh-copyright">
+                    Flamingbytes © 2023. Powered by <a href="https://ghost.org/" target="_blank" rel="noopener">Ghost</a>
+            </div>
+        </div>
+    </footer>
+
+</div>
+
+    <div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="pswp__bg"></div>
+
+    <div class="pswp__scroll-wrap">
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)"></button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)"></button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="/assets/built/main.min.js?v=e1adcf5302"></script>
+
+
+
+</body>
+
+</html>

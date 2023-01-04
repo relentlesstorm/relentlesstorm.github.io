@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>SysRq - Linux Magic System Request Key Hacks</title>
+    <link rel="stylesheet" href="/assets/built/screen.css?v=e1adcf5302">
+
+    <link rel="canonical" href="https://relentlesstorm.github.io/sysrq-linux-magic-system-request-key-hacks/" />
+    <meta name="referrer" content="no-referrer-when-downgrade" />
+    
+    <meta property="og:site_name" content="Flamingbytes" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="SysRq - Linux Magic System Request Key Hacks" />
+    <meta property="og:description" content="What is the magic SysRq key?
+
+
+It is a ‘magical’ key combo you can hit which the kernel will respond to regardless of whatever else it is doing, unless it is completely locked up.
+
+
+
+How do I enable the magic SysRq key?
+
+
+You need to say “yes” to ‘Magic SysRq" />
+    <meta property="og:url" content="https://relentlesstorm.github.io/sysrq-linux-magic-system-request-key-hacks/" />
+    <meta property="og:image" content="https://images.unsplash.com/photo-1498673394965-85cb14905c89?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDJ8fG1hZ2ljfGVufDB8fHx8MTY3Mjc3ODkyNg&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000" />
+    <meta property="article:published_time" content="2022-05-21T00:00:00.000Z" />
+    <meta property="article:modified_time" content="2023-01-04T04:29:42.000Z" />
+    <meta property="article:tag" content="Linux" />
+    
+    <meta property="article:publisher" content="https://www.facebook.com/ghost" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="SysRq - Linux Magic System Request Key Hacks" />
+    <meta name="twitter:description" content="What is the magic SysRq key?
+
+
+It is a ‘magical’ key combo you can hit which the kernel will respond to regardless of whatever else it is doing, unless it is completely locked up.
+
+
+
+How do I enable the magic SysRq key?
+
+
+You need to say “yes” to ‘Magic SysRq" />
+    <meta name="twitter:url" content="https://relentlesstorm.github.io/sysrq-linux-magic-system-request-key-hacks/" />
+    <meta name="twitter:image" content="https://images.unsplash.com/photo-1498673394965-85cb14905c89?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDJ8fG1hZ2ljfGVufDB8fHx8MTY3Mjc3ODkyNg&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000" />
+    <meta name="twitter:label1" content="Written by" />
+    <meta name="twitter:data1" content="relentlesstorm" />
+    <meta name="twitter:label2" content="Filed under" />
+    <meta name="twitter:data2" content="Linux" />
+    <meta name="twitter:site" content="@ghost" />
+    <meta property="og:image:width" content="2000" />
+    <meta property="og:image:height" content="1333" />
+    
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "publisher": {
+        "@type": "Organization",
+        "name": "Flamingbytes",
+        "url": "https://relentlesstorm.github.io/",
+        "logo": {
+            "@type": "ImageObject",
+            "url": "https://relentlesstorm.github.io/favicon.ico",
+            "width": 48,
+            "height": 48
+        }
+    },
+    "author": {
+        "@type": "Person",
+        "name": "relentlesstorm",
+        "url": "https://relentlesstorm.github.io/author/relentlesstorm/",
+        "sameAs": []
+    },
+    "headline": "SysRq - Linux Magic System Request Key Hacks",
+    "url": "https://relentlesstorm.github.io/sysrq-linux-magic-system-request-key-hacks/",
+    "datePublished": "2022-05-21T00:00:00.000Z",
+    "dateModified": "2023-01-04T04:29:42.000Z",
+    "image": {
+        "@type": "ImageObject",
+        "url": "https://images.unsplash.com/photo-1498673394965-85cb14905c89?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxMTc3M3wwfDF8c2VhcmNofDJ8fG1hZ2ljfGVufDB8fHx8MTY3Mjc3ODkyNg&ixlib=rb-4.0.3&q=80&w=2000",
+        "width": 2000,
+        "height": 1333
+    },
+    "keywords": "Linux",
+    "description": "What is the magic SysRq key?\n\n\nIt is a ‘magical’ key combo you can hit which the kernel will respond to regardless of whatever else it is doing, unless it is completely locked up.\n\n\n\nHow do I enable the magic SysRq key?\n\n\nYou need to say “yes” to ‘Magic SysRq key (CONFIG_MAGIC_SYSRQ)’ when configuring the kernel. When running a kernel with SysRq compiled in, /proc/sys/kernel/sysrq controls the functions allowed to be invoked via the SysRq key. The default value in this file is set by the CONFIG_",
+    "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https://relentlesstorm.github.io/"
+    }
+}
+    </script>
+
+    <meta name="generator" content="Ghost 5.26" />
+    <link rel="alternate" type="application/rss+xml" title="Flamingbytes" href="https://relentlesstorm.github.io/rss/" />
+    
+    <script defer src="https://cdn.jsdelivr.net/ghost/sodo-search@~1.1/umd/sodo-search.min.js" data-key="321a1d1aea33fd468f6e61f563" data-styles="https://cdn.jsdelivr.net/ghost/sodo-search@~1.1/umd/main.css" data-sodo-search="https://relentlesstorm.github.io/" crossorigin="anonymous"></script>
+    <script defer src="/public/cards.min.js?v=e1adcf5302"></script><style>:root {--ghost-accent-color: #6a13ec;}</style>
+    <link rel="stylesheet" type="text/css" href="/public/cards.min.css?v=e1adcf5302">
+</head>
+
+<body class="post-template tag-linux is-head-left-logo has-serif-body">
+<div class="gh-site">
+
+    <header id="gh-head" class="gh-head gh-outer">
+        <div class="gh-head-inner gh-inner">
+            <div class="gh-head-brand">
+                <div class="gh-head-brand-wrapper">
+                    <a class="gh-head-logo" href="https://relentlesstorm.github.io">
+                            Flamingbytes
+                    </a>
+                </div>
+                <button class="gh-search gh-icon-btn" data-ghost-search><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" width="20" height="20"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg></button>
+                <button class="gh-burger"></button>
+            </div>
+
+            <nav class="gh-head-menu">
+                <ul class="nav">
+    <li class="nav-home"><a href="https://relentlesstorm.github.io/">Home</a></li>
+    <li class="nav-tags"><a href="https://relentlesstorm.github.io/tags/">Tags</a></li>
+    <li class="nav-archive"><a href="https://relentlesstorm.github.io/archive/">Archive</a></li>
+    <li class="nav-about"><a href="https://relentlesstorm.github.io/about/">About</a></li>
+</ul>
+
+            </nav>
+
+            <div class="gh-head-actions">
+                        <button class="gh-search gh-icon-btn" data-ghost-search><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" width="20" height="20"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg></button>
+            </div>
+        </div>
+    </header>
+
+    
+<main class="gh-main">
+        <article class="gh-article post tag-linux">
+
+            <header class="gh-article-header gh-canvas">
+                    <a class="gh-article-tag" href="https://relentlesstorm.github.io/tag/linux/">Linux</a>
+
+                <h1 class="gh-article-title">SysRq - Linux Magic System Request Key Hacks</h1>
+
+                    <aside class="gh-article-sidebar">
+
+        <div class="gh-author-image-list">
+                <a class="gh-author-image" href="/author/relentlesstorm/">
+                        <div class="gh-author-icon"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="64" height="64"><g fill="none" fill-rule="evenodd"><path d="M3.513 18.998C4.749 15.504 8.082 13 12 13s7.251 2.504 8.487 5.998C18.47 21.442 15.417 23 12 23s-6.47-1.558-8.487-4.002zM12 12c2.21 0 4-2.79 4-5s-1.79-4-4-4-4 1.79-4 4 1.79 5 4 5z" fill="#FFF"/></g></svg>
+</div>
+                </a>
+        </div>
+
+        <div class="gh-author-name-list">
+                <h4 class="gh-author-name">
+                    <a href="/author/relentlesstorm/">relentlesstorm</a>
+                </h4>
+                
+        </div>
+
+        <div class="gh-article-meta">
+            <div class="gh-article-meta-inner">
+                <time class="gh-article-date" datetime="2022-05-21">May 21, 2022</time>
+                    <span class="gh-article-meta-sep"></span>
+                    <span class="gh-article-length">3 min</span>
+            </div>
+        </div>
+
+    </aside>
+
+
+                    <figure class="gh-article-image">
+        <img
+            srcset="https://images.unsplash.com/photo-1498673394965-85cb14905c89?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDJ8fG1hZ2ljfGVufDB8fHx8MTY3Mjc3ODkyNg&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;300 300w,
+                    https://images.unsplash.com/photo-1498673394965-85cb14905c89?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDJ8fG1hZ2ljfGVufDB8fHx8MTY3Mjc3ODkyNg&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720 720w,
+                    https://images.unsplash.com/photo-1498673394965-85cb14905c89?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDJ8fG1hZ2ljfGVufDB8fHx8MTY3Mjc3ODkyNg&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;960 960w,
+                    https://images.unsplash.com/photo-1498673394965-85cb14905c89?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDJ8fG1hZ2ljfGVufDB8fHx8MTY3Mjc3ODkyNg&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1200 1200w,
+                    https://images.unsplash.com/photo-1498673394965-85cb14905c89?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDJ8fG1hZ2ljfGVufDB8fHx8MTY3Mjc3ODkyNg&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000 2000w"
+            sizes="(max-width: 1200px) 100vw, 1200px"
+            src="https://images.unsplash.com/photo-1498673394965-85cb14905c89?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDJ8fG1hZ2ljfGVufDB8fHx8MTY3Mjc3ODkyNg&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1200"
+            alt="SysRq - Linux Magic System Request Key Hacks"
+        >
+            <figcaption>Photo by <a href="https://unsplash.com/@cristian1?utm_source=ghost&utm_medium=referral&utm_campaign=api-credit">Cristian Escobar</a> / <a href="https://unsplash.com/?utm_source=ghost&utm_medium=referral&utm_campaign=api-credit">Unsplash</a></figcaption>
+    </figure>
+            </header>
+
+            <section class="gh-content gh-canvas">
+                <!--kg-card-begin: markdown--><h2 id="what-is-the-magic-sysrq-key">What is the magic SysRq key?</h2>
+<p>It is a ‘magical’ key combo you can hit which the kernel will respond to regardless of whatever else it is doing, unless it is completely locked up.</p>
+<h2 id="how-do-i-enable-the-magic-sysrq-key">How do I enable the magic SysRq key?</h2>
+<p>You need to say “yes” to ‘Magic SysRq key (CONFIG_MAGIC_SYSRQ)’ when configuring the kernel. When running a kernel with SysRq compiled in, /proc/sys/kernel/sysrq controls the functions allowed to be invoked via the SysRq key. The default value in this file is set by the CONFIG_MAGIC_SYSRQ_DEFAULT_ENABLE config symbol, which itself defaults to 1. Here is the list of possible values in /proc/sys/kernel/sysrq:</p>
+<ul>
+<li>0 - disable sysrq completely</li>
+<li>1 - enable all functions of sysrq</li>
+<li>$&gt;$1 - bitmask of allowed sysrq functions (see below for detailed function description):</li>
+</ul>
+<pre><code>  2 =   0x2 - enable control of console logging level
+  4 =   0x4 - enable control of keyboard (SAK, unraw)
+  8 =   0x8 - enable debugging dumps of processes etc.
+ 16 =  0x10 - enable sync command
+ 32 =  0x20 - enable remount read-only
+ 64 =  0x40 - enable signalling of processes (term, kill, oom-kill)
+128 =  0x80 - allow reboot/poweroff
+256 = 0x100 - allow nicing of all RT tasks
+</code></pre>
+<p>You can set the value in the file by the following command:</p>
+<pre><code class="language-shell">$ echo &quot;number&quot; &gt;/proc/sys/kernel/sysrq
+</code></pre>
+<p>The number may be written here either as decimal or as hexadecimal with the 0x prefix. CONFIG_MAGIC_SYSRQ_DEFAULT_ENABLE must always be written in hexadecimal.</p>
+<p>Note that the value of /proc/sys/kernel/sysrq influences only the invocation via a keyboard. Invocation of any operation via /proc/sysrq-trigger is always allowed (by a user with admin privileges).</p>
+<h2 id="how-do-i-use-the-magic-sysrq-key">How do I use the magic SysRq key?</h2>
+<p>Write a character to /proc/sysrq-trigger. e.g.:</p>
+<pre><code class="language-shell">$ echo &quot;command key&quot; &gt; /proc/sysrq-trigger
+</code></pre>
+<p>The &quot;command key&quot; is case sensitive.</p>
+<h2 id="what-are-the-command-keys">What are the command keys?</h2>
+<p><img src="https://relentlesstorm.github.io/assets/images/posts/sysrq-command-key.png" alt="Image" loading="lazy">{:.shadow}</p>
+<h2 id="what-can-i-use-them-for">What can I use them for?</h2>
+<p>If we want to check the backtrace of all active CPUs, we can do following.</p>
+<pre><code class="language-shell">$ echo l &gt; /proc/sysrq-trigger
+</code></pre>
+<pre><code class="language-shell">$ tail -f /var/log/messages
+May 21 17:49:41 host1 kernel: sysrq: Show backtrace of all active CPUs
+May 21 17:49:41 host1 kernel: NMI backtrace for cpu 34
+May 21 17:49:41 host1 kernel: CPU: 34 PID: 27101 Comm: bash Tainted: G           O      5.7.12-1.el7.elrepo.x86_64 #1
+May 21 17:49:41 host1 kernel: Hardware name: Supermicro SYS-1029U-TN12RV/X11DPU-V, BIOS 3.4 11/03/2020
+May 21 17:49:41 host1 kernel: Call Trace:
+May 21 17:49:41 host1 kernel: dump_stack+0x6d/0x9a
+May 21 17:49:41 host1 kernel: ? lapic_can_unplug_cpu.cold+0x40/0x40
+May 21 17:49:41 host1 kernel: nmi_cpu_backtrace.cold+0x14/0x53
+May 21 17:49:41 host1 kernel: nmi_trigger_cpumask_backtrace+0xd9/0xdb
+May 21 17:49:41 host1 kernel: arch_trigger_cpumask_backtrace+0x19/0x20
+May 21 17:49:41 host1 kernel: sysrq_handle_showallcpus+0x17/0x20
+May 21 17:49:41 host1 kernel: __handle_sysrq.cold+0x48/0x111
+May 21 17:49:41 host1 kernel: write_sysrq_trigger+0x28/0x37
+May 21 17:49:41 host1 kernel: proc_reg_write+0x66/0x90
+May 21 17:49:41 host1 kernel: __vfs_write+0x1b/0x40
+May 21 17:49:41 host1 kernel: vfs_write+0xb9/0x1b0
+May 21 17:49:41 host1 kernel: ksys_write+0x67/0xe0
+May 21 17:49:41 host1 kernel: __x64_sys_write+0x1a/0x20
+May 21 17:49:41 host1 kernel: do_syscall_64+0x60/0x1e0
+May 21 17:49:41 host1 kernel: entry_SYSCALL_64_after_hwframe+0x44/0xa9
+&lt;...&gt;
+</code></pre>
+<p>The same message can also be checked from the following command.</p>
+<pre><code class="language-shell">$ dmesg -T
+$ journalctl --since &quot;5 minutes ago&quot;
+</code></pre>
+<h2 id="reference">Reference</h2>
+<ul>
+<li><a href="https://www.kernel.org/doc/html/latest/admin-guide/sysrq.html">https://www.kernel.org/doc/html/latest/admin-guide/sysrq.html</a></li>
+</ul>
+<!--kg-card-end: markdown-->
+            </section>
+
+        </article>
+
+                <div class="gh-read-next gh-canvas">
+                <section class="gh-pagehead">
+                    <h4 class="gh-pagehead-title">Read next</h4>
+                </section>
+
+                <div class="gh-topic gh-topic-grid">
+                    <div class="gh-topic-content">
+                            <article class="gh-card post featured">
+    <a class="gh-card-link" href="/cgroups-limit-io/">
+            <figure class="gh-card-image">
+                <img
+                    srcset="https://images.unsplash.com/photo-1646226343350-1ee5021e342a?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDN8fGhhcmRkaXNrfGVufDB8fHx8MTY3MjQ2MzUxOQ&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;300 300w,
+                            https://images.unsplash.com/photo-1646226343350-1ee5021e342a?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDN8fGhhcmRkaXNrfGVufDB8fHx8MTY3MjQ2MzUxOQ&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720 720w,
+                            https://images.unsplash.com/photo-1646226343350-1ee5021e342a?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDN8fGhhcmRkaXNrfGVufDB8fHx8MTY3MjQ2MzUxOQ&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;960 960w,
+                            https://images.unsplash.com/photo-1646226343350-1ee5021e342a?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDN8fGhhcmRkaXNrfGVufDB8fHx8MTY3MjQ2MzUxOQ&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1200 1200w,
+                            https://images.unsplash.com/photo-1646226343350-1ee5021e342a?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDN8fGhhcmRkaXNrfGVufDB8fHx8MTY3MjQ2MzUxOQ&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000 2000w"
+                    sizes="(max-width: 1200px) 100vw, 1200px"
+                    src="https://images.unsplash.com/photo-1646226343350-1ee5021e342a?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDN8fGhhcmRkaXNrfGVufDB8fHx8MTY3MjQ2MzUxOQ&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720"
+                    alt="Using cgroups to limit block device bandwidth"
+                >
+            </figure>
+
+        <div class="gh-card-wrapper">
+            <header class="gh-card-header">
+                <h3 class="gh-card-title">Using cgroups to limit block device bandwidth</h3>
+            </header>
+
+                    <div class="gh-card-excerpt">The block I/O controller specifies upper IO rate limits on devices.
+
+
+$ mount | egrep "/cgroup |/blkio"
+tmpfs on /sys/fs/cgroup type tmpfs (ro,nosuid,nodev,noexec,mode=755)
+cgroup on /sys/fs/cgroup/blkio type cgroup (rw,nosuid,nodev,noexec,relatime,blkio)
+
+$ lscgroup  | grep blkio
+blkio:/
+
+
+
+In this post,</div>
+
+            <footer class="gh-card-footer">
+                <span class="gh-card-author">relentlesstorm</span>
+                <time class="gh-card-date" datetime="2022-12-05">Dec 5, 2022</time>
+            </footer>
+        </div>
+    </a>
+</article>                            <article class="gh-card post">
+    <a class="gh-card-link" href="/cgroups-limit-memory/">
+            <figure class="gh-card-image">
+                <img
+                    srcset="https://images.unsplash.com/photo-1589532768434-a92c95dad7cb?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDE5fHxkYXRhYmFzZXxlbnwwfHx8fDE2NzI0NjI4NzI&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;300 300w,
+                            https://images.unsplash.com/photo-1589532768434-a92c95dad7cb?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDE5fHxkYXRhYmFzZXxlbnwwfHx8fDE2NzI0NjI4NzI&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720 720w,
+                            https://images.unsplash.com/photo-1589532768434-a92c95dad7cb?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDE5fHxkYXRhYmFzZXxlbnwwfHx8fDE2NzI0NjI4NzI&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;960 960w,
+                            https://images.unsplash.com/photo-1589532768434-a92c95dad7cb?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDE5fHxkYXRhYmFzZXxlbnwwfHx8fDE2NzI0NjI4NzI&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1200 1200w,
+                            https://images.unsplash.com/photo-1589532768434-a92c95dad7cb?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDE5fHxkYXRhYmFzZXxlbnwwfHx8fDE2NzI0NjI4NzI&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000 2000w"
+                    sizes="(max-width: 1200px) 100vw, 1200px"
+                    src="https://images.unsplash.com/photo-1589532768434-a92c95dad7cb?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDE5fHxkYXRhYmFzZXxlbnwwfHx8fDE2NzI0NjI4NzI&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720"
+                    alt="Using cgroups to limit Memory usage"
+                >
+            </figure>
+
+        <div class="gh-card-wrapper">
+            <header class="gh-card-header">
+                <h3 class="gh-card-title">Using cgroups to limit Memory usage</h3>
+            </header>
+
+                    <div class="gh-card-excerpt">The memory controller isolates the memory behaviour of a group of tasks from the rest of the system.
+
+
+$ mount | egrep "/cgroup |/memory"
+tmpfs on /sys/fs/cgroup type tmpfs (ro,nosuid,nodev,noexec,mode=755)
+cgroup on /sys/fs/cgroup/memory type cgroup (rw,nosuid,nodev,noexec,relatime,memory)
+
+$ lssubsys</div>
+
+            <footer class="gh-card-footer">
+                <span class="gh-card-author">relentlesstorm</span>
+                <time class="gh-card-date" datetime="2022-12-04">Dec 4, 2022</time>
+            </footer>
+        </div>
+    </a>
+</article>                            <article class="gh-card post featured">
+    <a class="gh-card-link" href="/cgroup-limit-cpu/">
+            <figure class="gh-card-image">
+                <img
+                    srcset="https://images.unsplash.com/photo-1613068687893-5e85b4638b56?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDN8fGRhdGFiYXNlfGVufDB8fHx8MTY3MjQ2Mjg3Mg&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;300 300w,
+                            https://images.unsplash.com/photo-1613068687893-5e85b4638b56?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDN8fGRhdGFiYXNlfGVufDB8fHx8MTY3MjQ2Mjg3Mg&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720 720w,
+                            https://images.unsplash.com/photo-1613068687893-5e85b4638b56?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDN8fGRhdGFiYXNlfGVufDB8fHx8MTY3MjQ2Mjg3Mg&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;960 960w,
+                            https://images.unsplash.com/photo-1613068687893-5e85b4638b56?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDN8fGRhdGFiYXNlfGVufDB8fHx8MTY3MjQ2Mjg3Mg&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1200 1200w,
+                            https://images.unsplash.com/photo-1613068687893-5e85b4638b56?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDN8fGRhdGFiYXNlfGVufDB8fHx8MTY3MjQ2Mjg3Mg&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000 2000w"
+                    sizes="(max-width: 1200px) 100vw, 1200px"
+                    src="https://images.unsplash.com/photo-1613068687893-5e85b4638b56?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDN8fGRhdGFiYXNlfGVufDB8fHx8MTY3MjQ2Mjg3Mg&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720"
+                    alt="Using cgroups to limit CPU utilization"
+                >
+            </figure>
+
+        <div class="gh-card-wrapper">
+            <header class="gh-card-header">
+                <h3 class="gh-card-title">Using cgroups to limit CPU utilization</h3>
+            </header>
+
+                    <div class="gh-card-excerpt">Intro to cgroups
+
+
+Cgroups(control groups) make it possible to allocate system resources such as CPU time, memory, disk I/O and network bandwidth, or combinations of them, among a group of tasks(processes) running on a system.
+
+
+The following commands output the available subsystems(resource controllers) for the cgroups.</div>
+
+            <footer class="gh-card-footer">
+                <span class="gh-card-author">relentlesstorm</span>
+                <time class="gh-card-date" datetime="2022-12-03">Dec 3, 2022</time>
+            </footer>
+        </div>
+    </a>
+</article>                    </div>
+                </div>
+            </div>
+
+        </main>
+
+    <footer class="gh-foot gh-outer">
+        <div class="gh-foot-inner gh-inner">
+
+            <!--<nav class="gh-foot-menu">
+                <<ul class="nav">
+    <li class="nav-sign-up"><a href="#/portal/">Sign up</a></li>
+</ul>
+
+            </nav>-->
+
+            <div class="gh-copyright">
+                    Flamingbytes © 2023. Powered by <a href="https://ghost.org/" target="_blank" rel="noopener">Ghost</a>
+            </div>
+        </div>
+    </footer>
+
+</div>
+
+    <div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="pswp__bg"></div>
+
+    <div class="pswp__scroll-wrap">
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)"></button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)"></button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="/assets/built/main.min.js?v=e1adcf5302"></script>
+
+
+
+</body>
+
+</html>

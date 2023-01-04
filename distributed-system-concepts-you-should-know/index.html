@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Distributed system concepts you should know</title>
+    <link rel="stylesheet" href="/assets/built/screen.css?v=e1adcf5302">
+
+    <link rel="canonical" href="https://relentlesstorm.github.io/distributed-system-concepts-you-should-know/" />
+    <meta name="referrer" content="no-referrer-when-downgrade" />
+    
+    <meta property="og:site_name" content="Flamingbytes" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="Distributed system concepts you should know" />
+    <meta property="og:description" content="This post contains basic explanations for concepts you should know related to distributed system.
+
+
+
+API and REST API
+
+
+Application Programming Interface, abbreviated as API, enables connection between computers or computer programs. It is a Software Interface that offers services to other software to enhance the required functionalities.
+
+
+REST API is" />
+    <meta property="og:url" content="https://relentlesstorm.github.io/distributed-system-concepts-you-should-know/" />
+    <meta property="og:image" content="https://images.unsplash.com/photo-1496171367470-9ed9a91ea931?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDE0fHx0ZWNobm9sb2d5fGVufDB8fHx8MTY3Mjc3ODAwMQ&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000" />
+    <meta property="article:published_time" content="2022-02-11T00:00:00.000Z" />
+    <meta property="article:modified_time" content="2023-01-04T04:43:02.000Z" />
+    <meta property="article:tag" content="Big Data" />
+    
+    <meta property="article:publisher" content="https://www.facebook.com/ghost" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Distributed system concepts you should know" />
+    <meta name="twitter:description" content="This post contains basic explanations for concepts you should know related to distributed system.
+
+
+
+API and REST API
+
+
+Application Programming Interface, abbreviated as API, enables connection between computers or computer programs. It is a Software Interface that offers services to other software to enhance the required functionalities.
+
+
+REST API is" />
+    <meta name="twitter:url" content="https://relentlesstorm.github.io/distributed-system-concepts-you-should-know/" />
+    <meta name="twitter:image" content="https://images.unsplash.com/photo-1496171367470-9ed9a91ea931?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDE0fHx0ZWNobm9sb2d5fGVufDB8fHx8MTY3Mjc3ODAwMQ&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000" />
+    <meta name="twitter:label1" content="Written by" />
+    <meta name="twitter:data1" content="relentlesstorm" />
+    <meta name="twitter:label2" content="Filed under" />
+    <meta name="twitter:data2" content="Big Data" />
+    <meta name="twitter:site" content="@ghost" />
+    <meta property="og:image:width" content="2000" />
+    <meta property="og:image:height" content="1333" />
+    
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "publisher": {
+        "@type": "Organization",
+        "name": "Flamingbytes",
+        "url": "https://relentlesstorm.github.io/",
+        "logo": {
+            "@type": "ImageObject",
+            "url": "https://relentlesstorm.github.io/favicon.ico",
+            "width": 48,
+            "height": 48
+        }
+    },
+    "author": {
+        "@type": "Person",
+        "name": "relentlesstorm",
+        "url": "https://relentlesstorm.github.io/author/relentlesstorm/",
+        "sameAs": []
+    },
+    "headline": "Distributed system concepts you should know",
+    "url": "https://relentlesstorm.github.io/distributed-system-concepts-you-should-know/",
+    "datePublished": "2022-02-11T00:00:00.000Z",
+    "dateModified": "2023-01-04T04:43:02.000Z",
+    "image": {
+        "@type": "ImageObject",
+        "url": "https://images.unsplash.com/photo-1496171367470-9ed9a91ea931?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxMTc3M3wwfDF8c2VhcmNofDE0fHx0ZWNobm9sb2d5fGVufDB8fHx8MTY3Mjc3ODAwMQ&ixlib=rb-4.0.3&q=80&w=2000",
+        "width": 2000,
+        "height": 1333
+    },
+    "keywords": "Big Data",
+    "description": "This post contains basic explanations for concepts you should know related to distributed system.\n\n\n\nAPI and REST API\n\n\nApplication Programming Interface, abbreviated as API, enables connection between computers or computer programs. It is a Software Interface that offers services to other software to enhance the required functionalities.\n\n\nREST API is an API that follows a set of rules for an application and services to communicate with each other. As it is constrained to REST architecture, RES",
+    "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https://relentlesstorm.github.io/"
+    }
+}
+    </script>
+
+    <meta name="generator" content="Ghost 5.26" />
+    <link rel="alternate" type="application/rss+xml" title="Flamingbytes" href="https://relentlesstorm.github.io/rss/" />
+    
+    <script defer src="https://cdn.jsdelivr.net/ghost/sodo-search@~1.1/umd/sodo-search.min.js" data-key="321a1d1aea33fd468f6e61f563" data-styles="https://cdn.jsdelivr.net/ghost/sodo-search@~1.1/umd/main.css" data-sodo-search="https://relentlesstorm.github.io/" crossorigin="anonymous"></script>
+    <script defer src="/public/cards.min.js?v=e1adcf5302"></script><style>:root {--ghost-accent-color: #6a13ec;}</style>
+    <link rel="stylesheet" type="text/css" href="/public/cards.min.css?v=e1adcf5302">
+</head>
+
+<body class="post-template tag-big-data is-head-left-logo has-serif-body">
+<div class="gh-site">
+
+    <header id="gh-head" class="gh-head gh-outer">
+        <div class="gh-head-inner gh-inner">
+            <div class="gh-head-brand">
+                <div class="gh-head-brand-wrapper">
+                    <a class="gh-head-logo" href="https://relentlesstorm.github.io">
+                            Flamingbytes
+                    </a>
+                </div>
+                <button class="gh-search gh-icon-btn" data-ghost-search><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" width="20" height="20"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg></button>
+                <button class="gh-burger"></button>
+            </div>
+
+            <nav class="gh-head-menu">
+                <ul class="nav">
+    <li class="nav-home"><a href="https://relentlesstorm.github.io/">Home</a></li>
+    <li class="nav-tags"><a href="https://relentlesstorm.github.io/tags/">Tags</a></li>
+    <li class="nav-archive"><a href="https://relentlesstorm.github.io/archive/">Archive</a></li>
+    <li class="nav-about"><a href="https://relentlesstorm.github.io/about/">About</a></li>
+</ul>
+
+            </nav>
+
+            <div class="gh-head-actions">
+                        <button class="gh-search gh-icon-btn" data-ghost-search><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" width="20" height="20"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg></button>
+            </div>
+        </div>
+    </header>
+
+    
+<main class="gh-main">
+        <article class="gh-article post tag-big-data">
+
+            <header class="gh-article-header gh-canvas">
+                    <a class="gh-article-tag" href="https://relentlesstorm.github.io/tag/big-data/">Big Data</a>
+
+                <h1 class="gh-article-title">Distributed system concepts you should know</h1>
+
+                    <aside class="gh-article-sidebar">
+
+        <div class="gh-author-image-list">
+                <a class="gh-author-image" href="/author/relentlesstorm/">
+                        <div class="gh-author-icon"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="64" height="64"><g fill="none" fill-rule="evenodd"><path d="M3.513 18.998C4.749 15.504 8.082 13 12 13s7.251 2.504 8.487 5.998C18.47 21.442 15.417 23 12 23s-6.47-1.558-8.487-4.002zM12 12c2.21 0 4-2.79 4-5s-1.79-4-4-4-4 1.79-4 4 1.79 5 4 5z" fill="#FFF"/></g></svg>
+</div>
+                </a>
+        </div>
+
+        <div class="gh-author-name-list">
+                <h4 class="gh-author-name">
+                    <a href="/author/relentlesstorm/">relentlesstorm</a>
+                </h4>
+                
+        </div>
+
+        <div class="gh-article-meta">
+            <div class="gh-article-meta-inner">
+                <time class="gh-article-date" datetime="2022-02-11">Feb 11, 2022</time>
+                    <span class="gh-article-meta-sep"></span>
+                    <span class="gh-article-length">10 min</span>
+            </div>
+        </div>
+
+    </aside>
+
+
+                    <figure class="gh-article-image">
+        <img
+            srcset="https://images.unsplash.com/photo-1496171367470-9ed9a91ea931?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDE0fHx0ZWNobm9sb2d5fGVufDB8fHx8MTY3Mjc3ODAwMQ&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;300 300w,
+                    https://images.unsplash.com/photo-1496171367470-9ed9a91ea931?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDE0fHx0ZWNobm9sb2d5fGVufDB8fHx8MTY3Mjc3ODAwMQ&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720 720w,
+                    https://images.unsplash.com/photo-1496171367470-9ed9a91ea931?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDE0fHx0ZWNobm9sb2d5fGVufDB8fHx8MTY3Mjc3ODAwMQ&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;960 960w,
+                    https://images.unsplash.com/photo-1496171367470-9ed9a91ea931?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDE0fHx0ZWNobm9sb2d5fGVufDB8fHx8MTY3Mjc3ODAwMQ&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1200 1200w,
+                    https://images.unsplash.com/photo-1496171367470-9ed9a91ea931?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDE0fHx0ZWNobm9sb2d5fGVufDB8fHx8MTY3Mjc3ODAwMQ&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000 2000w"
+            sizes="(max-width: 1200px) 100vw, 1200px"
+            src="https://images.unsplash.com/photo-1496171367470-9ed9a91ea931?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDE0fHx0ZWNobm9sb2d5fGVufDB8fHx8MTY3Mjc3ODAwMQ&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1200"
+            alt="Distributed system concepts you should know"
+        >
+            <figcaption>Photo by <a href="https://unsplash.com/@domenicoloia?utm_source=ghost&utm_medium=referral&utm_campaign=api-credit">Domenico Loia</a> / <a href="https://unsplash.com/?utm_source=ghost&utm_medium=referral&utm_campaign=api-credit">Unsplash</a></figcaption>
+    </figure>
+            </header>
+
+            <section class="gh-content gh-canvas">
+                <!--kg-card-begin: markdown--><p>This post contains basic explanations for concepts you should know related to distributed system.</p>
+<h2 id="api-and-rest-api">API and REST API</h2>
+<p>Application Programming Interface, abbreviated as API, enables connection between computers or computer programs. It is a Software Interface that offers services to other software to enhance the required functionalities.</p>
+<p>REST API is an API that follows a set of rules for an application and services to communicate with each other. As it is constrained to REST architecture, REST API is referred to as RESTful API. REST APIs provide a way of accessing web services in a flexible way without massive processing capabilities.</p>
+<p><img src="https://relentlesstorm.github.io/content/images/posts/rest-api-model.png" alt="Image" loading="lazy"></p>
+<p><a href="https://www.rlogical.com/wp-content/uploads/2021/08/rest-api-model.png">Source</a></p>
+<p>Below are the underlying rules of REST API:</p>
+<ul>
+<li>Statelessness - Systems aligning with the REST paradigm are bound to become stateless. For Client-Server communication, stateless constraint enforces servers to remain unaware of the client state and vice-versa. A constraint is applied by using resources instead of commands, and they are nouns of the web that describe any object, document, or thing to store/send to other resources.</li>
+<li>Cacheable - Cache helps servers to mitigate some constraints of statelessness. It is a critical factor that has improved the performance of modern web applications. Caching not only enhances the performance on the client-side but also scales significant results on the server-side. A well-established cache mechanism would drastically reduce the average response time of your server.</li>
+<li>Decoupled - REST is a distributed approach, where client and server applications are decoupled from each other. Irrespective of where the requests are initiated, the only information the client application knows is the Uniform Resource Identifier (URI) of the requested resource. A server application should pass requested data via HTTP but should not try modifying the client application.</li>
+<li>Layered - A Layered system makes a REST architecture scalable. With RESTful architecture, Client and Server applications are decoupled, so the calls and responses of REST APIs go through different layers. As REST API is layered, it should be designed such that neither Client nor Server identifies its communication with end applications or an intermediary.</li>
+</ul>
+<p><a href="https://hevodata.com/learn/api-vs-rest-api/">Source</a></p>
+<h2 id="concurrency">Concurrency</h2>
+<p>Concurrency allows different parts of a program to run at the same time without affecting the outcome. For example, two people tried to withdraw $1000 from the same bank account in which only has $1500. Concurrency ensures the two people can't overdraw the account.</p>
+<p>There are three common tactics to ensure concurrency.</p>
+<ul>
+<li>Locking - A mechanism where a process has the right to update or write data. When a process acquires a lock, other processes can't update or write.</li>
+<li>Atomicity - An atomic action is an action whose intermediate state can't be seen by other processes or threads.</li>
+<li>Transaction - A sequence of atomic operations.</li>
+</ul>
+<h2 id="message-queues">Message Queues</h2>
+<p>Queues are a component of service-based architectures. It accept client messages for delivery to a service, then hold the message until the service requests delivery.Once a queue has accepted a message, it provides a strong guarantee that the message will eventually be read and processed.Messages remain in the queue and available for delivery until the server confirms that it has finished with the message and deletes it.</p>
+<h2 id="microservice-architecture">Microservice Architecture</h2>
+<p>A microservice architecture – a variant of the service-oriented architecture (SOA) structural style – arranges an application as a collection of loosely-coupled services. In a microservices architecture, services are fine-grained and the protocols are lightweight. The goal is that teams can bring their services to life independent of others. Loose coupling reduces all types of dependencies and the complexities around it, as service developers do not need to care about the users of the service, they do not force their changes onto users of the service. Therefore it allows organizations developing software to grow fast, and big, as well as use off the shelf services easier. Communication requirements are less. But it comes at a cost to maintain the decoupling. Interfaces need to be designed carefully and treated as a public API. Techniques like having multiple interfaces on the same service, or multiple versions of the same service, to not break existing users code.</p>
+<p><a href="https://en.wikipedia.org/wiki/Microservices">Source</a></p>
+<h2 id="proxy-vs-reverse-proxy">Proxy vs. Reverse Proxy</h2>
+<p>A proxy server, sometimes referred to as a forward proxy, is a server that routes traffic between client(s) and another system, usually external to the network. By doing so, it can regulate traffic according to preset policies, convert and mask client IP addresses, enforce security protocols, and block unknown traffic.</p>
+<p>A reverse proxy is a type of proxy server.  Unlike a traditional proxy server, which is used to protect clients, a reverse proxy is used to protect servers. A reverse proxy is a server that accepts a request from a client, forwards the request to another one of many other servers, and returns the results from the server that actually processed the request to the client as if the proxy server had processed the request itself. The client only communicates directly with the reverse proxy server and it does not know that some other server actually processed its request.</p>
+<p><a href="https://www.strongdm.com/blog/difference-between-proxy-and-reverse-proxy#:~:text=A%20traditional%20forward%20proxy%20server,traffic%20to%20an%20external%20network.&amp;text=A%20reverse%20proxy%2C%20on%20the,%2C%20users%2C%20and%20application%20servers.">Source</a></p>
+<h2 id="horzontal-vs-vertical-scaling">Horzontal vs. Vertical Scaling</h2>
+<p>Horizontal scaling (aka scaling out) refers to adding additional nodes or machines to your infrastructure to cope with new demands. If you are hosting an application on a server and find that it no longer has the capacity or capabilities to handle traffic, adding a server may be your solution.</p>
+<p>While horizontal scaling refers to adding additional nodes, vertical scaling describes adding more power to your current machines. For instance, if your server requires more processing power, vertical scaling would mean upgrading the CPUs. You can also vertically scale the memory, storage, or network speed.</p>
+<p><a href="https://www.cloudzero.com/blog/horizontal-vs-vertical-scaling#:~:text=While%20horizontal%20scaling%20refers%20to,%2C%20storage%2C%20or%20network%20speed.">Source</a></p>
+<h2 id="distributed-cache">Distributed Cache</h2>
+<p><strong>Caching</strong> means saving frequently accessed data in-memory, that is in RAM instead of the hard drive. Accessing data from RAM is always faster than accessing it from the hard drive.</p>
+<p><img src="https://relentlesstorm.github.io/content/images/posts/caching-in-a-web-app.jpeg" alt="Image" loading="lazy"></p>
+<p>Caching serves the below-stated purposes in web applications.</p>
+<ol>
+<li>It reduces application latency by notches. Simply, due to the fact that it has all the frequently accessed data stored in RAM, it doesn’t has to talk to the hard drive when the user requests for the data. This makes the application response times faster.</li>
+<li>It intercepts all the user data requests before they go to the database. This averts the database bottleneck issue. The database is hit with comparatively lesser number of requests eventually making the application as a whole performant.</li>
+<li>Caching often comes in really handy in bringing the application running costs down.</li>
+</ol>
+<p>Caching can be leveraged at every layer of the web application architecture be it a database, CDN, DNS etc.</p>
+<p>A <strong>distributed cache</strong> is a cache which has its data spread across several nodes in a cluster also across several clusters across several data centres located around the globe.</p>
+<p><img src="https://relentlesstorm.github.io/content/images/posts/distributed-cache.jpeg" alt="Image" loading="lazy"></p>
+<p>Being deployed on multiple nodes helps with the horizontal scalability, instances can be added on the fly as per the demand.<br>
+Distributed caching is being primarily used in the industry today, for having the potential to scale on demand &amp; being highly available.<br>
+Scalability, High Availability, Fault-tolerance are crucial to the large scale services running online today. Businesses cannot afford to have their services go offline. Think about health services, stock markets, military. They have no scope for going down. They are distributed across multiple nodes with a pretty solid amount of redundancy.<br>
+Distributed cache, &amp; not just cache, distributed systems are the preferred choice for cloud computing. Solely due to the ability to scale &amp; being available.<br>
+Google Cloud uses Memcache for caching data on its public cloud platform. Redis is used by internet giants for caching, NoSQL datastore &amp; several other use cases.</p>
+<p><a href="https://www.scaleyourapp.com/distributed-cache-101-the-only-guide-youll-ever-need/">Source1</a><br>
+<a href="https://en.wikipedia.org/wiki/Distributed_cache">Source2</a><br>
+<a href="https://hazelcast.com/glossary/distributed-cache/">Source3</a></p>
+<h2 id="content-delivery-networkcdn">Content Delivery Network(CDN)</h2>
+<p>A content delivery network (CDN) refers to a geographically distributed group of servers which work together to provide fast delivery of Internet content.</p>
+<p>A CDN allows for the quick transfer of assets needed for loading Internet content including HTML pages, javascript files, stylesheets, images, and videos. The popularity of CDN services continues to grow, and today the majority of web traffic is served through CDNs, including traffic from major sites like Facebook, Netflix, and Amazon.</p>
+<p><a href="https://www.cloudflare.com/learning/cdn/what-is-a-cdn/">Source</a></p>
+<h2 id="hadoop-distributed-file-systemhdfs">Hadoop Distributed File System(HDFS)</h2>
+<p>The Apache™ Hadoop® project develops open-source software for reliable, scalable, distributed computing.</p>
+<p>The Apache Hadoop software library is a framework that allows for the distributed processing of large data sets across clusters of computers using simple programming models. It is designed to scale up from single servers to thousands of machines, each offering local computation and storage. Rather than rely on hardware to deliver high-availability, the library itself is designed to detect and handle failures at the application layer, so delivering a highly-available service on top of a cluster of computers, each of which may be prone to failures.</p>
+<p><a href="https://hadoop.apache.org/">Source</a></p>
+<h2 id="map-reduce">Map Reduce</h2>
+<p>MapReduce is a programming model and an associated implementation for processing and generating big data sets with a parallel, distributed algorithm on a cluster.</p>
+<p>A MapReduce program is composed of a map procedure, which performs filtering and sorting (such as sorting students by first name into queues, one queue for each name), and a reduce method, which performs a summary operation (such as counting the number of students in each queue, yielding name frequencies). The &quot;MapReduce System&quot; (also called &quot;infrastructure&quot; or &quot;framework&quot;) orchestrates the processing by marshalling the distributed servers, running the various tasks in parallel, managing all communications and data transfers between the various parts of the system, and providing for redundancy and fault tolerance.</p>
+<p><a href="https://en.wikipedia.org/wiki/MapReduce">Source</a><br>
+<a href="https://www.talend.com/resources/what-is-mapreduce/">Example</a></p>
+<h2 id="apache-zookeeper">Apache Zookeeper</h2>
+<p>ZooKeeper is a centralized service for maintaining configuration information, naming, providing distributed synchronization, and providing group services. All of these kinds of services are used in some form or another by distributed applications. Each time they are implemented there is a lot of work that goes into fixing the bugs and race conditions that are inevitable. Because of the difficulty of implementing these kinds of services, applications initially usually skimp on them ,which make them brittle in the presence of change and difficult to manage. Even when done correctly, different implementations of these services lead to management complexity when the applications are deployed.</p>
+<p>ZooKeeper aims at distilling the essence of these different services into a very simple interface to a centralized coordination service. The service itself is distributed and highly reliable. Consensus, group management, and presence protocols will be implemented by the service so that the applications do not need to implement them on their own. Application specific uses of these will consist of a mixture of specific components of Zoo Keeper and application specific conventions. ZooKeeper Recipes shows how this simple service can be used to build much more powerful abstractions.</p>
+<p><a href="https://zookeeper.apache.org/">Source</a></p>
+<h2 id="apache-kafka">Apache Kafka</h2>
+<p>Apache Kafka is an open-source distributed event streaming platform used by thousands of companies for high-performance data pipelines, streaming analytics, data integration, and mission-critical applications.</p>
+<p><a href="https://kafka.apache.org/">Source</a></p>
+<h2 id="read-write-quorum">Read-write quorum</h2>
+<p>Read-write quorums define two configurable parameters, R and W. R is the minimum number of nodes that must participate in a read operation, and W the minimum number of nodes that must participate in a write operation.</p>
+<p>Read-Write Quorum Systems Made Practical - Michael Whittaker, Aleksey Charapko, Joseph M. Hellerstein, Heidi Howard, Ion Stoica</p>
+<p>This <a href="https://code.likeagirl.io/distributed-computing-quorum-consistency-in-replication-96e64f7b5c6">paper</a> reviews some concepts of the quorum systems, and it presents a concrete tool named &quot;Quoracle&quot; that explores the trade-offs of the read-write quorum systems.</p>
+<p>Quoracle provides an alternative to the majority quorum systems that are widely adopted in distributed systems. The majority quorum can be defined as</p>
+<p>\frac{n}{2} where n=number of nodes</p>
+<p>In the case of a read-write quorum systems the majority is represented in a similar way:</p>
+<p>r = w = \frac{n}{2} + 1</p>
+<p>where r and w are the read and write quorums.</p>
+<p><a href="https://mwhittaker.github.io/publications/quoracle.pdf">Source</a></p>
+<h2 id="gossip-protocol">Gossip protocol</h2>
+<p>Gossip protocol is a communication protocol that allows state sharing in distributed systems. Most modern systems use this peer-to-peer protocol to disseminate information to all the members in a network or cluster.</p>
+<p>This protocol is used in a decentralized system that does not have any central node to keep track of all nodes and know if a node is down or not.</p>
+<p><strong>Gathering state information by multicasting</strong></p>
+<p>So, how does a node know every other node’s current state in a decentralized distributed system?</p>
+<p>The simplest way to do this is to have every node maintain heartbeats with every other node. Heartbeat is a periodic message sent to a central monitoring server or other servers in the system to show that it is alive and functioning. When a node goes down, it stops sending out heartbeats, and everyone else finds out immediately. But then O(N^2) messages get sent to every tick (N being the number of nodes), which is an expensive operation in any sizable cluster.</p>
+<p><strong>How the protocol works</strong></p>
+<p>The Gossip protocol is used to repair the problems caused by multicasting; it is a type of communication where a piece of information or gossip in this scenario, is sent from one or more nodes to a set of other nodes in a network. This is useful when a group of clients in the network require the same data at the same time. But there are many problems that occur during multicasting, if there are many nodes present at the recipient end, latency increases; the average time for a receiver to receive a multicast.</p>
+<p>To get this multicast message or gossip across the desired targets in the group, the gossip protocol sends out the gossip periodically to random nodes in the network, once a random node receives the gossip, it is said to be infected due to the gossip. Now the random node that receives the gossip does the same thing as the sender, it sends multiple copies of the gossip to random targets. This process continues until the target nodes get the multicast. This process turns the infected nodes to uninfected nodes after sending the gossip out to random nodes.</p>
+<p><a href="https://www.educative.io/edpresso/what-is-gossip-protocol">Source1</a><br>
+<a href="https://www.geeksforgeeks.org/the-gossip-protocol-in-cloud-computing/">Source2</a></p>
+<h2 id="fan-out">Fan Out</h2>
+<p>Let's try to understand how fan out apporach works based on the system design of twitter <a href="https://www.geeksforgeeks.org/design-twitter-a-system-design-interview-question/">here</a>.</p>
+<p>Fanout simply means spreading the data from a single point. Let’s see how to use it. Whenever a tweet is made by a user (Followee) do a lot of preprocessing and distribute the data into different users (followers) home timelines. In this process, you won’t have to make any database queries. You just need to go to the cache by user_id and access the home timeline data in Redis. So this process will be much faster and easier because it is an in-memory we get the list of tweets. Here is the complete flow of this approach.</p>
+<ul>
+<li>User X is followed by three people and this user has a cache called user timeline. X Tweeted something.</li>
+<li>Through Load Balancer tweet will flow into back-end servers.</li>
+<li>Server node will save tweet in DB/cache</li>
+<li>Server node will fetch all the users that follow User X from the cache.</li>
+<li>Server node will inject this tweet into in-memory timelines of his followers (fanout)</li>
+<li>All followers of User X will see the tweet of User X in their timeline. It will be refreshed and updated every time a user will visit on his/her timeline.</li>
+</ul>
+<p><img src="https://relentlesstorm.github.io/content/images/posts/Fanout-System-Design-Twitter.png" alt="Image" loading="lazy"></p>
+<p><a href="https://www.geeksforgeeks.org/design-twitter-a-system-design-interview-question/">Source</a></p>
+<h2 id="guid-and-uuid">GUID and UUID</h2>
+<p>GUID (aka UUID) is an acronym for 'Globally Unique Identifier' (or 'Universally Unique Identifier'). It is a 128-bit integer number used to identify resources. The term GUID is generally used by developers working with Microsoft technologies, while UUID is used everywhere else.</p>
+<p><a href="https://en.wikipedia.org/wiki/Universally_unique_identifier">Source1</a><br>
+<a href="https://www.guidgenerator.com/">Source2</a></p>
+<!--kg-card-end: markdown-->
+            </section>
+
+        </article>
+
+                <div class="gh-read-next gh-canvas">
+                <section class="gh-pagehead">
+                    <h4 class="gh-pagehead-title">Read next</h4>
+                </section>
+
+                <div class="gh-topic gh-topic-grid">
+                    <div class="gh-topic-content">
+                            <article class="gh-card post">
+    <a class="gh-card-link" href="/using-virtctl-to-access-virtual-machine-in-kubernetes/">
+            <figure class="gh-card-image">
+                <img
+                    srcset="https://images.unsplash.com/photo-1667372335936-3dc4ff716017?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDEwfHxrdWJlcm5ldGVzfGVufDB8fHx8MTY3Mjc3NzAxNg&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;300 300w,
+                            https://images.unsplash.com/photo-1667372335936-3dc4ff716017?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDEwfHxrdWJlcm5ldGVzfGVufDB8fHx8MTY3Mjc3NzAxNg&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720 720w,
+                            https://images.unsplash.com/photo-1667372335936-3dc4ff716017?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDEwfHxrdWJlcm5ldGVzfGVufDB8fHx8MTY3Mjc3NzAxNg&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;960 960w,
+                            https://images.unsplash.com/photo-1667372335936-3dc4ff716017?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDEwfHxrdWJlcm5ldGVzfGVufDB8fHx8MTY3Mjc3NzAxNg&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1200 1200w,
+                            https://images.unsplash.com/photo-1667372335936-3dc4ff716017?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDEwfHxrdWJlcm5ldGVzfGVufDB8fHx8MTY3Mjc3NzAxNg&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000 2000w"
+                    sizes="(max-width: 1200px) 100vw, 1200px"
+                    src="https://images.unsplash.com/photo-1667372335936-3dc4ff716017?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDEwfHxrdWJlcm5ldGVzfGVufDB8fHx8MTY3Mjc3NzAxNg&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720"
+                    alt="Using virtctl to access virtual machine in Kubernetes"
+                >
+            </figure>
+
+        <div class="gh-card-wrapper">
+            <header class="gh-card-header">
+                <h3 class="gh-card-title">Using virtctl to access virtual machine in Kubernetes</h3>
+            </header>
+
+                    <div class="gh-card-excerpt">Install the virtctl client tool
+
+
+Basic VirtualMachineInstance operations can be performed with the stock kubectl utility. However, the virtctl binary utility is required to use advanced features such as:
+
+
+ * Serial and graphical console access
+
+
+It also provides convenience commands for:
+
+
+ * Starting and stopping VirtualMachineInstances
+ * Live migrating VirtualMachineInstances
+ * Uploading virtual machine</div>
+
+            <footer class="gh-card-footer">
+                <span class="gh-card-author">relentlesstorm</span>
+                <time class="gh-card-date" datetime="2023-01-02">Jan 2, 2023</time>
+            </footer>
+        </div>
+    </a>
+</article>                            <article class="gh-card post">
+    <a class="gh-card-link" href="/using-node-selector-to-assign-virtual-mahcines-to-a-node/">
+            <figure class="gh-card-image">
+                <img
+                    srcset="https://images.unsplash.com/photo-1667372335962-5fd503a8ae5b?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDh8fGt1YmVybmV0ZXN8ZW58MHx8fHwxNjcyNzc3MDE2&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;300 300w,
+                            https://images.unsplash.com/photo-1667372335962-5fd503a8ae5b?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDh8fGt1YmVybmV0ZXN8ZW58MHx8fHwxNjcyNzc3MDE2&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720 720w,
+                            https://images.unsplash.com/photo-1667372335962-5fd503a8ae5b?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDh8fGt1YmVybmV0ZXN8ZW58MHx8fHwxNjcyNzc3MDE2&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;960 960w,
+                            https://images.unsplash.com/photo-1667372335962-5fd503a8ae5b?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDh8fGt1YmVybmV0ZXN8ZW58MHx8fHwxNjcyNzc3MDE2&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1200 1200w,
+                            https://images.unsplash.com/photo-1667372335962-5fd503a8ae5b?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDh8fGt1YmVybmV0ZXN8ZW58MHx8fHwxNjcyNzc3MDE2&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000 2000w"
+                    sizes="(max-width: 1200px) 100vw, 1200px"
+                    src="https://images.unsplash.com/photo-1667372335962-5fd503a8ae5b?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDh8fGt1YmVybmV0ZXN8ZW58MHx8fHwxNjcyNzc3MDE2&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720"
+                    alt="Using node selector to assign virtual machines to a node"
+                >
+            </figure>
+
+        <div class="gh-card-wrapper">
+            <header class="gh-card-header">
+                <h3 class="gh-card-title">Using node selector to assign virtual machines to a node</h3>
+            </header>
+
+                    <div class="gh-card-excerpt">In some circumstances, we want to control which node the virtual machine or pod deploys to. The node selector can be used to assign virtual machine or pod to a node.
+
+
+
+Add label to a node
+
+
+The label can be added to a node from either command line or openshift</div>
+
+            <footer class="gh-card-footer">
+                <span class="gh-card-author">relentlesstorm</span>
+                <time class="gh-card-date" datetime="2022-12-30">Dec 30, 2022</time>
+            </footer>
+        </div>
+    </a>
+</article>                            <article class="gh-card post">
+    <a class="gh-card-link" href="/deploy-application-with-kubernetes-statefulset/">
+            <figure class="gh-card-image">
+                <img
+                    srcset="https://images.unsplash.com/photo-1667372525724-16cede94db0b?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDJ8fGt1YmVybmV0ZXN8ZW58MHx8fHwxNjcyNzc3MDE2&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;300 300w,
+                            https://images.unsplash.com/photo-1667372525724-16cede94db0b?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDJ8fGt1YmVybmV0ZXN8ZW58MHx8fHwxNjcyNzc3MDE2&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720 720w,
+                            https://images.unsplash.com/photo-1667372525724-16cede94db0b?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDJ8fGt1YmVybmV0ZXN8ZW58MHx8fHwxNjcyNzc3MDE2&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;960 960w,
+                            https://images.unsplash.com/photo-1667372525724-16cede94db0b?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDJ8fGt1YmVybmV0ZXN8ZW58MHx8fHwxNjcyNzc3MDE2&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1200 1200w,
+                            https://images.unsplash.com/photo-1667372525724-16cede94db0b?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDJ8fGt1YmVybmV0ZXN8ZW58MHx8fHwxNjcyNzc3MDE2&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000 2000w"
+                    sizes="(max-width: 1200px) 100vw, 1200px"
+                    src="https://images.unsplash.com/photo-1667372525724-16cede94db0b?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDJ8fGt1YmVybmV0ZXN8ZW58MHx8fHwxNjcyNzc3MDE2&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720"
+                    alt="Deploy application with kubernetes statefulset"
+                >
+            </figure>
+
+        <div class="gh-card-wrapper">
+            <header class="gh-card-header">
+                <h3 class="gh-card-title">Deploy application with kubernetes statefulset</h3>
+            </header>
+
+                    <div class="gh-card-excerpt">StatefulSet is the workload API object used to manage stateful applications.
+
+
+Like a Deployment, a StatefulSet manages Pods that are based on an identical container spec. Unlike a Deployment, a StatefulSet maintains a sticky identity for each of their Pods. These pods are created from the same spec, but are</div>
+
+            <footer class="gh-card-footer">
+                <span class="gh-card-author">relentlesstorm</span>
+                <time class="gh-card-date" datetime="2022-12-29">Dec 29, 2022</time>
+            </footer>
+        </div>
+    </a>
+</article>                    </div>
+                </div>
+            </div>
+
+        </main>
+
+    <footer class="gh-foot gh-outer">
+        <div class="gh-foot-inner gh-inner">
+
+            <!--<nav class="gh-foot-menu">
+                <<ul class="nav">
+    <li class="nav-sign-up"><a href="#/portal/">Sign up</a></li>
+</ul>
+
+            </nav>-->
+
+            <div class="gh-copyright">
+                    Flamingbytes © 2023. Powered by <a href="https://ghost.org/" target="_blank" rel="noopener">Ghost</a>
+            </div>
+        </div>
+    </footer>
+
+</div>
+
+    <div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="pswp__bg"></div>
+
+    <div class="pswp__scroll-wrap">
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)"></button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)"></button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="/assets/built/main.min.js?v=e1adcf5302"></script>
+
+
+
+</body>
+
+</html>
