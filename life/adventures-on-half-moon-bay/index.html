@@ -5,7 +5,45 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Adventures on Half Moon Bay</title>
-    <link rel="stylesheet" href="/assets/built/screen.css?v=934f04db58">
+    <link rel="stylesheet" href="/assets/built/screen.css?v=b26259a70f">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.12.3/tocbot.css">
+    
+    <style>
+    .gh-content {
+        position: relative;
+    }
+
+    .gh-toc > .toc-list {
+        position: relative;
+    }
+
+    .toc-list {
+        overflow: hidden;
+        list-style: none;
+    }
+
+    @media (min-width: 1300px) {
+        .gh-sidebar {
+            position: absolute; 
+            top: 0;
+            bottom: 0;
+            margin-top: 4vmin;
+            margin-left: 2vmin;
+            /*grid-column: wide-start / main-start; *//* Place the TOC to the left of the content */
+            grid-column: wide-end / main-end; /* Place the TOC to the right of the content */
+        }
+    
+        .gh-toc {
+            position: sticky; /* On larger screens, TOC will stay in the same spot on the page */
+            top: 4vmin;
+        }
+    }
+
+    .gh-toc .is-active-link::before {
+        background-color: var(--ghost-accent-color); /* Defines TOC accent color based on Accent color set in Ghost Admin */
+    } 
+    </style>
 
     <link rel="icon" href="https://relentlesstorm.github.io/content/images/size/w256h256/2023/01/FlamingBytes-logos_transparent-9.png" type="image/png" />
     <link rel="canonical" href="https://relentlesstorm.github.io/life/adventures-on-half-moon-bay/" />
@@ -83,8 +121,8 @@ The next day, I woke up at 7 a." />
     <link rel="alternate" type="application/rss+xml" title="Flamingbytes" href="https://relentlesstorm.github.io/rss/" />
     
     <script defer src="https://cdn.jsdelivr.net/ghost/sodo-search@~1.1/umd/sodo-search.min.js" data-key="321a1d1aea33fd468f6e61f563" data-styles="https://cdn.jsdelivr.net/ghost/sodo-search@~1.1/umd/main.css" data-sodo-search="https://relentlesstorm.github.io/" crossorigin="anonymous"></script>
-    <script defer src="/public/cards.min.js?v=934f04db58"></script>
-    <link rel="stylesheet" type="text/css" href="/public/cards.min.css?v=934f04db58">
+    <script defer src="/public/cards.min.js?v=b26259a70f"></script>
+    <link rel="stylesheet" type="text/css" href="/public/cards.min.css?v=b26259a70f">
     <style>.gh-head-logo img{max-height:100px;height:100%;}</style><style>:root {--ghost-accent-color: #6a13ec;}</style>
 </head>
 
@@ -171,6 +209,7 @@ The next day, I woke up at 7 a." />
             </header>
 
             <section class="gh-content gh-canvas">
+                <aside class="gh-sidebar"><div class="gh-toc"></div></aside> 
                 <p>On the night before I went to the beach, I was so excited for my trip to Half Moon Bay that I could not even sleep. I pictured my friends and me running into the ocean and diving into the waves.</p><p>The next day, I woke up at 7 a.m. and jumped out of bed. I rushed to my parents’ room and told them to wake up. Then, I picked my best clothes from the closet. After that, I raced to the bathroom and quickly brushed my teeth. My mom made a delicious breakfast of toast and bacon while my dad drove to the gas station to fill up the gasoline tank. Finally, we got ready and met our friends at the parking lot in our neighborhood. One of my friend’s dad sent my dad the location of the beach on the phone and then we were ready to take off for Half Moon Bay. On the way to the beach, I took lots of pictures of the different scenery we passed through. After one hour, I picked up the first scent of fresh sea air. When we arrived at the first beach, there were too many people already, so we decided to move on. However, on the next beach, there were barely any people, so we decided to stay at that beach. When the car stopped, I put on my swimsuit and crocs.</p><p>When we were ready, we got off the car and my friends and I raced to the beach. We got out our shovels and started building a sandcastle. But the waves were too strong and destroyed our sandcastle. We decided to build a big dam and every time the waves came it would go into the dam and not touch the sandcastle. My dad was supposed to build the sandcastle and Ethan built the wall that defended the sandcastle if the dam was destroyed. My mom went on a scavenger hunt to find big pieces of wood which acted like a second wall. When the dam Keyu and I built was finished, I built mini dams in front of the big dam. This way the water had no way to reach the sandcastle. After my dad finished building the upper layer of the sandcastle, he dug a passage through the bottom layer off the sandcastle. The passage was supposed to act like a river if a huge wave came. The water was supposed to flow into the tunnel instead of drowning the whole castle. After our sandcastle was finished, it looked magnificent. Four guard towers were built at the corners of the castle. Below the castle was a long tunnel which was filled with water.</p><figure class="kg-card kg-image-card"><img src="https://www.flamingbytes.com/assets/images/posts/seafun3.jpg" class="kg-image" alt loading="lazy"></figure><figure class="kg-card kg-image-card"><img src="https://www.flamingbytes.com/assets/images/posts/seafun4.jpg" class="kg-image" alt loading="lazy"></figure><p>After we finished the sandcastle, we decided to play with the waves. We dived into the roaring waves and held a contest to see who could stand in the water the longest without getting blown down by the huge waves. After a while, we were soaked from head to feet. One of the waves was so gigantic that I fell in the sand. Every time a huge wave came, my friends and I would charge back to the dry sand and then when the wave calmed down, we would rush back. We enjoyed the same game for hours.</p><figure class="kg-card kg-image-card"><img src="https://www.flamingbytes.com/assets/images/posts/seafun2.jpg" class="kg-image" alt loading="lazy"></figure><p>Finally, it was time to go home. We took a group photo and I was so joyful that I jumped in the air when the picture was taken.</p><p>It was a day I would never forget!</p>
             </section>
 
@@ -359,7 +398,22 @@ Platinum</div>
         </div>
     </div>
 </div>
-<script src="/assets/built/main.min.js?v=934f04db58"></script>
+<script src="/assets/built/main.min.js?v=b26259a70f"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.12.3/tocbot.min.js"></script>
+
+<script>
+    tocbot.init({
+        // Where to render the table of contents.
+        tocSelector: '.gh-toc',
+        // Where to grab the headings to build the table of contents.
+        contentSelector: '.gh-content',
+        // Which headings to grab inside of the contentSelector element.
+        headingSelector: 'h1, h2, h3, h4',
+        // Ensure correct positioning
+        hasInnerContainers: true,
+    });
+</script>
 
 
 

@@ -5,7 +5,45 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>OpenZFS - A pooled storage file system</title>
-    <link rel="stylesheet" href="/assets/built/screen.css?v=934f04db58">
+    <link rel="stylesheet" href="/assets/built/screen.css?v=b26259a70f">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.12.3/tocbot.css">
+    
+    <style>
+    .gh-content {
+        position: relative;
+    }
+
+    .gh-toc > .toc-list {
+        position: relative;
+    }
+
+    .toc-list {
+        overflow: hidden;
+        list-style: none;
+    }
+
+    @media (min-width: 1300px) {
+        .gh-sidebar {
+            position: absolute; 
+            top: 0;
+            bottom: 0;
+            margin-top: 4vmin;
+            margin-left: 2vmin;
+            /*grid-column: wide-start / main-start; *//* Place the TOC to the left of the content */
+            grid-column: wide-end / main-end; /* Place the TOC to the right of the content */
+        }
+    
+        .gh-toc {
+            position: sticky; /* On larger screens, TOC will stay in the same spot on the page */
+            top: 4vmin;
+        }
+    }
+
+    .gh-toc .is-active-link::before {
+        background-color: var(--ghost-accent-color); /* Defines TOC accent color based on Accent color set in Ghost Admin */
+    } 
+    </style>
 
     <link rel="icon" href="https://relentlesstorm.github.io/content/images/size/w256h256/2023/01/FlamingBytes-logos_transparent-9.png" type="image/png" />
     <link rel="canonical" href="https://relentlesstorm.github.io/openzfs-a-pooled-storage-file-system/" />
@@ -109,8 +147,8 @@ The ZFS file" />
     <link rel="alternate" type="application/rss+xml" title="Flamingbytes" href="https://relentlesstorm.github.io/rss/" />
     
     <script defer src="https://cdn.jsdelivr.net/ghost/sodo-search@~1.1/umd/sodo-search.min.js" data-key="321a1d1aea33fd468f6e61f563" data-styles="https://cdn.jsdelivr.net/ghost/sodo-search@~1.1/umd/main.css" data-sodo-search="https://relentlesstorm.github.io/" crossorigin="anonymous"></script>
-    <script defer src="/public/cards.min.js?v=934f04db58"></script>
-    <link rel="stylesheet" type="text/css" href="/public/cards.min.css?v=934f04db58">
+    <script defer src="/public/cards.min.js?v=b26259a70f"></script>
+    <link rel="stylesheet" type="text/css" href="/public/cards.min.css?v=b26259a70f">
     <style>.gh-head-logo img{max-height:100px;height:100%;}</style><style>:root {--ghost-accent-color: #6a13ec;}</style>
 </head>
 
@@ -197,6 +235,7 @@ The ZFS file" />
             </header>
 
             <section class="gh-content gh-canvas">
+                <aside class="gh-sidebar"><div class="gh-toc"></div></aside> 
                 <!--kg-card-begin: markdown--><h2 id="openzfs">OpenZFS</h2>
 <p>The OpenZFS project is an open source derivative of the Oracle ZFS project. OpenZFS is an outstanding storage platform that encompasses the functionality of traditional filesystems, volume managers, and more, with consistent reliability, functionality and performance across all distributions.</p>
 <p><a href="https://en.wikipedia.org/wiki/OpenZFS">Source1</a><br>
@@ -804,7 +843,22 @@ $ /opt/pwx/bin/pxctl -j volume create datavol --sharedv4</div>
         </div>
     </div>
 </div>
-<script src="/assets/built/main.min.js?v=934f04db58"></script>
+<script src="/assets/built/main.min.js?v=b26259a70f"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.12.3/tocbot.min.js"></script>
+
+<script>
+    tocbot.init({
+        // Where to render the table of contents.
+        tocSelector: '.gh-toc',
+        // Where to grab the headings to build the table of contents.
+        contentSelector: '.gh-content',
+        // Which headings to grab inside of the contentSelector element.
+        headingSelector: 'h1, h2, h3, h4',
+        // Ensure correct positioning
+        hasInnerContainers: true,
+    });
+</script>
 
 
 

@@ -5,7 +5,45 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Analyze the library and system calls</title>
-    <link rel="stylesheet" href="/assets/built/screen.css?v=934f04db58">
+    <link rel="stylesheet" href="/assets/built/screen.css?v=b26259a70f">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.12.3/tocbot.css">
+    
+    <style>
+    .gh-content {
+        position: relative;
+    }
+
+    .gh-toc > .toc-list {
+        position: relative;
+    }
+
+    .toc-list {
+        overflow: hidden;
+        list-style: none;
+    }
+
+    @media (min-width: 1300px) {
+        .gh-sidebar {
+            position: absolute; 
+            top: 0;
+            bottom: 0;
+            margin-top: 4vmin;
+            margin-left: 2vmin;
+            /*grid-column: wide-start / main-start; *//* Place the TOC to the left of the content */
+            grid-column: wide-end / main-end; /* Place the TOC to the right of the content */
+        }
+    
+        .gh-toc {
+            position: sticky; /* On larger screens, TOC will stay in the same spot on the page */
+            top: 4vmin;
+        }
+    }
+
+    .gh-toc .is-active-link::before {
+        background-color: var(--ghost-accent-color); /* Defines TOC accent color based on Accent color set in Ghost Admin */
+    } 
+    </style>
 
     <link rel="icon" href="https://relentlesstorm.github.io/content/images/size/w256h256/2023/01/FlamingBytes-logos_transparent-9.png" type="image/png" />
     <link rel="canonical" href="https://relentlesstorm.github.io/analyze-the-library-and-system-calls/" />
@@ -85,8 +123,8 @@ Library calls take place in user space. System calls is the fundamental interfac
     <link rel="alternate" type="application/rss+xml" title="Flamingbytes" href="https://relentlesstorm.github.io/rss/" />
     
     <script defer src="https://cdn.jsdelivr.net/ghost/sodo-search@~1.1/umd/sodo-search.min.js" data-key="321a1d1aea33fd468f6e61f563" data-styles="https://cdn.jsdelivr.net/ghost/sodo-search@~1.1/umd/main.css" data-sodo-search="https://relentlesstorm.github.io/" crossorigin="anonymous"></script>
-    <script defer src="/public/cards.min.js?v=934f04db58"></script>
-    <link rel="stylesheet" type="text/css" href="/public/cards.min.css?v=934f04db58">
+    <script defer src="/public/cards.min.js?v=b26259a70f"></script>
+    <link rel="stylesheet" type="text/css" href="/public/cards.min.css?v=b26259a70f">
     <style>.gh-head-logo img{max-height:100px;height:100%;}</style><style>:root {--ghost-accent-color: #6a13ec;}</style>
 </head>
 
@@ -173,6 +211,7 @@ Library calls take place in user space. System calls is the fundamental interfac
             </header>
 
             <section class="gh-content gh-canvas">
+                <aside class="gh-sidebar"><div class="gh-toc"></div></aside> 
                 <!--kg-card-begin: markdown--><p>When the application source code is not available, we can trace the function calls during its runtime in order to understand how the application code works.</p>
 <p>Library calls take place in user space. <a href="https://man7.org/linux/man-pages/man2/syscalls.2.html">System calls</a> is the fundamental interface between application and the kernel. System calls are not invoked directly but rather via wrapper functions in glibc(or other library).</p>
 <p>In this article, we will study how to use ltrace/strace/perf tracing tools to help understand the target application.</p>
@@ -571,7 +610,22 @@ The following ftrace options are used in this example. There are 8 nfsd processe
         </div>
     </div>
 </div>
-<script src="/assets/built/main.min.js?v=934f04db58"></script>
+<script src="/assets/built/main.min.js?v=b26259a70f"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.12.3/tocbot.min.js"></script>
+
+<script>
+    tocbot.init({
+        // Where to render the table of contents.
+        tocSelector: '.gh-toc',
+        // Where to grab the headings to build the table of contents.
+        contentSelector: '.gh-content',
+        // Which headings to grab inside of the contentSelector element.
+        headingSelector: 'h1, h2, h3, h4',
+        // Ensure correct positioning
+        hasInnerContainers: true,
+    });
+</script>
 
 
 

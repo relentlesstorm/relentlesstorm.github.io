@@ -5,7 +5,45 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>The Civil and Revolutionary War</title>
-    <link rel="stylesheet" href="/assets/built/screen.css?v=934f04db58">
+    <link rel="stylesheet" href="/assets/built/screen.css?v=b26259a70f">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.12.3/tocbot.css">
+    
+    <style>
+    .gh-content {
+        position: relative;
+    }
+
+    .gh-toc > .toc-list {
+        position: relative;
+    }
+
+    .toc-list {
+        overflow: hidden;
+        list-style: none;
+    }
+
+    @media (min-width: 1300px) {
+        .gh-sidebar {
+            position: absolute; 
+            top: 0;
+            bottom: 0;
+            margin-top: 4vmin;
+            margin-left: 2vmin;
+            /*grid-column: wide-start / main-start; *//* Place the TOC to the left of the content */
+            grid-column: wide-end / main-end; /* Place the TOC to the right of the content */
+        }
+    
+        .gh-toc {
+            position: sticky; /* On larger screens, TOC will stay in the same spot on the page */
+            top: 4vmin;
+        }
+    }
+
+    .gh-toc .is-active-link::before {
+        background-color: var(--ghost-accent-color); /* Defines TOC accent color based on Accent color set in Ghost Admin */
+    } 
+    </style>
 
     <link rel="icon" href="https://relentlesstorm.github.io/content/images/size/w256h256/2023/01/FlamingBytes-logos_transparent-9.png" type="image/png" />
     <link rel="canonical" href="https://relentlesstorm.github.io/life/test-post-2/" />
@@ -83,8 +121,8 @@ The Civil War started when America’s North and South had different ideas about
     <link rel="alternate" type="application/rss+xml" title="Flamingbytes" href="https://relentlesstorm.github.io/rss/" />
     
     <script defer src="https://cdn.jsdelivr.net/ghost/sodo-search@~1.1/umd/sodo-search.min.js" data-key="321a1d1aea33fd468f6e61f563" data-styles="https://cdn.jsdelivr.net/ghost/sodo-search@~1.1/umd/main.css" data-sodo-search="https://relentlesstorm.github.io/" crossorigin="anonymous"></script>
-    <script defer src="/public/cards.min.js?v=934f04db58"></script>
-    <link rel="stylesheet" type="text/css" href="/public/cards.min.css?v=934f04db58">
+    <script defer src="/public/cards.min.js?v=b26259a70f"></script>
+    <link rel="stylesheet" type="text/css" href="/public/cards.min.css?v=b26259a70f">
     <style>.gh-head-logo img{max-height:100px;height:100%;}</style><style>:root {--ghost-accent-color: #6a13ec;}</style>
 </head>
 
@@ -171,6 +209,7 @@ The Civil War started when America’s North and South had different ideas about
             </header>
 
             <section class="gh-content gh-canvas">
+                <aside class="gh-sidebar"><div class="gh-toc"></div></aside> 
                 <p>The Revolutionary and Civil War were two of the most well known wars in American history. They greatly impacted America in different ways. The Civil War abolished slavery while the Revolutionary War created our nation.</p><p>The Civil War started when America’s North and South had different ideas about slavery. The people of Northern America, which was called Union, thought that slavery was unjust. They wanted to abolish it. However, the South wanted slavery. The South left the United States and created their own nation called the Confederacy. The first battle that started the Civil War was the attack on Fort Sumter. After the huge loss of Fort Sumter, President Lincoln announced that the Union would attempt to keep supplies from leaving or entering the Confederate nation. This blockade would later weaken the Confederacy. President Lincoln did not want his nation to be divided, so he tried his best to win the war. He chose General Grant as leader for the Union army. Under Grant’s leadership, the Union defeated the Confederate army and slavery was abolished. The Confederacy later reunited with the Union and America was a united nation again.</p><p>The Revolutionary War started when the colonists thought that they were not represented in the British government. The British government was making laws and raising taxes constantly which made the colonists feel that they had no freedom. They wanted to make choices and speak without restraint. With the leadership of General Washington, they went through many hardships and battles. Eventually, they were allied with the French and Spanish armies. Together, they trapped the British, who were led by General Cornwallis, and made them surrender. Having no choice, the British signed the Treaty of Paris and the people of America earned their freedom. The Americans had another problem though. How would they govern themselves? They wanted to be different from England, their home country. They did not want a monarch. Instead, they created several branches which were called the Legislative, Judicial, and Executive. These branches made laws and advised the president. The Americans made sure no one in the government would be too powerful or strong enough to become king.</p><p>The Revolutionary War and Civil War both had a heavy impact on our nation. If we had not won both , nobody knows what may have happened to America today. Both wars involved a lot of battles and the colonies had to constantly use up their supplies to support the war. The colonists before the Revolutionary War were left in the New World to govern themselves. Later on, the British wished to gain control over them and have monopoly over their products. The colonists rebelled and began the war. However, in the Civil War, it wasn’t about rebelling for freedom. Two parts of America had different ideas about slavery. The Northern part thought slavery was unjust but the South wanted slavery. The South eventually decided to separate from America and create their own nation called the Confederacy. Both of these wars were fought in the United States and were fought for the freedom of our citizens’ rights. The major difference was that the Revolutionary War was fought against Britain while the Civil War was fought against ourselves. Also, the weaponry of the patriots were knives and bayonets or hand combat, while the Civil War troops used deadlier weapons such as cannonballs. Due to the deadlier weapons, about 620,000 Americans died in the Civil War, and 25,000 Americans died in the Revolutionary War. But since both wars were won by the Americans, the result was the unity of our country.</p><p>The effects of the Civil and Revolutionary War, two of the most important wars in American history, led to what America is right now. Though they had serious impacts on our land, the Revolutionary War led to the establishment of our land and freedom from Britain, while the result of the Civil War was that slavery was demolished. The site Ducksters U.S. History said, “The Revolutionary War was fought for the Americans’ freedom, while the Civil War was fought for the freedom of slaves.” So both wars affected the rights of citizens.</p>
             </section>
 
@@ -359,7 +398,22 @@ Platinum</div>
         </div>
     </div>
 </div>
-<script src="/assets/built/main.min.js?v=934f04db58"></script>
+<script src="/assets/built/main.min.js?v=b26259a70f"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.12.3/tocbot.min.js"></script>
+
+<script>
+    tocbot.init({
+        // Where to render the table of contents.
+        tocSelector: '.gh-toc',
+        // Where to grab the headings to build the table of contents.
+        contentSelector: '.gh-content',
+        // Which headings to grab inside of the contentSelector element.
+        headingSelector: 'h1, h2, h3, h4',
+        // Ensure correct positioning
+        hasInnerContainers: true,
+    });
+</script>
 
 
 
