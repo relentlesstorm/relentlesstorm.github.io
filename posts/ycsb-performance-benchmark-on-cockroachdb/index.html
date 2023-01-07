@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Flamingbytes</title>
+    <link rel="stylesheet" href="/assets/built/screen.css?v=af8165c91b">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.12.3/tocbot.css">
+    
+    <style>
+    .gh-content {
+        position: relative;
+    }
+
+    .gh-toc > .toc-list {
+        position: relative;
+    }
+
+    .toc-list {
+        overflow: hidden;
+        list-style: none;
+    }
+
+    @media (min-width: 1300px) {
+        .gh-sidebar {
+            position: absolute; 
+            top: 0;
+            bottom: 0;
+            margin-top: 4vmin;
+            margin-left: 2vmin;
+            /*grid-column: wide-start / main-start; *//* Place the TOC to the left of the content */
+            grid-column: wide-end / main-end; /* Place the TOC to the right of the content */
+        }
+    
+        .gh-toc {
+            position: sticky; /* On larger screens, TOC will stay in the same spot on the page */
+            top: 4vmin;
+        }
+    }
+
+    .gh-toc .is-active-link::before {
+        background-color: var(--ghost-accent-color); /* Defines TOC accent color based on Accent color set in Ghost Admin */
+    } 
+    </style>
+
+    <link rel="icon" href="https://relentlesstorm.github.io/content/images/size/w256h256/2023/01/FlamingBytes-icon-64x64.png" type="image/png" />
+    <link rel="canonical" href="https://relentlesstorm.github.io/posts/ycsb-performance-benchmark-on-cockroachdb/" />
+    <meta name="referrer" content="no-referrer-when-downgrade" />
+    
+    <meta property="og:site_name" content="Flamingbytes" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="YCSB performance benchmark on CockroachDB" />
+    <meta property="og:description" content="Intro to go-ycsb
+
+
+go-ycsb is a Go port of YCSB. It fully supports all YCSB generators and the Core workload so we can do the basic CRUD benchmarks with Go.
+
+
+
+Install golang package
+
+
+$ wget https://dl.google.com/go/go1.19.2.linux-amd64.tar.gz
+$ tar -C /usr/local -xvzf" />
+    <meta property="og:url" content="https://relentlesstorm.github.io/posts/ycsb-performance-benchmark-on-cockroachdb/" />
+    <meta property="og:image" content="https://images.unsplash.com/photo-1489976908522-aabacf277f49?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDF8fHBlcmZvcm1hbmNlfGVufDB8fHx8MTY3Mjc3Njg1OQ&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000" />
+    <meta property="article:published_time" content="2022-10-02T00:00:00.000Z" />
+    <meta property="article:modified_time" content="2023-01-03T20:15:01.000Z" />
+    <meta property="article:tag" content="Benchmarking" />
+    
+    <meta property="article:publisher" content="https://www.facebook.com/ghost" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="YCSB performance benchmark on CockroachDB" />
+    <meta name="twitter:description" content="Intro to go-ycsb
+
+
+go-ycsb is a Go port of YCSB. It fully supports all YCSB generators and the Core workload so we can do the basic CRUD benchmarks with Go.
+
+
+
+Install golang package
+
+
+$ wget https://dl.google.com/go/go1.19.2.linux-amd64.tar.gz
+$ tar -C /usr/local -xvzf" />
+    <meta name="twitter:url" content="https://relentlesstorm.github.io/posts/ycsb-performance-benchmark-on-cockroachdb/" />
+    <meta name="twitter:image" content="https://images.unsplash.com/photo-1489976908522-aabacf277f49?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDF8fHBlcmZvcm1hbmNlfGVufDB8fHx8MTY3Mjc3Njg1OQ&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000" />
+    <meta name="twitter:label1" content="Written by" />
+    <meta name="twitter:data1" content="relentlesstorm" />
+    <meta name="twitter:label2" content="Filed under" />
+    <meta name="twitter:data2" content="Benchmarking" />
+    <meta name="twitter:site" content="@ghost" />
+    <meta property="og:image:width" content="2000" />
+    <meta property="og:image:height" content="1333" />
+    
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "publisher": {
+        "@type": "Organization",
+        "name": "Flamingbytes",
+        "url": "https://relentlesstorm.github.io/",
+        "logo": {
+            "@type": "ImageObject",
+            "url": "https://relentlesstorm.github.io/content/images/size/w256h256/2023/01/FlamingBytes-icon-64x64.png",
+            "width": 60,
+            "height": 60
+        }
+    },
+    "author": {
+        "@type": "Person",
+        "name": "relentlesstorm",
+        "image": {
+            "@type": "ImageObject",
+            "url": "https://relentlesstorm.github.io/content/images/2023/01/FlamingBytes-icon-64x64-1.png",
+            "width": 64,
+            "height": 64
+        },
+        "url": "https://relentlesstorm.github.io/author/relentlesstorm/",
+        "sameAs": []
+    },
+    "headline": "YCSB performance benchmark on CockroachDB",
+    "url": "https://relentlesstorm.github.io/posts/ycsb-performance-benchmark-on-cockroachdb/",
+    "datePublished": "2022-10-02T00:00:00.000Z",
+    "dateModified": "2023-01-03T20:15:01.000Z",
+    "image": {
+        "@type": "ImageObject",
+        "url": "https://images.unsplash.com/photo-1489976908522-aabacf277f49?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxMTc3M3wwfDF8c2VhcmNofDF8fHBlcmZvcm1hbmNlfGVufDB8fHx8MTY3Mjc3Njg1OQ&ixlib=rb-4.0.3&q=80&w=2000",
+        "width": 2000,
+        "height": 1333
+    },
+    "keywords": "Benchmarking",
+    "description": "Intro to go-ycsb\n\n\ngo-ycsb is a Go port of YCSB. It fully supports all YCSB generators and the Core workload so we can do the basic CRUD benchmarks with Go.\n\n\n\nInstall golang package\n\n\n$ wget https://dl.google.com/go/go1.19.2.linux-amd64.tar.gz\n$ tar -C /usr/local -xvzf go1.19.2.linux-amd64.tar.gz\n$ cat /usr/local/go/VERSION\ngo1.19.2\n\n$ vim /root/.bash_profile\nPATH&#x3D;$PATH:$HOME/bin:/usr/local/go/bin\nexport PATH\n\n$ source /root/.bash_profile\n$ go version\ngo version go1.19.2 linux/amd64\n\n\n\n\nInstall",
+    "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https://relentlesstorm.github.io/"
+    }
+}
+    </script>
+
+    <meta name="generator" content="Ghost 5.26" />
+    <link rel="alternate" type="application/rss+xml" title="Flamingbytes" href="https://relentlesstorm.github.io/rss/" />
+    
+    <script defer src="https://cdn.jsdelivr.net/ghost/sodo-search@~1.1/umd/sodo-search.min.js" data-key="321a1d1aea33fd468f6e61f563" data-styles="https://cdn.jsdelivr.net/ghost/sodo-search@~1.1/umd/main.css" data-sodo-search="https://relentlesstorm.github.io/" crossorigin="anonymous"></script>
+    <script defer src="/public/cards.min.js?v=af8165c91b"></script>
+    <link rel="stylesheet" type="text/css" href="/public/cards.min.css?v=af8165c91b">
+    <script defer src="/public/comment-counts.min.js?v=af8165c91b" data-ghost-comments-counts-api="https://relentlesstorm.github.io/members/api/comments/counts/"></script>
+    <style>.gh-head-logo img{max-height:100px;height:100%;}</style>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-B8PQ47L2H0"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-B8PQ47L2H0');
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8578408127828851" crossorigin="anonymous"></script><style>:root {--ghost-accent-color: #6a13ec;}</style>
+</head>
+
+<body class="post-template tag-benchmarking is-head-left-logo has-serif-body">
+<div class="gh-site">
+
+    <header id="gh-head" class="gh-head gh-outer">
+        <div class="gh-head-inner gh-inner">
+            <div class="gh-head-brand">
+                <div class="gh-head-brand-wrapper">
+                    <a class="gh-head-logo" href="https://relentlesstorm.github.io">
+                            Flamingbytes
+                    </a>
+                </div>
+                <button class="gh-search gh-icon-btn" data-ghost-search><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" width="20" height="20"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg></button>
+                <button class="gh-burger"></button>
+            </div>
+
+            <nav class="gh-head-menu">
+                <ul class="nav">
+    <li class="nav-home"><a href="https://relentlesstorm.github.io/">Home</a></li>
+    <li class="nav-tags"><a href="https://relentlesstorm.github.io/posts/tags/">Tags</a></li>
+    <li class="nav-archive"><a href="https://relentlesstorm.github.io/posts/archive/">Archive</a></li>
+    <li class="nav-about"><a href="https://relentlesstorm.github.io/about/">About</a></li>
+</ul>
+
+            </nav>
+
+            <div class="gh-head-actions">
+                        <button class="gh-search gh-icon-btn" data-ghost-search><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" width="20" height="20"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg></button>
+            </div>
+        </div>
+    </header>
+
+    
+<main class="gh-main">
+        <article class="gh-article post tag-benchmarking">
+
+            <header class="gh-article-header gh-canvas">
+                    <a class="gh-article-tag" href="https://relentlesstorm.github.io/posts/tag/benchmarking/">Benchmarking</a>
+
+                <h1 class="gh-article-title">YCSB performance benchmark on CockroachDB</h1>
+
+                    <aside class="gh-article-sidebar">
+
+        <div class="gh-author-image-list">
+                <a class="gh-author-image" href="/author/relentlesstorm/">
+                        <img src="https://relentlesstorm.github.io/content/images/2023/01/FlamingBytes-icon-64x64-1.png" alt="relentlesstorm">
+                </a>
+        </div>
+
+        <div class="gh-author-name-list">
+                <h4 class="gh-author-name">
+                    <a href="/author/relentlesstorm/">relentlesstorm</a>
+                </h4>
+                
+        </div>
+
+        <div class="gh-article-meta">
+            <div class="gh-article-meta-inner">
+                <time class="gh-article-date" datetime="2022-10-02">Oct 2, 2022</time>
+                    <span class="gh-article-meta-sep"></span>
+                    <span class="gh-article-length">7 min</span>
+            </div>
+        </div>
+
+    </aside>
+
+
+                    <figure class="gh-article-image">
+        <img
+            srcset="https://images.unsplash.com/photo-1489976908522-aabacf277f49?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDF8fHBlcmZvcm1hbmNlfGVufDB8fHx8MTY3Mjc3Njg1OQ&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;300 300w,
+                    https://images.unsplash.com/photo-1489976908522-aabacf277f49?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDF8fHBlcmZvcm1hbmNlfGVufDB8fHx8MTY3Mjc3Njg1OQ&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720 720w,
+                    https://images.unsplash.com/photo-1489976908522-aabacf277f49?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDF8fHBlcmZvcm1hbmNlfGVufDB8fHx8MTY3Mjc3Njg1OQ&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;960 960w,
+                    https://images.unsplash.com/photo-1489976908522-aabacf277f49?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDF8fHBlcmZvcm1hbmNlfGVufDB8fHx8MTY3Mjc3Njg1OQ&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1200 1200w,
+                    https://images.unsplash.com/photo-1489976908522-aabacf277f49?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDF8fHBlcmZvcm1hbmNlfGVufDB8fHx8MTY3Mjc3Njg1OQ&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000 2000w"
+            sizes="(max-width: 1200px) 100vw, 1200px"
+            src="https://images.unsplash.com/photo-1489976908522-aabacf277f49?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDF8fHBlcmZvcm1hbmNlfGVufDB8fHx8MTY3Mjc3Njg1OQ&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1200"
+            alt="YCSB performance benchmark on CockroachDB"
+        >
+            <figcaption>Photo by <a href="https://unsplash.com/@rockthechaos?utm_source=ghost&utm_medium=referral&utm_campaign=api-credit">Kolleen  Gladden</a> / <a href="https://unsplash.com/?utm_source=ghost&utm_medium=referral&utm_campaign=api-credit">Unsplash</a></figcaption>
+    </figure>
+            </header>
+
+            <section class="gh-content gh-canvas">
+                <aside class="gh-sidebar"><div class="gh-toc"></div></aside> 
+                <!--kg-card-begin: markdown--><h2 id="intro-to-go-ycsb">Intro to go-ycsb</h2>
+<p>go-ycsb is a Go port of YCSB. It fully supports all YCSB generators and the Core workload so we can do the basic CRUD benchmarks with Go.</p>
+<h2 id="install-golang-package">Install golang package</h2>
+<pre><code class="language-shell">$ wget https://dl.google.com/go/go1.19.2.linux-amd64.tar.gz
+$ tar -C /usr/local -xvzf go1.19.2.linux-amd64.tar.gz
+$ cat /usr/local/go/VERSION
+go1.19.2
+
+$ vim /root/.bash_profile
+PATH=$PATH:$HOME/bin:/usr/local/go/bin
+export PATH
+
+$ source /root/.bash_profile
+$ go version
+go version go1.19.2 linux/amd64
+</code></pre>
+<h2 id="install-go-ycsb">Install go-ycsb</h2>
+<pre><code class="language-shell">$ git clone https://github.com/pingcap/go-ycsb.git
+$ cd go-ycsb
+
+$ make
+go build -tags &quot; libsqlite3&quot; -o bin/go-ycsb cmd/go-ycsb/*
+# github.com/mattn/go-sqlite3
+/root/go/pkg/mod/github.com/mattn/go-sqlite3@v2.0.1+incompatible/backup.go:12:21: fatal error: sqlite3.h: No such file or directory
+ #include &lt;sqlite3.h&gt;
+                     ^
+compilation terminated.
+make: *** [build] Error 2
+
+$ cat /etc/centos-release
+CentOS Linux release 7.9.2009 (Core)
+
+$ yum install sqlite-devel.x86_64
+$ rpm -qa | grep sqlite
+sqlite-3.7.17-8.el7_7.1.x86_64
+sqlite-devel-3.7.17-8.el7_7.1.x86_64
+
+$ make
+go build -tags &quot; libsqlite3&quot; -o bin/go-ycsb cmd/go-ycsb/*
+
+$ ./bin/go-ycsb --help
+Go YCSB
+
+Usage:
+  go-ycsb [command]
+
+Available Commands:
+  help        Help about any command
+  load        YCSB load benchmark
+  run         YCSB run benchmark
+  shell       YCSB Command Line Client
+
+Flags:
+  -h, --help   help for go-ycsb
+
+Use &quot;go-ycsb [command] --help&quot; for more information about a command.
+</code></pre>
+<h2 id="ycsb-workloads">YCSB workloads</h2>
+<p>YCSB includes a set of core workloads that define a basic benchmark for cloud systems. Of course, you can define your own workloads, as described in Implementing New Workloads. However, the core workloads are a useful first step, and obtaining these benchmark numbers for a variety of different systems would allow you to understand the performance tradeoffs of different systems.</p>
+<p>The core workloads consist of six different workloads:</p>
+<pre><code class="language-shell">[root@cockroach-db-host go-ycsb]# ls db
+aerospike  basic   cassandra      etcd          minio    mysql    pg     rocksdb  sqlite
+badger     boltdb  elasticsearch  foundationdb  mongodb  pegasus  redis  spanner  tikv
+
+[root@cockroach-db-host go-ycsb]# ls workloads/
+minio  workloada  workloadb  workloadc  workloadd  workloadd.orig  workloade  workloadf  workload_template
+</code></pre>
+<h3 id="workload-a-update-heavy-workload">Workload A: Update heavy workload</h3>
+<pre><code class="language-shell">$ cat go-ycsb/workloads/workloada
+# Workload A: Update heavy workload
+#   Application example: Session store recording recent actions
+#
+#   Read/update ratio: 50/50
+#   Default data size: 1 KB records (10 fields, 100 bytes each, plus key)
+#   Request distribution: zipfian
+
+recordcount=1000
+operationcount=1000
+workload=core
+
+readallfields=true
+
+readproportion=0.5
+updateproportion=0.5
+scanproportion=0
+insertproportion=0
+
+requestdistribution=uniform
+</code></pre>
+<h3 id="workload-b-read-mostly-workload">Workload B: Read mostly workload</h3>
+<pre><code class="language-shell">$ cat go-ycsb/workloads/workloadb
+# Yahoo! Cloud System Benchmark
+# Workload B: Read mostly workload
+#   Application example: photo tagging; add a tag is an update, but most operations are to read tags
+#
+#   Read/update ratio: 95/5
+#   Default data size: 1 KB records (10 fields, 100 bytes each, plus key)
+#   Request distribution: zipfian
+
+recordcount=1000
+operationcount=1000
+workload=core
+
+readallfields=true
+
+readproportion=0.95
+updateproportion=0.05
+scanproportion=0
+insertproportion=0
+
+requestdistribution=uniform
+</code></pre>
+<h3 id="workload-c-read-only">Workload C: Read only</h3>
+<pre><code class="language-shell">$ cat go-ycsb/workloads/workloadc
+# Yahoo! Cloud System Benchmark
+# Workload C: Read only
+#   Application example: user profile cache, where profiles are constructed elsewhere (e.g., Hadoop)
+#
+#   Read/update ratio: 100/0
+#   Default data size: 1 KB records (10 fields, 100 bytes each, plus key)
+#   Request distribution: zipfian
+
+recordcount=1000
+operationcount=1000
+workload=core
+
+readallfields=true
+
+readproportion=1
+updateproportion=0
+scanproportion=0
+insertproportion=0
+
+requestdistribution=uniform
+</code></pre>
+<h3 id="workload-d-read-latest-workload">Workload D: Read latest workload</h3>
+<pre><code class="language-shell">$ cat go-ycsb/workloads/workloadd
+# Yahoo! Cloud System Benchmark
+# Workload D: Read latest workload
+#   Application example: user status updates; people want to read the latest
+#
+#   Read/update/insert ratio: 95/0/5
+#   Default data size: 1 KB records (10 fields, 100 bytes each, plus key)
+#   Request distribution: latest
+
+# The insert order for this is hashed, not ordered. The &quot;latest&quot; items may be
+# scattered around the keyspace if they are keyed by userid.timestamp. A workload
+# which orders items purely by time, and demands the latest, is very different than
+# workload here (which we believe is more typical of how people build systems.)
+
+recordcount=1000
+operationcount=1000
+workload=core
+
+readallfields=true
+
+readproportion=0.95
+updateproportion=0
+scanproportion=0
+insertproportion=0.05
+
+requestdistribution=latest
+</code></pre>
+<h3 id="workload-e-short-ranges">Workload E: Short ranges</h3>
+<pre><code class="language-shell">$ cat go-ycsb/workloads/workloade
+# Yahoo! Cloud System Benchmark
+# Workload E: Short ranges
+#   Application example: threaded conversations, where each scan is for the posts in a given thread (assumed to be clustered by thread id)
+#
+#   Scan/insert ratio: 95/5
+#   Default data size: 1 KB records (10 fields, 100 bytes each, plus key)
+#   Request distribution: zipfian
+
+# The insert order is hashed, not ordered. Although the scans are ordered, it does not necessarily
+# follow that the data is inserted in order. For example, posts for thread 342 may not be inserted contiguously, but
+# instead interspersed with posts from lots of other threads. The way the YCSB client works is that it will pick a start
+# key, and then request a number of records; this works fine even for hashed insertion.
+
+recordcount=1000
+operationcount=1000
+workload=core
+
+readallfields=true
+
+readproportion=0
+updateproportion=0
+scanproportion=0.95
+insertproportion=0.05
+
+requestdistribution=uniform
+
+maxscanlength=1
+
+scanlengthdistribution=uniform
+</code></pre>
+<h3 id="workload-f-read-modify-write">Workload F: Read-modify-write</h3>
+<pre><code class="language-shell">$ cat go-ycsb/workloads/workloadf
+# Yahoo! Cloud System Benchmark
+# Workload F: Read-modify-write workload
+#   Application example: user database, where user records are read and modified by the user or to record user activity.
+#
+#   Read/read-modify-write ratio: 50/50
+#   Default data size: 1 KB records (10 fields, 100 bytes each, plus key)
+#   Request distribution: zipfian
+
+recordcount=1000
+operationcount=1000
+workload=core
+
+readallfields=true
+
+readproportion=0.5
+updateproportion=0
+scanproportion=0
+insertproportion=0
+readmodifywriteproportion=0.5
+
+requestdistribution=uniform
+</code></pre>
+<h2 id="load-the-data-to-database">Load the data to database</h2>
+<p>The database needs to be created before data load.</p>
+<pre><code class="language-shell">root@cockroach-db-host-ip:26257/defaultdb&gt; create database test;
+CREATE DATABASE
+
+Time: 16ms total (execution 16ms / network 0ms)
+
+root@cockroach-db-host-ip:26257/defaultdb&gt; show databases;
+  database_name | owner | primary_region | regions | survival_goal
+----------------+-------+----------------+---------+----------------
+  defaultdb     | root  | NULL           | {}      | NULL
+  postgres      | root  | NULL           | {}      | NULL
+  system        | node  | NULL           | {}      | NULL
+  test          | root  | NULL           | {}      | NULL
+(4 rows)
+
+Time: 6ms total (execution 5ms / network 1ms)
+</code></pre>
+<p>Load the database as below:</p>
+<pre><code class="language-shell">[root@cockroach-db-host go-ycsb]# ./bin/go-ycsb load --help
+YCSB load benchmark
+
+Usage:
+  go-ycsb load db [flags]
+
+Flags:
+  -h, --help                    help for load
+      --interval int            Interval of outputting measurements in seconds (default 10)
+  -p, --prop stringArray        Specify a property value with name=value
+  -P, --property_file strings   Spefify a property file
+      --table string            Use the table name instead of the default &quot;usertable&quot;
+      --target int              Attempt to do n operations per second (default: unlimited) - can also be specified as the &quot;target&quot; property
+      --threads int             Execute using n threads - can also be specified as the &quot;threadcount&quot; property (default 1)
+
+$ ./bin/go-ycsb load cockroach -P workloads/workloadd -p pg.host=cockroach-db-host-ip -p pg.port=26257 -p pg.user=root -p pg.db=test -p pg.sslmode=disable -p dropdata=true
+***************** properties *****************
+&quot;insertproportion&quot;=&quot;0.05&quot;
+&quot;dropdata&quot;=&quot;true&quot;
+&quot;scanproportion&quot;=&quot;0&quot;
+&quot;workload&quot;=&quot;core&quot;
+&quot;recordcount&quot;=&quot;1000&quot;
+&quot;pg.port&quot;=&quot;26257&quot;
+&quot;dotransactions&quot;=&quot;false&quot;
+&quot;updateproportion&quot;=&quot;0&quot;
+&quot;pg.user&quot;=&quot;root&quot;
+&quot;requestdistribution&quot;=&quot;latest&quot;
+&quot;readallfields&quot;=&quot;true&quot;
+&quot;pg.sslmode&quot;=&quot;disable&quot;
+&quot;command&quot;=&quot;load&quot;
+&quot;pg.host&quot;=&quot;cockroach-db-host-ip&quot;
+&quot;operationcount&quot;=&quot;1000&quot;
+&quot;pg.db&quot;=&quot;test&quot;
+&quot;readproportion&quot;=&quot;0.95&quot;
+**********************************************
+Run finished, takes 2.794042708s
+INSERT - Takes(s): 2.8, Count: 1000, OPS: 361.7, Avg(us): 2734, Min(us): 1794, Max(us): 29903, 99th(us): 3557, 99.9th(us): 10999, 99.99th(us): 29903
+</code></pre>
+<p>The &quot;--threads&quot; option can be specified to increase the number of threads for data load.</p>
+<pre><code class="language-shell">$ ./bin/go-ycsb load cockroach -P workloads/workloadd --threads 96 -p pg.host=cockroach-db-host-ip -p pg.port=26257 -p pg.user=root -p pg.db=test -p pg.sslmode=disable -p dropdata=true
+</code></pre>
+<h2 id="verify-the-loaded-data">Verify the loaded data</h2>
+<pre><code class="language-shell">root@cockroach-db-host-ip:26257/defaultdb&gt; use test;
+SET
+
+Time: 1ms total (execution 1ms / network 0ms)
+
+root@cockroach-db-host-ip:26257/test&gt; show tables;
+  schema_name | table_name | type  | owner | estimated_row_count | locality
+--------------+------------+-------+-------+---------------------+-----------
+  public      | usertable  | table | root  |                1000 | NULL
+(1 row)
+
+Time: 39ms total (execution 38ms / network 0ms)
+
+root@cockroach-db-host-ip:26257/test&gt; show columns from usertable;
+  column_name |  data_type   | is_nullable | column_default | generation_expression |     indices      | is_hidden
+--------------+--------------+-------------+----------------+-----------------------+------------------+------------
+  ycsb_key    | VARCHAR(64)  |    false    | NULL           |                       | {usertable_pkey} |   false
+  field0      | VARCHAR(100) |    true     | NULL           |                       | {usertable_pkey} |   false
+  field1      | VARCHAR(100) |    true     | NULL           |                       | {usertable_pkey} |   false
+  field2      | VARCHAR(100) |    true     | NULL           |                       | {usertable_pkey} |   false
+  field3      | VARCHAR(100) |    true     | NULL           |                       | {usertable_pkey} |   false
+  field4      | VARCHAR(100) |    true     | NULL           |                       | {usertable_pkey} |   false
+  field5      | VARCHAR(100) |    true     | NULL           |                       | {usertable_pkey} |   false
+  field6      | VARCHAR(100) |    true     | NULL           |                       | {usertable_pkey} |   false
+  field7      | VARCHAR(100) |    true     | NULL           |                       | {usertable_pkey} |   false
+  field8      | VARCHAR(100) |    true     | NULL           |                       | {usertable_pkey} |   false
+  field9      | VARCHAR(100) |    true     | NULL           |                       | {usertable_pkey} |   false
+(11 rows)
+
+Time: 56ms total (execution 55ms / network 1ms)
+
+root@cockroach-db-host-ip:26257/test&gt; show ranges from table usertable;
+  start_key | end_key | range_id |     range_size_mb     | lease_holder | lease_holder_locality | replicas | replica_localities
+------------+---------+----------+-----------------------+--------------+-----------------------+----------+---------------------
+  NULL      | NULL    |       45 | 1.0670000000000000000 |            1 |                       | {1,2,3}  | {,,}
+(1 row)
+
+Time: 26ms total (execution 25ms / network 1ms)
+
+root@cockroach-db-host-ip:26257/test&gt; select count(*) from usertable;
+  count
+---------
+   1000
+(1 row)
+
+Time: 3ms total (execution 2ms / network 0ms)
+
+root@cockroach-db-host-ip:26257/test&gt; select * from usertable limit 2;
+         ycsb_key         |                                                field0                                                |                                                field1                                                |                                                field2                                                |                                                field3                                                |                                                field4                                                |                                                field5                                                |                                                field6                                                |                                                field7                                                |                                                field8                                                |                                                
+         field9
+
+  user6282602628620641459 | CRvLzkeCGxHtROFZjmDBFtRGwQigtZAPNCOSMdNXgDNsmpONJsVKRyJpleAmmigBbLoCUvtqDwPNYNoipLCXFqrEvBLnIoDrHSVq | dmhlgvUykChQAJzTfgSwBwEuWwBhLgcYUkBFAObtredxAUHWkCVaWfgMQCKIYUUrnHbguWZGrZXmYVRKAoZHVOnKdBsMYYaUqCWC | UtVaaGeRrAoupCumOJNesfunCVXnJhFoWBlKqebBYFZyooDIaYHPeQVgvCqEfCdmGpVtcLZJYhjvMSyFBZixzyMiykEoTZXMbFic | VmmyYkAgPawZuSqZmSiIEoEnssZHuLfbBhcpFixthpYsZUHgbxfpiffrgOFSlIYgejLLQuXMaGDxBbKHegWaHXpDBdxUUHZgJSLx | cCRKTqdUukzOdPwxqTBKyBEQPkIyIgAkxdaqXAiYbNwhuJVCoEqpBPSUApjLyvSXdyAqovEwSnsiIVvuviUCTiqcelbJuwvnCGyx | JuggBRLaLLqWhcCNoxEpbJZsXhcxSGyaPNRUrLoqrnKvpJfLvABueeZQOsmCERRMXasJIIJazBQoqLKVHfELiOwzolwgcXfOtLco | DJrJlWIgICwWgOuEQjnzUiZoCnGnKYXcJtrrgEYznFnKsOEmapuWzuwFVekgElVlYuwOoruMKqHoIOjHqLYZCUzoiSsIbPHZscaq | MOZiEsuFeHnouWlGmBcvNNZvXuOWqHlHKBDEFfYXcsaHNUGJPLUWpEGeHOKOilztleethxYoHLdAFBZdClYRRApEDoezGpuEvpwa | YvdqeMSnQPLoXYfExfduQrNSFRiTVKFPZdGATDpQMvtCHAdqTqMYjMpElQgcRjUuJUBMqwXJDzcVWlGiQSAirgVVDBGoAHqyzgdA | mkKBHtYOEsdXlpndKPOYHTQiqkFbTAsDbESpWeYXVSiBximrDHhjBARBZHkjWQjzZGITkqjecazQeCHvmkePqefSNieJtFTdbvRI
+
+  user6282603728132269670 | DSNUAvAFJxstogmWRPJmbNikPspeilFAZQJKzLRdxJpyOQJeQbltpxqnYJQtWwihrPbvZoOzbaMrMlLKBiAWjttcMskyfguSFidf | pSYiwZdqValtHyYGoYwkVYGawNErokKdMTiNCJUrcKTQWSQWKGixRVDxJTcaCfUXHMLxSSvDdFTVjTuxqWGWkWlxKocypFUGupqH | YBoLQdTXAQpjUgZReUGUfAOzsrBMKZyoZCdwxWJrOBkRlbbpXUmZLQxHHnDgnLNCNEnxozGPFCGEOVilyqLCixqDIsPNhccTdhbq | UQNzeZJXzbvwwupufEHeacjxxrTGCYfppLsbOCxLyfvuhZYPmoSyhKupkGRkHsYSnQVCFHCokWmHFWnLbYctVGdAunsPnkDjQAPk | HkqgViwhjGaBGUXJikhpwPMFCxqtOxoIunZQjmeKcytoItvGrfvcztncPzUukauoovIoQRmBCcQhJpoZxDLmXcpQJgFAbDYsbBGc | VDazXEFSiKZSKoSPMpAnFNAzqbrGcZwwrSMjFIJoEJPfvDzdwWwiVmHRkRGuFzwrXTOAKOiazelzsQFMAARAZdreFMWzKIwXieCP | lwbhKgtyTCZYJZmeRbVmWzkmPsWvdURifyZgGuSwVRrcCDCmrwvEdnFTWgCsYmcqzFgziAjgakhSuJjyixzoNThbtIgTkPuzAMVX | cKRURxsRlJvcKgrRQwMFeRLKCWfiavzTKqTJbYbWKZgOkZuutCIltPbwufcIMPDRWdgAZVaPqGCussiIxcFjMHMioVNLLQklptbG | OzGsnjbnnUtzsxjSVLpukwOcdegoTYrBLhOISwiNdNMGzKXBbDIRpBQqvNFEUEVfMPPJIWGSVzvSGTyAazIOvSMnWeEdKnEuggge | aHOwSIrvztvWYhrsdYaYGjtdjLTiVgfZluTgohVwNABYlZyiYPdrZgmMCFTQLOXqcbBbtahLNzPxdtoeqxrCBAussTPjmJrIzxns
+(2 rows)
+
+Time: 2ms total (execution 1ms / network 1ms)
+</code></pre>
+<h2 id="run-the-ycsb-benchmark">Run the YCSB benchmark</h2>
+<pre><code class="language-shell">[root@cockroach-db-host go-ycsb]# ./bin/go-ycsb run --help
+YCSB run benchmark
+
+Usage:
+  go-ycsb run db [flags]
+
+Flags:
+  -h, --help                    help for run
+      --interval int            Interval of outputting measurements in seconds (default 10)
+  -p, --prop stringArray        Specify a property value with name=value
+  -P, --property_file strings   Spefify a property file
+      --table string            Use the table name instead of the default &quot;usertable&quot;
+      --target int              Attempt to do n operations per second (default: unlimited) - can also be specified as the &quot;target&quot; property
+      --threads int             Execute using n threads - can also be specified as the &quot;threadcount&quot; property (default 1)
+
+[root@cockroach-db-host go-ycsb]# ./bin/go-ycsb run cockroach -P workloads/workloadd --threads 96 -p pg.host=cockroach-db-host-ip -p pg.port=26257 -p pg.user=root -p pg.db=test -p pg.sslmode=disable
+Run finished, takes 41m57.357806424s
+INSERT - Takes(s): 2517.3, Count: 4992285, OPS: 1983.2, Avg(us): 5053, Min(us): 1214, Max(us): 32863, 99th(us): 26719, 99.9th(us): 31471, 99.99th(us): 32671
+READ   - Takes(s): 2517.3, Count: 94554325, OPS: 37561.2, Avg(us): 2131, Min(us): 389, Max(us): 20687, 99th(us): 11543, 99.9th(us): 19695, 99.99th(us): 20591
+</code></pre>
+<h2 id="reference">Reference</h2>
+<ul>
+<li><a href="https://github.com/pingcap/go-ycsb">https://github.com/pingcap/go-ycsb</a></li>
+<li><a href="https://github.com/brianfrankcooper/YCSB/wiki/Core-Workloads">https://github.com/brianfrankcooper/YCSB/wiki/Core-Workloads</a></li>
+<li><a href="https://github.com/brianfrankcooper/YCSB/wiki/Running-a-Workload">https://github.com/brianfrankcooper/YCSB/wiki/Running-a-Workload</a></li>
+<li><a href="https://www.scylladb.com/product/benchmarks/scylla-vs-cockroachdb/">https://www.scylladb.com/product/benchmarks/scylla-vs-cockroachdb/</a></li>
+<li><a href="https://medium.com/@siddontang/use-go-ycsb-to-benchmark-different-databases-8850f6edb3a7">https://medium.com/@siddontang/use-go-ycsb-to-benchmark-different-databases-8850f6edb3a7</a></li>
+<li><a href="https://github.com/cockroachdb/docs/blob/master/v2.1/cockroach-workload.md">https://github.com/cockroachdb/docs/blob/master/v2.1/cockroach-workload.md</a></li>
+<li><a href="https://research.yahoo.com/news/yahoo-cloud-serving-benchmark/">Yahoo announcement</a></li>
+<li><a href="https://courses.cs.duke.edu/fall13/compsci590.4/838-CloudPapers/ycsb.pdf">Paper - Benchmarking Cloud Serving Systems with YCSB</a></li>
+<li><a href="https://s.yimg.com/ge/labs/v1/files/ycsb-v4.pdf">Yahoo lab experiments</a></li>
+<li><a href="https://helenchw.github.io/files/ycsb-overview.pdf">A Quick Introduction to YCSB</a></li>
+<li><a href="https://benchant.com/blog/ycsb">The Ultimate YCSB Benchmark Guide 2021</a></li>
+<li><a href="http://highscalability.com/blog/2021/2/17/benchmark-ycsb-numbers-for-redis-mongodb-couchbase2-yugabyte.html">http://highscalability.com/blog/2021/2/17/benchmark-ycsb-numbers-for-redis-mongodb-couchbase2-yugabyte.html</a></li>
+<li><a href="https://en.wikipedia.org/wiki/YCSB">https://en.wikipedia.org/wiki/YCSB</a></li>
+</ul>
+<!--kg-card-end: markdown-->
+            </section>
+
+        </article>
+
+                <div class="gh-read-next gh-canvas">
+                <section class="gh-pagehead">
+                    <h4 class="gh-pagehead-title">Read next</h4>
+                </section>
+
+                <div class="gh-topic gh-topic-grid">
+                    <div class="gh-topic-content">
+                            <article class="gh-card post featured">
+    <a class="gh-card-link" href="/posts/crdb-sysbench/">
+            <figure class="gh-card-image">
+                <img
+                    srcset="https://images.unsplash.com/photo-1597852074816-d933c7d2b988?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDR8fGRhdGFiYXNlfGVufDB8fHx8MTY3MjQ2Mjg3Mg&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;300 300w,
+                            https://images.unsplash.com/photo-1597852074816-d933c7d2b988?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDR8fGRhdGFiYXNlfGVufDB8fHx8MTY3MjQ2Mjg3Mg&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720 720w,
+                            https://images.unsplash.com/photo-1597852074816-d933c7d2b988?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDR8fGRhdGFiYXNlfGVufDB8fHx8MTY3MjQ2Mjg3Mg&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;960 960w,
+                            https://images.unsplash.com/photo-1597852074816-d933c7d2b988?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDR8fGRhdGFiYXNlfGVufDB8fHx8MTY3MjQ2Mjg3Mg&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1200 1200w,
+                            https://images.unsplash.com/photo-1597852074816-d933c7d2b988?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDR8fGRhdGFiYXNlfGVufDB8fHx8MTY3MjQ2Mjg3Mg&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000 2000w"
+                    sizes="(max-width: 1200px) 100vw, 1200px"
+                    src="https://images.unsplash.com/photo-1597852074816-d933c7d2b988?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDR8fGRhdGFiYXNlfGVufDB8fHx8MTY3MjQ2Mjg3Mg&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720"
+                    alt="Use sysbench for CockroachDB performance benchmarking"
+                >
+            </figure>
+
+        <div class="gh-card-wrapper">
+            <header class="gh-card-header">
+                <h3 class="gh-card-title">Use sysbench for CockroachDB performance benchmarking</h3>
+            </header>
+
+                    <div class="gh-card-excerpt">Intro
+
+
+Cockroach uses TPC-C as the official OLTP workload benchmark since it's a more realistic measurement by modeling the real world applications.
+
+
+However, sysbench is a straight-forward throughput/latency benchmarking tool. It is a scriptable multi-threaded benchmark tool based on LuaJIT. It is most frequently used for database benchmarks, but</div>
+
+            <footer class="gh-card-footer">
+                <span class="gh-card-author">relentlesstorm</span>
+                <time class="gh-card-date" datetime="2022-12-08">Dec 8, 2022</time>
+                    <script
+    data-ghost-comment-count="63afb5b296dbf412f1f8030c"
+    data-ghost-comment-count-empty=""
+    data-ghost-comment-count-singular="comment"
+    data-ghost-comment-count-plural="comments"
+    data-ghost-comment-count-tag="span"
+    data-ghost-comment-count-class-name="gh-card-comments"
+    data-ghost-comment-count-autowrap="true"
+>
+</script>
+            </footer>
+        </div>
+    </a>
+</article>                            <article class="gh-card post">
+    <a class="gh-card-link" href="/posts/cockroachdb-performance-benchmarking/">
+            <figure class="gh-card-image">
+                <img
+                    srcset="https://images.unsplash.com/photo-1505570554449-69ce7d4fa36b?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDIxfHwlMjBwZXJmb3JtYW5jZXxlbnwwfHx8fDE2NzI3Nzc0NzQ&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;300 300w,
+                            https://images.unsplash.com/photo-1505570554449-69ce7d4fa36b?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDIxfHwlMjBwZXJmb3JtYW5jZXxlbnwwfHx8fDE2NzI3Nzc0NzQ&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720 720w,
+                            https://images.unsplash.com/photo-1505570554449-69ce7d4fa36b?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDIxfHwlMjBwZXJmb3JtYW5jZXxlbnwwfHx8fDE2NzI3Nzc0NzQ&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;960 960w,
+                            https://images.unsplash.com/photo-1505570554449-69ce7d4fa36b?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDIxfHwlMjBwZXJmb3JtYW5jZXxlbnwwfHx8fDE2NzI3Nzc0NzQ&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1200 1200w,
+                            https://images.unsplash.com/photo-1505570554449-69ce7d4fa36b?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDIxfHwlMjBwZXJmb3JtYW5jZXxlbnwwfHx8fDE2NzI3Nzc0NzQ&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000 2000w"
+                    sizes="(max-width: 1200px) 100vw, 1200px"
+                    src="https://images.unsplash.com/photo-1505570554449-69ce7d4fa36b?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDIxfHwlMjBwZXJmb3JtYW5jZXxlbnwwfHx8fDE2NzI3Nzc0NzQ&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720"
+                    alt="CockroachDB performance benchmarking"
+                >
+            </figure>
+
+        <div class="gh-card-wrapper">
+            <header class="gh-card-header">
+                <h3 class="gh-card-title">CockroachDB performance benchmarking</h3>
+            </header>
+
+                    <div class="gh-card-excerpt">CockroachDB key concepts
+
+
+ * 
+   
+   
+   Range - CockroachDB stores all user data (tables, indexes, etc.) and almost all system data in a giant sorted map of key-value pairs. This keyspace is divided into "ranges", contiguous chunks of the keyspace, so that every key can always be found in a single range.
+   
+   
+   From</div>
+
+            <footer class="gh-card-footer">
+                <span class="gh-card-author">relentlesstorm</span>
+                <time class="gh-card-date" datetime="2022-12-04">Dec 4, 2022</time>
+                    <script
+    data-ghost-comment-count="63b48ec21527a00d97449cae"
+    data-ghost-comment-count-empty=""
+    data-ghost-comment-count-singular="comment"
+    data-ghost-comment-count-plural="comments"
+    data-ghost-comment-count-tag="span"
+    data-ghost-comment-count-class-name="gh-card-comments"
+    data-ghost-comment-count-autowrap="true"
+>
+</script>
+            </footer>
+        </div>
+    </a>
+</article>                            <article class="gh-card post featured">
+    <a class="gh-card-link" href="/posts/benchmark-es-cluster-with-rally/">
+            <figure class="gh-card-image">
+                <img
+                    srcset="https://images.unsplash.com/photo-1496096265110-f83ad7f96608?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDMwfHx0ZWNobm9sb2d5fGVufDB8fHx8MTY3MjQ2NDY5NQ&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;300 300w,
+                            https://images.unsplash.com/photo-1496096265110-f83ad7f96608?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDMwfHx0ZWNobm9sb2d5fGVufDB8fHx8MTY3MjQ2NDY5NQ&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720 720w,
+                            https://images.unsplash.com/photo-1496096265110-f83ad7f96608?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDMwfHx0ZWNobm9sb2d5fGVufDB8fHx8MTY3MjQ2NDY5NQ&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;960 960w,
+                            https://images.unsplash.com/photo-1496096265110-f83ad7f96608?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDMwfHx0ZWNobm9sb2d5fGVufDB8fHx8MTY3MjQ2NDY5NQ&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1200 1200w,
+                            https://images.unsplash.com/photo-1496096265110-f83ad7f96608?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDMwfHx0ZWNobm9sb2d5fGVufDB8fHx8MTY3MjQ2NDY5NQ&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000 2000w"
+                    sizes="(max-width: 1200px) 100vw, 1200px"
+                    src="https://images.unsplash.com/photo-1496096265110-f83ad7f96608?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDMwfHx0ZWNobm9sb2d5fGVufDB8fHx8MTY3MjQ2NDY5NQ&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720"
+                    alt="Benchmarking Elasticsearch cluster with Rally"
+                >
+            </figure>
+
+        <div class="gh-card-wrapper">
+            <header class="gh-card-header">
+                <h3 class="gh-card-title">Benchmarking Elasticsearch cluster with Rally</h3>
+            </header>
+
+                    <div class="gh-card-excerpt">Install Rally on each node
+
+
+Prerequisites
+
+
+$ yum update
+$ yum install openssl-devel bzip2-devel libffi-devel
+$ yum groupinstall "Development Tools"
+
+
+
+Install Python 3.8+
+
+
+$ wget https://www.python.org/ftp/python/3.8.15/Python-3.8.15.tar.xz
+$ tar xf Python-3.8.15.tar.xz
+$ vim Python-3.8.15/Modules/Setup
+SSL=</div>
+
+            <footer class="gh-card-footer">
+                <span class="gh-card-author">relentlesstorm</span>
+                <time class="gh-card-date" datetime="2022-10-26">Oct 26, 2022</time>
+                    <script
+    data-ghost-comment-count="63afc9d396dbf412f1f803c7"
+    data-ghost-comment-count-empty=""
+    data-ghost-comment-count-singular="comment"
+    data-ghost-comment-count-plural="comments"
+    data-ghost-comment-count-tag="span"
+    data-ghost-comment-count-class-name="gh-card-comments"
+    data-ghost-comment-count-autowrap="true"
+>
+</script>
+            </footer>
+        </div>
+    </a>
+</article>                    </div>
+                </div>
+            </div>
+
+    
+        <!-- ghost native comments
+                    <div class="gh-comments gh-read-next gh-canvas">
+            <section class="gh-pagehead">
+                <h4 class="gh-pagehead-title">Comments (<script
+    data-ghost-comment-count="63b48c641527a00d97449c67"
+    data-ghost-comment-count-empty="0"
+    data-ghost-comment-count-singular=""
+    data-ghost-comment-count-plural=""
+    data-ghost-comment-count-tag="span"
+    data-ghost-comment-count-class-name=""
+    data-ghost-comment-count-autowrap="true"
+>
+</script>)</h3>
+            </section>
+            
+        <script defer src="https://cdn.jsdelivr.net/ghost/comments-ui@~0.12/umd/comments-ui.min.js" data-ghost-comments="https://relentlesstorm.github.io/" data-api="https://relentlesstorm.github.io/ghost/api/content/" data-admin="https://relentlesstorm.github.io/ghost/" data-key="321a1d1aea33fd468f6e61f563" data-styles="https://cdn.jsdelivr.net/ghost/comments-ui@~0.12/umd/main.css" data-title="" data-count="false" data-post-id="63b48c641527a00d97449c67" data-sentry-dsn="" data-color-scheme="auto" data-avatar-saturation="60" data-accent-color="#6a13ec" data-app-version="0.12" data-comments-enabled="all" data-publication="Flamingbytes" crossorigin="anonymous"></script>
+    
+        </div>
+        -->
+
+        <!-- disqus comments 
+        <div id="disqus_thread"></div>
+<script>
+    var disqus_config = function () {
+        this.page.url = "https://relentlesstorm.github.io/posts/ycsb-performance-benchmark-on-cockroachdb/";
+        this.page.identifier = "ghost-63b48c641527a00d97449c67"
+    };
+    (function() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://www-flamingbytes-com.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+    })();
+</script>
+-->
+
+</main>
+
+    <footer class="gh-foot gh-outer">
+        <div class="gh-foot-inner gh-inner">
+
+            <!--<nav class="gh-foot-menu">
+                <<ul class="nav">
+    <li class="nav-sign-up"><a href="#/portal/">Sign up</a></li>
+</ul>
+
+            </nav>-->
+
+            <div class="gh-copyright">
+                    Flamingbytes © 2023. Powered by <a href="https://ghost.org/" target="_blank" rel="noopener">Ghost</a>
+            </div>
+        </div>
+    </footer>
+
+</div>
+
+    <div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="pswp__bg"></div>
+
+    <div class="pswp__scroll-wrap">
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)"></button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)"></button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="/assets/built/main.min.js?v=af8165c91b"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.12.3/tocbot.min.js"></script>
+
+<script>
+    tocbot.init({
+        // Where to render the table of contents.
+        tocSelector: '.gh-toc',
+        // Where to grab the headings to build the table of contents.
+        contentSelector: '.gh-content',
+        // Which headings to grab inside of the contentSelector element.
+        headingSelector: 'h1, h2, h3, h4',
+        // Ensure correct positioning
+        hasInnerContainers: true,
+    });
+</script>
+
+
+
+</body>
+
+</html>

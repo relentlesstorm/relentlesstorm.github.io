@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Flamingbytes</title>
+    <link rel="stylesheet" href="/assets/built/screen.css?v=af8165c91b">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.12.3/tocbot.css">
+    
+    <style>
+    .gh-content {
+        position: relative;
+    }
+
+    .gh-toc > .toc-list {
+        position: relative;
+    }
+
+    .toc-list {
+        overflow: hidden;
+        list-style: none;
+    }
+
+    @media (min-width: 1300px) {
+        .gh-sidebar {
+            position: absolute; 
+            top: 0;
+            bottom: 0;
+            margin-top: 4vmin;
+            margin-left: 2vmin;
+            /*grid-column: wide-start / main-start; *//* Place the TOC to the left of the content */
+            grid-column: wide-end / main-end; /* Place the TOC to the right of the content */
+        }
+    
+        .gh-toc {
+            position: sticky; /* On larger screens, TOC will stay in the same spot on the page */
+            top: 4vmin;
+        }
+    }
+
+    .gh-toc .is-active-link::before {
+        background-color: var(--ghost-accent-color); /* Defines TOC accent color based on Accent color set in Ghost Admin */
+    } 
+    </style>
+
+    <link rel="icon" href="https://relentlesstorm.github.io/content/images/size/w256h256/2023/01/FlamingBytes-icon-64x64.png" type="image/png" />
+    <link rel="canonical" href="https://relentlesstorm.github.io/posts/understanding-the-linux-inodes/" />
+    <meta name="referrer" content="no-referrer-when-downgrade" />
+    
+    <meta property="og:site_name" content="Flamingbytes" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="Understanding the Linux inodes" />
+    <meta property="og:description" content="Linux makes a clear distinction between the contents of a file and the information about a file. All information needed by the filesystem to handle a file is included in a data structure called an inode. Each file has its own inode, which the filesystem uses to identify the file." />
+    <meta property="og:url" content="https://relentlesstorm.github.io/posts/understanding-the-linux-inodes/" />
+    <meta property="og:image" content="https://images.unsplash.com/photo-1672627750971-5c90cb7014d3?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8YWxsfDM4fHx8fHx8Mnx8MTY3Mjc3OTY4OQ&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000" />
+    <meta property="article:published_time" content="2022-04-30T00:00:00.000Z" />
+    <meta property="article:modified_time" content="2023-01-03T21:01:44.000Z" />
+    <meta property="article:tag" content="Linux" />
+    
+    <meta property="article:publisher" content="https://www.facebook.com/ghost" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Understanding the Linux inodes" />
+    <meta name="twitter:description" content="Linux makes a clear distinction between the contents of a file and the information about a file. All information needed by the filesystem to handle a file is included in a data structure called an inode. Each file has its own inode, which the filesystem uses to identify the file." />
+    <meta name="twitter:url" content="https://relentlesstorm.github.io/posts/understanding-the-linux-inodes/" />
+    <meta name="twitter:image" content="https://images.unsplash.com/photo-1672627750971-5c90cb7014d3?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8YWxsfDM4fHx8fHx8Mnx8MTY3Mjc3OTY4OQ&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000" />
+    <meta name="twitter:label1" content="Written by" />
+    <meta name="twitter:data1" content="relentlesstorm" />
+    <meta name="twitter:label2" content="Filed under" />
+    <meta name="twitter:data2" content="Linux" />
+    <meta name="twitter:site" content="@ghost" />
+    <meta property="og:image:width" content="2000" />
+    <meta property="og:image:height" content="2664" />
+    
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "publisher": {
+        "@type": "Organization",
+        "name": "Flamingbytes",
+        "url": "https://relentlesstorm.github.io/",
+        "logo": {
+            "@type": "ImageObject",
+            "url": "https://relentlesstorm.github.io/content/images/size/w256h256/2023/01/FlamingBytes-icon-64x64.png",
+            "width": 60,
+            "height": 60
+        }
+    },
+    "author": {
+        "@type": "Person",
+        "name": "relentlesstorm",
+        "image": {
+            "@type": "ImageObject",
+            "url": "https://relentlesstorm.github.io/content/images/2023/01/FlamingBytes-icon-64x64-1.png",
+            "width": 64,
+            "height": 64
+        },
+        "url": "https://relentlesstorm.github.io/author/relentlesstorm/",
+        "sameAs": []
+    },
+    "headline": "Understanding the Linux inodes",
+    "url": "https://relentlesstorm.github.io/posts/understanding-the-linux-inodes/",
+    "datePublished": "2022-04-30T00:00:00.000Z",
+    "dateModified": "2023-01-03T21:01:44.000Z",
+    "image": {
+        "@type": "ImageObject",
+        "url": "https://images.unsplash.com/photo-1672627750971-5c90cb7014d3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxMTc3M3wwfDF8YWxsfDM4fHx8fHx8Mnx8MTY3Mjc3OTY4OQ&ixlib=rb-4.0.3&q=80&w=2000",
+        "width": 2000,
+        "height": 2664
+    },
+    "keywords": "Linux",
+    "description": "Linux makes a clear distinction between the contents of a file and the information about a file. All information needed by the filesystem to handle a file is included in a data structure called an inode. Each file has its own inode, which the filesystem uses to identify the file.\n\n\n\nFile types\n\n\nLinux files may be one of the following types.\n\n\n * Regular file\n * Directory\n * Symbolic link\n * Block device file\n * Character device file\n * Pipe(FIFO)\n * Socket\n\n\nThe first three file types are const",
+    "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https://relentlesstorm.github.io/"
+    }
+}
+    </script>
+
+    <meta name="generator" content="Ghost 5.26" />
+    <link rel="alternate" type="application/rss+xml" title="Flamingbytes" href="https://relentlesstorm.github.io/rss/" />
+    
+    <script defer src="https://cdn.jsdelivr.net/ghost/sodo-search@~1.1/umd/sodo-search.min.js" data-key="321a1d1aea33fd468f6e61f563" data-styles="https://cdn.jsdelivr.net/ghost/sodo-search@~1.1/umd/main.css" data-sodo-search="https://relentlesstorm.github.io/" crossorigin="anonymous"></script>
+    <script defer src="/public/cards.min.js?v=af8165c91b"></script>
+    <link rel="stylesheet" type="text/css" href="/public/cards.min.css?v=af8165c91b">
+    <script defer src="/public/comment-counts.min.js?v=af8165c91b" data-ghost-comments-counts-api="https://relentlesstorm.github.io/members/api/comments/counts/"></script>
+    <style>.gh-head-logo img{max-height:100px;height:100%;}</style>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-B8PQ47L2H0"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-B8PQ47L2H0');
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8578408127828851" crossorigin="anonymous"></script><style>:root {--ghost-accent-color: #6a13ec;}</style>
+</head>
+
+<body class="post-template tag-linux is-head-left-logo has-serif-body">
+<div class="gh-site">
+
+    <header id="gh-head" class="gh-head gh-outer">
+        <div class="gh-head-inner gh-inner">
+            <div class="gh-head-brand">
+                <div class="gh-head-brand-wrapper">
+                    <a class="gh-head-logo" href="https://relentlesstorm.github.io">
+                            Flamingbytes
+                    </a>
+                </div>
+                <button class="gh-search gh-icon-btn" data-ghost-search><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" width="20" height="20"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg></button>
+                <button class="gh-burger"></button>
+            </div>
+
+            <nav class="gh-head-menu">
+                <ul class="nav">
+    <li class="nav-home"><a href="https://relentlesstorm.github.io/">Home</a></li>
+    <li class="nav-tags"><a href="https://relentlesstorm.github.io/posts/tags/">Tags</a></li>
+    <li class="nav-archive"><a href="https://relentlesstorm.github.io/posts/archive/">Archive</a></li>
+    <li class="nav-about"><a href="https://relentlesstorm.github.io/about/">About</a></li>
+</ul>
+
+            </nav>
+
+            <div class="gh-head-actions">
+                        <button class="gh-search gh-icon-btn" data-ghost-search><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" width="20" height="20"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg></button>
+            </div>
+        </div>
+    </header>
+
+    
+<main class="gh-main">
+        <article class="gh-article post tag-linux">
+
+            <header class="gh-article-header gh-canvas">
+                    <a class="gh-article-tag" href="https://relentlesstorm.github.io/posts/tag/linux/">Linux</a>
+
+                <h1 class="gh-article-title">Understanding the Linux inodes</h1>
+
+                    <aside class="gh-article-sidebar">
+
+        <div class="gh-author-image-list">
+                <a class="gh-author-image" href="/author/relentlesstorm/">
+                        <img src="https://relentlesstorm.github.io/content/images/2023/01/FlamingBytes-icon-64x64-1.png" alt="relentlesstorm">
+                </a>
+        </div>
+
+        <div class="gh-author-name-list">
+                <h4 class="gh-author-name">
+                    <a href="/author/relentlesstorm/">relentlesstorm</a>
+                </h4>
+                
+        </div>
+
+        <div class="gh-article-meta">
+            <div class="gh-article-meta-inner">
+                <time class="gh-article-date" datetime="2022-04-30">Apr 30, 2022</time>
+                    <span class="gh-article-meta-sep"></span>
+                    <span class="gh-article-length">4 min</span>
+            </div>
+        </div>
+
+    </aside>
+
+
+                    <figure class="gh-article-image">
+        <img
+            srcset="https://images.unsplash.com/photo-1672627750971-5c90cb7014d3?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8YWxsfDM4fHx8fHx8Mnx8MTY3Mjc3OTY4OQ&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;300 300w,
+                    https://images.unsplash.com/photo-1672627750971-5c90cb7014d3?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8YWxsfDM4fHx8fHx8Mnx8MTY3Mjc3OTY4OQ&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720 720w,
+                    https://images.unsplash.com/photo-1672627750971-5c90cb7014d3?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8YWxsfDM4fHx8fHx8Mnx8MTY3Mjc3OTY4OQ&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;960 960w,
+                    https://images.unsplash.com/photo-1672627750971-5c90cb7014d3?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8YWxsfDM4fHx8fHx8Mnx8MTY3Mjc3OTY4OQ&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1200 1200w,
+                    https://images.unsplash.com/photo-1672627750971-5c90cb7014d3?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8YWxsfDM4fHx8fHx8Mnx8MTY3Mjc3OTY4OQ&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000 2000w"
+            sizes="(max-width: 1200px) 100vw, 1200px"
+            src="https://images.unsplash.com/photo-1672627750971-5c90cb7014d3?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8YWxsfDM4fHx8fHx8Mnx8MTY3Mjc3OTY4OQ&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1200"
+            alt="Understanding the Linux inodes"
+        >
+            <figcaption>Photo by <a href="https://unsplash.com/@aaronburden?utm_source=ghost&utm_medium=referral&utm_campaign=api-credit">Aaron Burden</a> / <a href="https://unsplash.com/?utm_source=ghost&utm_medium=referral&utm_campaign=api-credit">Unsplash</a></figcaption>
+    </figure>
+            </header>
+
+            <section class="gh-content gh-canvas">
+                <aside class="gh-sidebar"><div class="gh-toc"></div></aside> 
+                <!--kg-card-begin: markdown--><p>Linux makes a clear distinction between the contents of a file and the information about a file. All information needed by the filesystem to handle a file is included in a data structure called an <strong>inode</strong>. Each file has its own inode, which the filesystem uses to identify the file.</p>
+<h2 id="file-types">File types</h2>
+<p>Linux files may be one of the following types.</p>
+<ul>
+<li>Regular file</li>
+<li>Directory</li>
+<li>Symbolic link</li>
+<li>Block device file</li>
+<li>Character device file</li>
+<li>Pipe(FIFO)</li>
+<li>Socket</li>
+</ul>
+<p>The first three file types are constituents of any Linux filesystem. Device files are related both to I/O devices, and to device drivers integrated into the kernel. When a program accesses a device file, it acts directly on the I/O device associated with that file. Pipes and sockets are special files used for interprocess communication.</p>
+<h2 id="file-inodes">File inodes</h2>
+<p>Linux system must provide the following inode attributes, which are specified in the POSIX standard:</p>
+<ul>
+<li>File type</li>
+<li>Link count: Number of hard links associated with the file</li>
+<li>File size in bytes</li>
+<li>Device ID(i.e., the identifier of the device containing the file)</li>
+<li>Inode number that identifies the file in the filesystem</li>
+<li>UID of the file owner</li>
+<li>User group ID of the file</li>
+<li>Timestamps which specify the inode change time, the last access time and the last modify time.</li>
+<li>Access rights/permissions(read, write, and execute) and file mode</li>
+</ul>
+<p>The following is inode struct definition in the Linux source code.</p>
+<pre><code class="language-c">/*
+ * Keep mostly read-only and often accessed (especially for
+ * the RCU path lookup and 'stat' data) fields at the beginning
+ * of the 'struct inode'
+ */
+struct inode {
+	umode_t			i_mode;
+	unsigned short		i_opflags;
+	kuid_t			i_uid;
+	kgid_t			i_gid;
+	unsigned int		i_flags;
+
+#ifdef CONFIG_FS_POSIX_ACL
+	struct posix_acl	*i_acl;
+	struct posix_acl	*i_default_acl;
+#endif
+
+	const struct inode_operations	*i_op;
+	struct super_block	*i_sb;
+	struct address_space	*i_mapping;
+
+#ifdef CONFIG_SECURITY
+	void			*i_security;
+#endif
+
+	/* Stat data, not accessed from path walking */
+	unsigned long		i_ino;
+	/*
+	 * Filesystems may only read i_nlink directly.  They shall use the
+	 * following functions for modification:
+	 *
+	 *    (set|clear|inc|drop)_nlink
+	 *    inode_(inc|dec)_link_count
+	 */
+	union {
+		const unsigned int i_nlink;
+		unsigned int __i_nlink;
+	};
+	dev_t			i_rdev;
+	loff_t			i_size;
+	struct timespec64	i_atime;
+	struct timespec64	i_mtime;
+	struct timespec64	i_ctime;
+	spinlock_t		i_lock;	/* i_blocks, i_bytes, maybe i_size */
+	unsigned short          i_bytes;
+	u8			i_blkbits;
+	u8			i_write_hint;
+	blkcnt_t		i_blocks;
+
+#ifdef __NEED_I_SIZE_ORDERED
+	seqcount_t		i_size_seqcount;
+#endif
+
+	/* Misc */
+	unsigned long		i_state;
+	struct rw_semaphore	i_rwsem;
+
+	unsigned long		dirtied_when;	/* jiffies of first dirtying */
+	unsigned long		dirtied_time_when;
+
+	struct hlist_node	i_hash;
+	struct list_head	i_io_list;	/* backing dev IO list */
+#ifdef CONFIG_CGROUP_WRITEBACK
+	struct bdi_writeback	*i_wb;		/* the associated cgroup wb */
+
+	/* foreign inode detection, see wbc_detach_inode() */
+	int			i_wb_frn_winner;
+	u16			i_wb_frn_avg_time;
+	u16			i_wb_frn_history;
+#endif
+	struct list_head	i_lru;		/* inode LRU list */
+	struct list_head	i_sb_list;
+	struct list_head	i_wb_list;	/* backing dev writeback list */
+	union {
+		struct hlist_head	i_dentry;
+		struct rcu_head		i_rcu;
+	};
+	atomic64_t		i_version;
+	atomic64_t		i_sequence; /* see futex */
+	atomic_t		i_count;
+	atomic_t		i_dio_count;
+	atomic_t		i_writecount;
+#if defined(CONFIG_IMA) || defined(CONFIG_FILE_LOCKING)
+	atomic_t		i_readcount; /* struct files open RO */
+#endif
+	union {
+		const struct file_operations	*i_fop;	/* former -&gt;i_op-&gt;default_file_ops */
+		void (*free_inode)(struct inode *);
+	};
+	struct file_lock_context	*i_flctx;
+	struct address_space	i_data;
+	struct list_head	i_devices;
+	union {
+		struct pipe_inode_info	*i_pipe;
+		struct cdev		*i_cdev;
+		char			*i_link;
+		unsigned		i_dir_seq;
+	};
+
+	__u32			i_generation;
+
+#ifdef CONFIG_FSNOTIFY
+	__u32			i_fsnotify_mask; /* all events this inode cares about */
+	struct fsnotify_mark_connector __rcu	*i_fsnotify_marks;
+#endif
+
+#ifdef CONFIG_FS_ENCRYPTION
+	struct fscrypt_info	*i_crypt_info;
+#endif
+
+#ifdef CONFIG_FS_VERITY
+	struct fsverity_info	*i_verity_info;
+#endif
+
+	void			*i_private; /* fs or device private pointer */
+} __randomize_layout;
+</code></pre>
+<h2 id="display-inode-information">Display inode information</h2>
+<p>The inode data can be displayed with the <strong>stat</strong> command.</p>
+<pre><code class="language-shell">$ echo &quot;hello inode&quot; &gt; testfile
+
+$ debugfs /dev/mapper/vgroot-lvroot
+debugfs 1.42.9 (28-Dec-2013)
+debugfs:  q
+[root@init500-d1 ~]# stat testfile
+  File: ‘testfile’
+  Size: 12        	Blocks: 8          IO Block: 4096   regular file
+Device: fd00h/64768d	Inode: 27787306    Links: 1
+Access: (0644/-rw-r--r--)  Uid: (    0/    root)   Gid: (    0/    root)
+Access: 2022-04-30 20:40:38.496696650 +0000
+Modify: 2022-04-30 20:40:38.496696650 +0000
+Change: 2022-04-30 20:40:38.496696650 +0000
+ Birth: -
+
+$ stat --format=%i testfile
+27787306
+</code></pre>
+<p>The inode number can be also displayed with <strong>ls -i</strong> command. With <strong>ls -l</strong> command, it displays file permissions for the owner, group and others. In the following example, the owner has read and write permission. The group and others only have read permission.</p>
+<pre><code class="language-shell">$ ls -il testfile
+27787306 -rw-r--r-- 1 root root 12 Apr 30 20:40 testfile
+</code></pre>
+<p>The inode space information can be displayed with <strong>df -i</strong> command.</p>
+<pre><code class="language-shell">$ df -i
+Filesystem                   Inodes  IUsed     IFree IUse% Mounted on
+devtmpfs                  132058034    953 132057081    1% /dev
+tmpfs                     132061520      4 132061516    1% /dev/shm
+tmpfs                     132061520   1270 132060250    1% /run
+tmpfs                     132061520     17 132061503    1% /sys/fs/cgroup
+/dev/mapper/vgroot-lvroot  97320960 188567  97132393    1% /
+/dev/nvme0n1p2               128016     31    127985    1% /boot
+/dev/nvme0n1p1                    0      0         0     - /boot/efi
+tmpfs                     132061520      1 132061519    1% /run/user/0
+tmpfs                     132061520      1 132061519    1% /var/lib/osd/lttng
+</code></pre>
+<p>The content of filesystem superblock can be listed with <strong>tune2fs</strong> command. The inode related information can be grepped.</p>
+<pre><code class="language-shell">$ tune2fs -l /dev/mapper/vgroot-lvroot | grep -i inode
+Filesystem features:      has_journal ext_attr resize_inode dir_index filetype needs_recovery extent 64bit flex_bg sparse_super large_file huge_file uninit_bg dir_nlink extra_isize
+Inode count:              97320960
+Free inodes:              97167388
+Inodes per group:         8192
+Inode blocks per group:   512
+First inode:              11
+Inode size:	          256
+Journal inode:            8
+First orphan inode:       22157990
+Journal backup:           inode blocks
+</code></pre>
+<p>The debugfs program is an interactive file system debugger. It can be used to examine and change the state of an ext2, ext3, or ext4 file system.</p>
+<pre><code class="language-shell">$ debugfs /dev/mapper/vgroot-lvroot
+debugfs 1.42.9 (28-Dec-2013)
+
+debugfs:  stat &lt;27787306&gt;
+Inode: 27787306   Type: regular    Mode:  0644   Flags: 0x80000
+Generation: 269876152    Version: 0x00000000:00000001
+User:     0   Group:     0   Size: 12
+File ACL: 0    Directory ACL: 0
+Links: 1   Blockcount: 8
+Fragment:  Address: 0    Number: 0    Size: 0
+ ctime: 0x626d9ec6:766bf528 -- Sat Apr 30 20:40:38 2022
+ atime: 0x626d9ec6:766bf528 -- Sat Apr 30 20:40:38 2022
+ mtime: 0x626d9ec6:766bf528 -- Sat Apr 30 20:40:38 2022
+crtime: 0x626d9ec6:766bf528 -- Sat Apr 30 20:40:38 2022
+Size of extra inode fields: 32
+EXTENTS:
+(0):111182849
+</code></pre>
+<p>Inode structure for the directory can be displayed as below.</p>
+<pre><code class="language-shell">$ stat /
+  File: ‘/’
+  Size: 4096      	Blocks: 8          IO Block: 4096   directory
+Device: fd00h/64768d	Inode: 2           Links: 18
+Access: (0555/dr-xr-xr-x)  Uid: (    0/    root)   Gid: (    0/    root)
+Access: 2022-04-14 23:50:13.812053511 +0000
+Modify: 2022-04-30 20:42:56.468650708 +0000
+Change: 2022-04-30 20:42:56.468650708 +0000
+ Birth: -
+</code></pre>
+<h2 id="reference">Reference</h2>
+<ul>
+<li><a href="https://elixir.bootlin.com/linux/latest/source/include/linux/fs.h#L614">https://elixir.bootlin.com/linux/latest/source/include/linux/fs.h#L614</a></li>
+<li><a href="https://www.cs.montana.edu/courses/309/topics/4-disks/debugfs_example.html">https://www.cs.montana.edu/courses/309/topics/4-disks/debugfs_example.html</a></li>
+<li><a href="https://linoxide.com/linux-inode/">https://linoxide.com/linux-inode/</a></li>
+</ul>
+<!--kg-card-end: markdown-->
+            </section>
+
+        </article>
+
+                <div class="gh-read-next gh-canvas">
+                <section class="gh-pagehead">
+                    <h4 class="gh-pagehead-title">Read next</h4>
+                </section>
+
+                <div class="gh-topic gh-topic-grid">
+                    <div class="gh-topic-content">
+                            <article class="gh-card post featured">
+    <a class="gh-card-link" href="/posts/cgroups-limit-io/">
+            <figure class="gh-card-image">
+                <img
+                    srcset="https://images.unsplash.com/photo-1646226343350-1ee5021e342a?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDN8fGhhcmRkaXNrfGVufDB8fHx8MTY3MjQ2MzUxOQ&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;300 300w,
+                            https://images.unsplash.com/photo-1646226343350-1ee5021e342a?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDN8fGhhcmRkaXNrfGVufDB8fHx8MTY3MjQ2MzUxOQ&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720 720w,
+                            https://images.unsplash.com/photo-1646226343350-1ee5021e342a?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDN8fGhhcmRkaXNrfGVufDB8fHx8MTY3MjQ2MzUxOQ&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;960 960w,
+                            https://images.unsplash.com/photo-1646226343350-1ee5021e342a?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDN8fGhhcmRkaXNrfGVufDB8fHx8MTY3MjQ2MzUxOQ&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1200 1200w,
+                            https://images.unsplash.com/photo-1646226343350-1ee5021e342a?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDN8fGhhcmRkaXNrfGVufDB8fHx8MTY3MjQ2MzUxOQ&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000 2000w"
+                    sizes="(max-width: 1200px) 100vw, 1200px"
+                    src="https://images.unsplash.com/photo-1646226343350-1ee5021e342a?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDN8fGhhcmRkaXNrfGVufDB8fHx8MTY3MjQ2MzUxOQ&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720"
+                    alt="Using cgroups to limit block device bandwidth"
+                >
+            </figure>
+
+        <div class="gh-card-wrapper">
+            <header class="gh-card-header">
+                <h3 class="gh-card-title">Using cgroups to limit block device bandwidth</h3>
+            </header>
+
+                    <div class="gh-card-excerpt">The block I/O controller specifies upper IO rate limits on devices.
+
+
+$ mount | egrep "/cgroup |/blkio"
+tmpfs on /sys/fs/cgroup type tmpfs (ro,nosuid,nodev,noexec,mode=755)
+cgroup on /sys/fs/cgroup/blkio type cgroup (rw,nosuid,nodev,noexec,relatime,blkio)
+
+$ lscgroup  | grep blkio
+blkio:/
+
+
+
+In this post,</div>
+
+            <footer class="gh-card-footer">
+                <span class="gh-card-author">relentlesstorm</span>
+                <time class="gh-card-date" datetime="2022-12-05">Dec 5, 2022</time>
+                    <script
+    data-ghost-comment-count="63afc44996dbf412f1f80353"
+    data-ghost-comment-count-empty=""
+    data-ghost-comment-count-singular="comment"
+    data-ghost-comment-count-plural="comments"
+    data-ghost-comment-count-tag="span"
+    data-ghost-comment-count-class-name="gh-card-comments"
+    data-ghost-comment-count-autowrap="true"
+>
+</script>
+            </footer>
+        </div>
+    </a>
+</article>                            <article class="gh-card post">
+    <a class="gh-card-link" href="/posts/cgroups-limit-memory/">
+            <figure class="gh-card-image">
+                <img
+                    srcset="https://images.unsplash.com/photo-1589532768434-a92c95dad7cb?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDE5fHxkYXRhYmFzZXxlbnwwfHx8fDE2NzI0NjI4NzI&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;300 300w,
+                            https://images.unsplash.com/photo-1589532768434-a92c95dad7cb?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDE5fHxkYXRhYmFzZXxlbnwwfHx8fDE2NzI0NjI4NzI&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720 720w,
+                            https://images.unsplash.com/photo-1589532768434-a92c95dad7cb?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDE5fHxkYXRhYmFzZXxlbnwwfHx8fDE2NzI0NjI4NzI&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;960 960w,
+                            https://images.unsplash.com/photo-1589532768434-a92c95dad7cb?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDE5fHxkYXRhYmFzZXxlbnwwfHx8fDE2NzI0NjI4NzI&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1200 1200w,
+                            https://images.unsplash.com/photo-1589532768434-a92c95dad7cb?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDE5fHxkYXRhYmFzZXxlbnwwfHx8fDE2NzI0NjI4NzI&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000 2000w"
+                    sizes="(max-width: 1200px) 100vw, 1200px"
+                    src="https://images.unsplash.com/photo-1589532768434-a92c95dad7cb?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDE5fHxkYXRhYmFzZXxlbnwwfHx8fDE2NzI0NjI4NzI&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720"
+                    alt="Using cgroups to limit Memory usage"
+                >
+            </figure>
+
+        <div class="gh-card-wrapper">
+            <header class="gh-card-header">
+                <h3 class="gh-card-title">Using cgroups to limit Memory usage</h3>
+            </header>
+
+                    <div class="gh-card-excerpt">The memory controller isolates the memory behaviour of a group of tasks from the rest of the system.
+
+
+$ mount | egrep "/cgroup |/memory"
+tmpfs on /sys/fs/cgroup type tmpfs (ro,nosuid,nodev,noexec,mode=755)
+cgroup on /sys/fs/cgroup/memory type cgroup (rw,nosuid,nodev,noexec,relatime,memory)
+
+$ lssubsys</div>
+
+            <footer class="gh-card-footer">
+                <span class="gh-card-author">relentlesstorm</span>
+                <time class="gh-card-date" datetime="2022-12-04">Dec 4, 2022</time>
+                    <script
+    data-ghost-comment-count="63afc3ca96dbf412f1f80342"
+    data-ghost-comment-count-empty=""
+    data-ghost-comment-count-singular="comment"
+    data-ghost-comment-count-plural="comments"
+    data-ghost-comment-count-tag="span"
+    data-ghost-comment-count-class-name="gh-card-comments"
+    data-ghost-comment-count-autowrap="true"
+>
+</script>
+            </footer>
+        </div>
+    </a>
+</article>                            <article class="gh-card post featured">
+    <a class="gh-card-link" href="/posts/cgroup-limit-cpu/">
+            <figure class="gh-card-image">
+                <img
+                    srcset="https://images.unsplash.com/photo-1613068687893-5e85b4638b56?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDN8fGRhdGFiYXNlfGVufDB8fHx8MTY3MjQ2Mjg3Mg&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;300 300w,
+                            https://images.unsplash.com/photo-1613068687893-5e85b4638b56?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDN8fGRhdGFiYXNlfGVufDB8fHx8MTY3MjQ2Mjg3Mg&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720 720w,
+                            https://images.unsplash.com/photo-1613068687893-5e85b4638b56?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDN8fGRhdGFiYXNlfGVufDB8fHx8MTY3MjQ2Mjg3Mg&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;960 960w,
+                            https://images.unsplash.com/photo-1613068687893-5e85b4638b56?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDN8fGRhdGFiYXNlfGVufDB8fHx8MTY3MjQ2Mjg3Mg&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1200 1200w,
+                            https://images.unsplash.com/photo-1613068687893-5e85b4638b56?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDN8fGRhdGFiYXNlfGVufDB8fHx8MTY3MjQ2Mjg3Mg&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000 2000w"
+                    sizes="(max-width: 1200px) 100vw, 1200px"
+                    src="https://images.unsplash.com/photo-1613068687893-5e85b4638b56?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDN8fGRhdGFiYXNlfGVufDB8fHx8MTY3MjQ2Mjg3Mg&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720"
+                    alt="Using cgroups to limit CPU utilization"
+                >
+            </figure>
+
+        <div class="gh-card-wrapper">
+            <header class="gh-card-header">
+                <h3 class="gh-card-title">Using cgroups to limit CPU utilization</h3>
+            </header>
+
+                    <div class="gh-card-excerpt">Intro to cgroups
+
+
+Cgroups(control groups) make it possible to allocate system resources such as CPU time, memory, disk I/O and network bandwidth, or combinations of them, among a group of tasks(processes) running on a system.
+
+
+The following commands output the available subsystems(resource controllers) for the cgroups.</div>
+
+            <footer class="gh-card-footer">
+                <span class="gh-card-author">relentlesstorm</span>
+                <time class="gh-card-date" datetime="2022-12-03">Dec 3, 2022</time>
+                    <script
+    data-ghost-comment-count="63afb5c896dbf412f1f80317"
+    data-ghost-comment-count-empty=""
+    data-ghost-comment-count-singular="comment"
+    data-ghost-comment-count-plural="comments"
+    data-ghost-comment-count-tag="span"
+    data-ghost-comment-count-class-name="gh-card-comments"
+    data-ghost-comment-count-autowrap="true"
+>
+</script>
+            </footer>
+        </div>
+    </a>
+</article>                    </div>
+                </div>
+            </div>
+
+    
+        <!-- ghost native comments
+                    <div class="gh-comments gh-read-next gh-canvas">
+            <section class="gh-pagehead">
+                <h4 class="gh-pagehead-title">Comments (<script
+    data-ghost-comment-count="63b497741527a00d97449ddd"
+    data-ghost-comment-count-empty="0"
+    data-ghost-comment-count-singular=""
+    data-ghost-comment-count-plural=""
+    data-ghost-comment-count-tag="span"
+    data-ghost-comment-count-class-name=""
+    data-ghost-comment-count-autowrap="true"
+>
+</script>)</h3>
+            </section>
+            
+        <script defer src="https://cdn.jsdelivr.net/ghost/comments-ui@~0.12/umd/comments-ui.min.js" data-ghost-comments="https://relentlesstorm.github.io/" data-api="https://relentlesstorm.github.io/ghost/api/content/" data-admin="https://relentlesstorm.github.io/ghost/" data-key="321a1d1aea33fd468f6e61f563" data-styles="https://cdn.jsdelivr.net/ghost/comments-ui@~0.12/umd/main.css" data-title="" data-count="false" data-post-id="63b497741527a00d97449ddd" data-sentry-dsn="" data-color-scheme="auto" data-avatar-saturation="60" data-accent-color="#6a13ec" data-app-version="0.12" data-comments-enabled="all" data-publication="Flamingbytes" crossorigin="anonymous"></script>
+    
+        </div>
+        -->
+
+        <!-- disqus comments 
+        <div id="disqus_thread"></div>
+<script>
+    var disqus_config = function () {
+        this.page.url = "https://relentlesstorm.github.io/posts/understanding-the-linux-inodes/";
+        this.page.identifier = "ghost-63b497741527a00d97449ddd"
+    };
+    (function() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://www-flamingbytes-com.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+    })();
+</script>
+-->
+
+</main>
+
+    <footer class="gh-foot gh-outer">
+        <div class="gh-foot-inner gh-inner">
+
+            <!--<nav class="gh-foot-menu">
+                <<ul class="nav">
+    <li class="nav-sign-up"><a href="#/portal/">Sign up</a></li>
+</ul>
+
+            </nav>-->
+
+            <div class="gh-copyright">
+                    Flamingbytes © 2023. Powered by <a href="https://ghost.org/" target="_blank" rel="noopener">Ghost</a>
+            </div>
+        </div>
+    </footer>
+
+</div>
+
+    <div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="pswp__bg"></div>
+
+    <div class="pswp__scroll-wrap">
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)"></button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)"></button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="/assets/built/main.min.js?v=af8165c91b"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.12.3/tocbot.min.js"></script>
+
+<script>
+    tocbot.init({
+        // Where to render the table of contents.
+        tocSelector: '.gh-toc',
+        // Where to grab the headings to build the table of contents.
+        contentSelector: '.gh-content',
+        // Which headings to grab inside of the contentSelector element.
+        headingSelector: 'h1, h2, h3, h4',
+        // Ensure correct positioning
+        hasInnerContainers: true,
+    });
+</script>
+
+
+
+</body>
+
+</html>
