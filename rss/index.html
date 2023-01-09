@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:media="http://search.yahoo.com/mrss/"><channel><title><![CDATA[Flamingbytes]]></title><description><![CDATA[Stay hungry, Stay foolish.]]></description><link>https://relentlesstorm.github.io/</link><image><url>https://relentlesstorm.github.io/favicon.png</url><title>Flamingbytes</title><link>https://relentlesstorm.github.io/</link></image><generator>Ghost 5.26</generator><lastBuildDate>Mon, 09 Jan 2023 01:36:45 GMT</lastBuildDate><atom:link href="https://relentlesstorm.github.io/rss/" rel="self" type="application/rss+xml"/><ttl>60</ttl><item><title><![CDATA[Using virtctl to access virtual machine in Kubernetes]]></title><description><![CDATA[<!--kg-card-begin: html--><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8578408127828851" crossorigin="anonymous">
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:media="http://search.yahoo.com/mrss/"><channel><title><![CDATA[Flamingbytes]]></title><description><![CDATA[Stay hungry, Stay foolish.]]></description><link>https://relentlesstorm.github.io/</link><image><url>https://relentlesstorm.github.io/favicon.png</url><title>Flamingbytes</title><link>https://relentlesstorm.github.io/</link></image><generator>Ghost 5.26</generator><lastBuildDate>Mon, 09 Jan 2023 04:29:26 GMT</lastBuildDate><atom:link href="https://relentlesstorm.github.io/rss/" rel="self" type="application/rss+xml"/><ttl>60</ttl><item><title><![CDATA[Using virtctl to access virtual machine in Kubernetes]]></title><description><![CDATA[<!--kg-card-begin: html--><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8578408127828851" crossorigin="anonymous">
 </script>
 <ins class="adsbygoogle" style="display:block; text-align:center;" data-ad-layout="in-article" data-ad-format="fluid" data-ad-client="ca-pub-8578408127828851" data-ad-slot="5596270594">
 </ins>
@@ -407,7 +407,9 @@ $ git push -u origin main
 	}
 }
 </code></pre>
-<h2 id="create-a-secret-based-on-existing-credentials">Create a Secret based on existing credentials</h2>
+<!--kg-card-end: markdown--><!--kg-card-begin: html--><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8578408127828851" crossorigin="anonymous"></script>
+<ins class="adsbygoogle" style="display:block; text-align:center;" data-ad-layout="in-article" data-ad-format="fluid" data-ad-client="ca-pub-8578408127828851" data-ad-slot="5596270594"></ins>
+<script>(adsbygoogle = window.adsbygoogle || []).push({});</script><!--kg-card-end: html--><!--kg-card-begin: markdown--><h2 id="create-a-secret-based-on-existing-credentials">Create a Secret based on existing credentials</h2>
 <p>A Kubernetes cluster uses the Secret of kubernetes.io/dockerconfigjson type to authenticate with a container registry to pull a private image.</p>
 <p>If you already ran docker login, you can copy that credential into Kubernetes:</p>
 <pre><code class="language-shell">$ kubectl create secret generic regcred --from-file=.dockerconfigjson=/root/.docker/config.json --type=kubernetes.io/dockerconfigjson
@@ -437,7 +439,9 @@ type: kubernetes.io/dockerconfigjson
 	}
 }
 </code></pre>
-<h2 id="create-a-pod-that-uses-the-secret-to-pull-image">Create a Pod that uses the Secret to pull image</h2>
+<!--kg-card-end: markdown--><!--kg-card-begin: html--><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8578408127828851" crossorigin="anonymous"></script>
+<ins class="adsbygoogle" style="display:block; text-align:center;" data-ad-layout="in-article" data-ad-format="fluid" data-ad-client="ca-pub-8578408127828851" data-ad-slot="5596270594"></ins>
+<script>(adsbygoogle = window.adsbygoogle || []).push({});</script><!--kg-card-end: html--><!--kg-card-begin: markdown--><h2 id="create-a-pod-that-uses-the-secret-to-pull-image">Create a Pod that uses the Secret to pull image</h2>
 <pre><code class="language-shell">$ vi my-private-reg-pod.yaml
 apiVersion: v1
 kind: Pod

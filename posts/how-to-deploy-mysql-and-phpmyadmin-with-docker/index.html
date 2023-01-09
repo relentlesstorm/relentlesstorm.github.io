@@ -62,7 +62,7 @@ $ docker" />
     <meta property="og:url" content="https://relentlesstorm.github.io/posts/how-to-deploy-mysql-and-phpmyadmin-with-docker/" />
     <meta property="og:image" content="https://images.unsplash.com/photo-1662026911591-335639b11db6?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDN8fG15c3FsfGVufDB8fHx8MTY3Mjc4MTg5OA&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000" />
     <meta property="article:published_time" content="2022-04-12T00:00:00.000Z" />
-    <meta property="article:modified_time" content="2023-01-04T04:34:27.000Z" />
+    <meta property="article:modified_time" content="2023-01-09T04:27:15.000Z" />
     <meta property="article:tag" content="Big Data" />
     
     <meta property="article:publisher" content="https://www.facebook.com/ghost" />
@@ -115,7 +115,7 @@ $ docker" />
     "headline": "How to deploy MySQL and phpMyAdmin with Docker",
     "url": "https://relentlesstorm.github.io/posts/how-to-deploy-mysql-and-phpmyadmin-with-docker/",
     "datePublished": "2022-04-12T00:00:00.000Z",
-    "dateModified": "2023-01-04T04:34:27.000Z",
+    "dateModified": "2023-01-09T04:27:15.000Z",
     "image": {
         "@type": "ImageObject",
         "url": "https://images.unsplash.com/photo-1662026911591-335639b11db6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxMTc3M3wwfDF8c2VhcmNofDN8fG15c3FsfGVufDB8fHx8MTY3Mjc4MTg5OA&ixlib=rb-4.0.3&q=80&w=2000",
@@ -249,7 +249,15 @@ ff380903d3a0   mysql/mysql-server:5.7   &quot;/entrypoint.sh mysq…&quot;   34 
 <li>The variable MYSQL_ROOT_HOST=% creates a root user with permission to login from any IP address.</li>
 <li>The variable MYSQL_ROOT_PASSWORD creates the root password of MySQL. If not provided, a random password will be generated.</li>
 </ul>
-<h2 id="create-mysql-database-and-restore-from-a-db-backupif-exists">Create MySQL database and restore from a db backup(if exists)</h2>
+<!--kg-card-end: markdown--><!--kg-card-begin: html--><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8578408127828851"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-8578408127828851"
+     data-ad-slot="5596270594"></ins>
+<script>(adsbygoogle = window.adsbygoogle || []).push({});</script><!--kg-card-end: html--><!--kg-card-begin: markdown--><h2 id="create-mysql-database-and-restore-from-a-db-backupif-exists">Create MySQL database and restore from a db backup(if exists)</h2>
 <pre><code class="language-shell">$ docker exec -it mysqldb bash
 
 bash-4.2# mysql -V
@@ -288,7 +296,15 @@ mysql&gt; use mydb;
 mysql&gt; show tables
 mysql&gt; SELECT table_schema &quot;DB Name&quot;, ROUND(SUM(data_length + index_length) / 1024 / 1024, 1) &quot;DB Size in MB&quot;  FROM information_schema.tables  GROUP BY table_schema;
 </code></pre>
-<h2 id="create-the-phpmyadmin-docker-container">Create the phpMyAdmin docker container</h2>
+<!--kg-card-end: markdown--><!--kg-card-begin: html--><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8578408127828851"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-8578408127828851"
+     data-ad-slot="5596270594"></ins>
+<script>(adsbygoogle = window.adsbygoogle || []).push({});</script><!--kg-card-end: html--><!--kg-card-begin: markdown--><h2 id="create-the-phpmyadmin-docker-container">Create the phpMyAdmin docker container</h2>
 <pre><code class="language-shell">$ docker pull phpmyadmin/phpmyadmin:latest
 $ docker run --name phpadmin -d --link mysqldb:db -p 8080:80 phpmyadmin/phpmyadmin
 </code></pre>
