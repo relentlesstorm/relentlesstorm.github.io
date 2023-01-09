@@ -1,5 +1,5 @@
 User-agent: *
-Sitemap: https://relentlesstorm.github.io/sitemap.xml
+Sitemap: https://www.flamingbytes.com/sitemap.xml
 Disallow: /ghost/
 Disallow: /p/
 Disallow: /email/
