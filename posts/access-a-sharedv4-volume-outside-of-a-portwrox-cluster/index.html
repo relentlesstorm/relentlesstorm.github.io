@@ -229,12 +229,6 @@ $ /opt/pwx/bin/pxctl -j volume create datavol --sharedv4" />
             <section class="gh-content gh-canvas">
                 <aside class="gh-sidebar"><div class="gh-toc"></div></aside> 
 
-                <!-- native ads start -->
-                <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8578408127828851" crossorigin="anonymous"></script>
-                <ins class="adsbygoogle" style="display:block; text-align:center;" data-ad-layout="in-article" data-ad-format="fluid" data-ad-client="ca-pub-8578408127828851" data-ad-slot="5596270594"></ins>
-                <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-                <!-- native ads end -->
-                
                 <!--kg-card-begin: markdown--><p>To access a sharedv4 volume outside of the Portworx cluster, add the allow_ips label to the volume you wish to export, specifying a semi-colon separated list of IP addresses of non-Portworx nodes you wish to mount your sharedv4 volume to:</p>
 <pre><code class="language-shell">$ /opt/pwx/bin/pxctl -j volume create datavol --sharedv4 --label name=data --size 500 --fs ext4 --repl 2 --nodes node1,node2
 $ /opt/pwx/bin/pxctl -j volume update datavol --sharedv4_mount_options=&quot;vers=4.0&quot;

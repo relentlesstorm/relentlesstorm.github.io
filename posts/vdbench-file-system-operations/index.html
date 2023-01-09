@@ -229,12 +229,6 @@ In the File system Workload Definition(FWD), we can specify a single file sysetm
             <section class="gh-content gh-canvas">
                 <aside class="gh-sidebar"><div class="gh-toc"></div></aside> 
 
-                <!-- native ads start -->
-                <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8578408127828851" crossorigin="anonymous"></script>
-                <ins class="adsbygoogle" style="display:block; text-align:center;" data-ad-layout="in-article" data-ad-format="fluid" data-ad-client="ca-pub-8578408127828851" data-ad-slot="5596270594"></ins>
-                <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-                <!-- native ads end -->
-                
                 <!--kg-card-begin: markdown--><h2 id="specify-file-system-operations-in-fwd-and-rd">Specify file system operations in FWD and RD</h2>
 <p>In the File system Workload Definition(FWD), we can specify a single file sysetm operation that must be executed for the workload, with the parameter 'operation='. The valid operation can be mkdir,rmdir,create,delete,open,close,read,write,getattr and setattr. We can specify 'fwd=xxx,rdpct=nn' to allow for mixed read and write operations against the same file.</p>
 <p>If one or more operations need to be specified, the parameter 'fwd=xxx,operations=' in Run Definition(RD) can be leveraged to override the single operation in FWD. For example, the parameter 'operations=mkdir' or 'operations=(read,getattr)' can be specified in RD. Vdbench will fail the operation if the file structure is not created before it is accessed.</p>
