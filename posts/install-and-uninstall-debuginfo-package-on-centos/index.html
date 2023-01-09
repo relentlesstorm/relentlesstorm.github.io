@@ -71,7 +71,7 @@ name&#x3D;CentOS-7 -" />
     <meta property="og:url" content="https://relentlesstorm.github.io/posts/install-and-uninstall-debuginfo-package-on-centos/" />
     <meta property="og:image" content="https://images.unsplash.com/photo-1607746746362-4c89ad1c0866?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDl8fGRlYnVnfGVufDB8fHx8MTY3Mjc3ODU0NA&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000" />
     <meta property="article:published_time" content="2022-07-11T00:00:00.000Z" />
-    <meta property="article:modified_time" content="2023-01-03T20:43:04.000Z" />
+    <meta property="article:modified_time" content="2023-01-09T02:12:25.000Z" />
     <meta property="article:tag" content="Linux" />
     
     <meta property="article:publisher" content="https://www.facebook.com/ghost" />
@@ -133,7 +133,7 @@ name&#x3D;CentOS-7 -" />
     "headline": "Install and uninstall debuginfo package on CentOS",
     "url": "https://relentlesstorm.github.io/posts/install-and-uninstall-debuginfo-package-on-centos/",
     "datePublished": "2022-07-11T00:00:00.000Z",
-    "dateModified": "2023-01-03T20:43:04.000Z",
+    "dateModified": "2023-01-09T02:12:25.000Z",
     "image": {
         "@type": "ImageObject",
         "url": "https://images.unsplash.com/photo-1607746746362-4c89ad1c0866?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxMTc3M3wwfDF8c2VhcmNofDl8fGRlYnVnfGVufDB8fHx8MTY3Mjc3ODU0NA&ixlib=rb-4.0.3&q=80&w=2000",
@@ -252,6 +252,13 @@ name&#x3D;CentOS-7 -" />
 
             <section class="gh-content gh-canvas">
                 <aside class="gh-sidebar"><div class="gh-toc"></div></aside> 
+
+                <!-- native ads start -->
+                <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8578408127828851" crossorigin="anonymous"></script>
+                <ins class="adsbygoogle" style="display:block; text-align:center;" data-ad-layout="in-article" data-ad-format="fluid" data-ad-client="ca-pub-8578408127828851" data-ad-slot="5596270594"></ins>
+                <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+                <!-- native ads end -->
+                
                 <!--kg-card-begin: markdown--><h2 id="install-debuginfo-package">Install debuginfo package</h2>
 <p>On CentOS, we can install debuginfo package as below.</p>
 <ul>
@@ -280,7 +287,15 @@ Dependency Installed:
 kernel-debuginfo-4.19.113-300.el7.x86_64
 kernel-debuginfo-common-x86_64-4.19.113-300.el7.x86_64 
 </code></pre>
-<p>Notice that the installed kernel-debuginfo package version does not match with the kernel version. We can use the following commands to install the identical version as kernel.</p>
+<!--kg-card-end: markdown--><!--kg-card-begin: html--><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8578408127828851"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-8578408127828851"
+     data-ad-slot="5596270594"></ins>
+<script>(adsbygoogle = window.adsbygoogle || []).push({});</script><!--kg-card-end: html--><!--kg-card-begin: markdown--><p>Notice that the installed kernel-debuginfo package version does not match with the kernel version. We can use the following commands to install the identical version as kernel.</p>
 <pre><code class="language-shell">[root@host1 ~]# yum install -y kernel-devel-$(uname -r) \
 kernel-debuginfo-$(uname -r) \
 kernel-debuginfo-common-$(uname -m)-$(uname -r)
@@ -288,7 +303,15 @@ kernel-debuginfo-common-$(uname -m)-$(uname -r)
 Installed:
   kernel-debuginfo.x86_64 0:3.10.0-1160.el7  kernel-debuginfo-common-x86_64.x86_64 0:3.10.0-1160.el7
 </code></pre>
-<h2 id="remove-debuginfo-package">Remove debuginfo package</h2>
+<!--kg-card-end: markdown--><!--kg-card-begin: html--><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8578408127828851"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-8578408127828851"
+     data-ad-slot="5596270594"></ins>
+<script>(adsbygoogle = window.adsbygoogle || []).push({});</script><!--kg-card-end: html--><!--kg-card-begin: markdown--><h2 id="remove-debuginfo-package">Remove debuginfo package</h2>
 <pre><code class="language-shell">[root@host1 ~]# rpm -qa | grep debuginfo
 kernel-debuginfo-4.19.113-300.el7.x86_64
 kernel-debuginfo-common-x86_64-4.19.113-300.el7.x86_64

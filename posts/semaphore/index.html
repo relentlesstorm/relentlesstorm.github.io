@@ -228,6 +228,13 @@ A semaphore is a very relaxed type of lockable object. A given semaphore has a p
 
             <section class="gh-content gh-canvas">
                 <aside class="gh-sidebar"><div class="gh-toc"></div></aside> 
+
+                <!-- native ads start -->
+                <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8578408127828851" crossorigin="anonymous"></script>
+                <ins class="adsbygoogle" style="display:block; text-align:center;" data-ad-layout="in-article" data-ad-format="fluid" data-ad-client="ca-pub-8578408127828851" data-ad-slot="5596270594"></ins>
+                <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+                <!-- native ads end -->
+                
                 <!--kg-card-begin: markdown--><h2 id="what-is-semaphore">What is semaphore</h2>
 <p>A semaphore is a very relaxed type of lockable object. A given semaphore has a predefined maximum count, and a current count. You take ownership of a semaphore with a wait operation, also referred to as decrementing the semaphore, or even just abstractly called P. You release ownership with a signal operation, also referred to as incrementing the semaphore, a post operation, or abstractly called V. The single-letter operation names are from Dijkstra’s original paper on semaphores.</p>
 <p>Every time you wait on a semaphore, you decrease the current count. If the count was greater than zero then the decrement just happens, and the wait call returns. If the count was already zero then it cannot be decremented, so the wait call will block until another thread increases the count by signaling the semaphore.</p>

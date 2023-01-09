@@ -59,7 +59,7 @@ In the File system Workload Definition(FWD), we can specify a single file sysetm
     <meta property="og:url" content="https://relentlesstorm.github.io/posts/vdbench-file-system-operations/" />
     <meta property="og:image" content="https://images.unsplash.com/photo-1561444673-0d29500f40cf?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDE0fHxyYWNlfGVufDB8fHx8MTY3Mjc4MTk3Mg&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000" />
     <meta property="article:published_time" content="2022-03-10T00:00:00.000Z" />
-    <meta property="article:modified_time" content="2023-01-03T22:02:58.000Z" />
+    <meta property="article:modified_time" content="2023-01-09T02:28:25.000Z" />
     <meta property="article:tag" content="Benchmarking" />
     
     <meta property="article:publisher" content="https://www.facebook.com/ghost" />
@@ -109,7 +109,7 @@ In the File system Workload Definition(FWD), we can specify a single file sysetm
     "headline": "Vdbench file system operations",
     "url": "https://relentlesstorm.github.io/posts/vdbench-file-system-operations/",
     "datePublished": "2022-03-10T00:00:00.000Z",
-    "dateModified": "2023-01-03T22:02:58.000Z",
+    "dateModified": "2023-01-09T02:28:25.000Z",
     "image": {
         "@type": "ImageObject",
         "url": "https://images.unsplash.com/photo-1561444673-0d29500f40cf?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxMTc3M3wwfDF8c2VhcmNofDE0fHxyYWNlfGVufDB8fHx8MTY3Mjc4MTk3Mg&ixlib=rb-4.0.3&q=80&w=2000",
@@ -228,11 +228,26 @@ In the File system Workload Definition(FWD), we can specify a single file sysetm
 
             <section class="gh-content gh-canvas">
                 <aside class="gh-sidebar"><div class="gh-toc"></div></aside> 
+
+                <!-- native ads start -->
+                <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8578408127828851" crossorigin="anonymous"></script>
+                <ins class="adsbygoogle" style="display:block; text-align:center;" data-ad-layout="in-article" data-ad-format="fluid" data-ad-client="ca-pub-8578408127828851" data-ad-slot="5596270594"></ins>
+                <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+                <!-- native ads end -->
+                
                 <!--kg-card-begin: markdown--><h2 id="specify-file-system-operations-in-fwd-and-rd">Specify file system operations in FWD and RD</h2>
 <p>In the File system Workload Definition(FWD), we can specify a single file sysetm operation that must be executed for the workload, with the parameter 'operation='. The valid operation can be mkdir,rmdir,create,delete,open,close,read,write,getattr and setattr. We can specify 'fwd=xxx,rdpct=nn' to allow for mixed read and write operations against the same file.</p>
 <p>If one or more operations need to be specified, the parameter 'fwd=xxx,operations=' in Run Definition(RD) can be leveraged to override the single operation in FWD. For example, the parameter 'operations=mkdir' or 'operations=(read,getattr)' can be specified in RD. Vdbench will fail the operation if the file structure is not created before it is accessed.</p>
 <p>In the following example, we will run vdbench to make directories, create files, getattr, delete files and remove directories.</p>
-<h2 id="make-directories">Make directories</h2>
+<!--kg-card-end: markdown--><!--kg-card-begin: html--><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8578408127828851"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-8578408127828851"
+     data-ad-slot="5596270594"></ins>
+<script>(adsbygoogle = window.adsbygoogle || []).push({});</script><!--kg-card-end: html--><!--kg-card-begin: markdown--><h2 id="make-directories">Make directories</h2>
 <p>Prepare the job file to make the directories:</p>
 <pre><code class="language-shell">$ cat jobfile/vdb_mkdir.job
 hd=default,vdbench=/home/tester/vdbench_test,shell=ssh,user=root
@@ -272,7 +287,15 @@ total 8
 drwxr-xr-x 2 root root 4096 Mar 16 02:06 .
 drwxr-xr-x 7 root root 4096 Mar 16 02:06 ..
 </code></pre>
-<h2 id="create-files-in-the-existing-directories">Create files in the existing directories</h2>
+<!--kg-card-end: markdown--><!--kg-card-begin: html--><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8578408127828851"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-8578408127828851"
+     data-ad-slot="5596270594"></ins>
+<script>(adsbygoogle = window.adsbygoogle || []).push({});</script><!--kg-card-end: html--><!--kg-card-begin: markdown--><h2 id="create-files-in-the-existing-directories">Create files in the existing directories</h2>
 <p>Prepare the job file to create files in the existing directories:</p>
 <pre><code class="language-shell">$ cat jobfile/vdb_create.job
 hd=default,vdbench=/home/tester/vdbench_test,shell=ssh,user=root
@@ -336,7 +359,15 @@ drwxr-xr-x 7 root root 4096 Mar 16 02:06 ..
 -rw-r--r-- 1 root root 4096 Mar 16 02:06 vdb_f0000.file
 -rw-r--r-- 1 root root 4096 Mar 16 02:06 vdb_f0001.file
 </code></pre>
-<h2 id="getattr">Getattr</h2>
+<!--kg-card-end: markdown--><!--kg-card-begin: html--><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8578408127828851"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-8578408127828851"
+     data-ad-slot="5596270594"></ins>
+<script>(adsbygoogle = window.adsbygoogle || []).push({});</script><!--kg-card-end: html--><!--kg-card-begin: markdown--><h2 id="getattr">Getattr</h2>
 <p>Prepare the job file to getattr:</p>
 <pre><code class="language-shell">$ cat jobfile/vdb_getattr.job
 hd=default,vdbench=/home/tester/vdbench_test,shell=ssh,user=root
@@ -407,7 +438,15 @@ drwxr-xr-x 7 root root 4096 Mar 16 02:06 ..
 -rw-r--r-- 1 root root 4096 Mar 16 02:06 vdb_f0000.file
 -rw-r--r-- 1 root root 4096 Mar 16 02:06 vdb_f0001.file
 </code></pre>
-<h2 id="delete-files">Delete files</h2>
+<!--kg-card-end: markdown--><!--kg-card-begin: html--><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8578408127828851"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-8578408127828851"
+     data-ad-slot="5596270594"></ins>
+<script>(adsbygoogle = window.adsbygoogle || []).push({});</script><!--kg-card-end: html--><!--kg-card-begin: markdown--><h2 id="delete-files">Delete files</h2>
 <p>Prepare the job file to delete files:</p>
 <pre><code class="language-shell">$ cat jobfile/vdb_delete.job
 hd=default,vdbench=/home/tester/vdbench_test,shell=ssh,user=root
@@ -455,7 +494,15 @@ total 8
 drwxr-xr-x 2 root root 4096 Mar 16 02:06 .
 drwxr-xr-x 7 root root 4096 Mar 16 02:06 ..
 </code></pre>
-<h2 id="remove-directories">Remove directories</h2>
+<!--kg-card-end: markdown--><!--kg-card-begin: html--><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8578408127828851"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-8578408127828851"
+     data-ad-slot="5596270594"></ins>
+<script>(adsbygoogle = window.adsbygoogle || []).push({});</script><!--kg-card-end: html--><!--kg-card-begin: markdown--><h2 id="remove-directories">Remove directories</h2>
 <p>Prepare the job file to remove directories:</p>
 <pre><code class="language-shell">$ cat jobfile/vdb_rmdir.job
 hd=default,vdbench=/home/tester/vdbench_test,shell=ssh,user=root

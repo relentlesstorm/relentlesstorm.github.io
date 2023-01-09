@@ -228,6 +228,13 @@ A mutex is basically a lock that we set (lock) before accessing a shared resourc
 
             <section class="gh-content gh-canvas">
                 <aside class="gh-sidebar"><div class="gh-toc"></div></aside> 
+
+                <!-- native ads start -->
+                <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8578408127828851" crossorigin="anonymous"></script>
+                <ins class="adsbygoogle" style="display:block; text-align:center;" data-ad-layout="in-article" data-ad-format="fluid" data-ad-client="ca-pub-8578408127828851" data-ad-slot="5596270594"></ins>
+                <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+                <!-- native ads end -->
+                
                 <!--kg-card-begin: markdown--><h2 id="mutexes">Mutexes</h2>
 <p>A mutex is basically a lock that we set (lock) before accessing a shared resource and release (unlock) when we’re done. While it is set, any other thread that tries to set it will block until we release it. If more than one thread is blocked when we unlock the mutex, then all threads blocked on the lock will be made runnable, and the first one to run will be able to set the lock. The others will see that the mutex is still locked and go back to waiting for it to become available again. In this way, only one thread will proceed at a time.</p>
 <p>This mutual-exclusion mechanism works only if we design our threads to follow the same data-access rules. The operating system doesn’t serialize access to data for us. If we allow one thread to access a shared resource without first acquiring a lock, then inconsistencies can occur even though the rest of our threads do acquire the lock before attempting to access the shared resource.</p>

@@ -66,7 +66,7 @@ Red Hat Enterprise Linux release 8.5 (Ootpa)
     <meta property="og:url" content="https://relentlesstorm.github.io/posts/how-to-configure-sar-data-collection-on-rhel8/" />
     <meta property="og:image" content="https://images.unsplash.com/photo-1531570003789-62d56ed3b271?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDV8fHNhcnxlbnwwfHx8fDE2NzI3Nzg2MzI&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000" />
     <meta property="article:published_time" content="2022-01-04T00:00:00.000Z" />
-    <meta property="article:modified_time" content="2023-01-03T23:08:29.000Z" />
+    <meta property="article:modified_time" content="2023-01-09T02:06:13.000Z" />
     <meta property="article:tag" content="Linux" />
     
     <meta property="article:publisher" content="https://www.facebook.com/ghost" />
@@ -123,7 +123,7 @@ Red Hat Enterprise Linux release 8.5 (Ootpa)
     "headline": "How to configure SAR data collection on RHEL8",
     "url": "https://relentlesstorm.github.io/posts/how-to-configure-sar-data-collection-on-rhel8/",
     "datePublished": "2022-01-04T00:00:00.000Z",
-    "dateModified": "2023-01-03T23:08:29.000Z",
+    "dateModified": "2023-01-09T02:06:13.000Z",
     "image": {
         "@type": "ImageObject",
         "url": "https://images.unsplash.com/photo-1531570003789-62d56ed3b271?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxMTc3M3wwfDF8c2VhcmNofDV8fHNhcnxlbnwwfHx8fDE2NzI3Nzg2MzI&ixlib=rb-4.0.3&q=80&w=2000",
@@ -242,6 +242,13 @@ Red Hat Enterprise Linux release 8.5 (Ootpa)
 
             <section class="gh-content gh-canvas">
                 <aside class="gh-sidebar"><div class="gh-toc"></div></aside> 
+
+                <!-- native ads start -->
+                <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8578408127828851" crossorigin="anonymous"></script>
+                <ins class="adsbygoogle" style="display:block; text-align:center;" data-ad-layout="in-article" data-ad-format="fluid" data-ad-client="ca-pub-8578408127828851" data-ad-slot="5596270594"></ins>
+                <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+                <!-- native ads end -->
+                
                 <!--kg-card-begin: markdown--><p>On RHEL8, it uses systemd instead of cron jobs to manage SAR data collection service.</p>
 <p>Run the following command to check if the SAR data collection is started.</p>
 <pre><code class="language-shell">[root@h04-11 ~]# cat /etc/redhat-release
@@ -263,7 +270,15 @@ Red Hat Enterprise Linux release 8.5 (Ootpa)
 
 Jan 04 19:49:54 h04-11 systemd[1]: Started Run system activity accounting tool every 10 minutes.
 </code></pre>
-<p>Check the sar file existence after a few minutes as below.</p>
+<!--kg-card-end: markdown--><!--kg-card-begin: html--><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8578408127828851"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-8578408127828851"
+     data-ad-slot="5596270594"></ins>
+<script>(adsbygoogle = window.adsbygoogle || []).push({});</script><!--kg-card-end: html--><!--kg-card-begin: markdown--><p>Check the sar file existence after a few minutes as below.</p>
 <pre><code class="language-shell">[root@h04-11 ~]# ls -ltr /var/log/sa
 total 0
 [root@h04-11 ~]# date
@@ -290,7 +305,15 @@ OnCalendar=*:00/10
 [Install]
 WantedBy=sysstat.service
 </code></pre>
-<p>To change the interval of SAR data collection, edit the systemd unit file as below.</p>
+<!--kg-card-end: markdown--><!--kg-card-begin: html--><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8578408127828851"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-8578408127828851"
+     data-ad-slot="5596270594"></ins>
+<script>(adsbygoogle = window.adsbygoogle || []).push({});</script><!--kg-card-end: html--><!--kg-card-begin: markdown--><p>To change the interval of SAR data collection, edit the systemd unit file as below.</p>
 <pre><code class="language-shell">[root@h04-11 ~]# export SYSTEMD_EDITOR=/usr/bin/vi
 [root@h04-11 ~]# systemctl edit sysstat-collect.timer
 </code></pre>
@@ -348,7 +371,15 @@ OnCalendar=*:00/1
 
 Jan 04 19:49:54 h04-11 systemd[1]: Started Run system activity accounting tool every 10 minutes.
 </code></pre>
-<p>To verify if the interval of SAR data collection is modified successfully, do the following.</p>
+<!--kg-card-end: markdown--><!--kg-card-begin: html--><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8578408127828851"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-8578408127828851"
+     data-ad-slot="5596270594"></ins>
+<script>(adsbygoogle = window.adsbygoogle || []).push({});</script><!--kg-card-end: html--><!--kg-card-begin: markdown--><p>To verify if the interval of SAR data collection is modified successfully, do the following.</p>
 <pre><code class="language-shell">[root@h04-11 ~]# sar -u -f /var/log/sa/sa04
 Linux 4.18.0-348.2.1.el8_5.x86_64 (h04-11) 	01/04/2022 	_x86_64_	(32 CPU)
 

@@ -59,7 +59,7 @@ Receive ring buffers are shared between the device driver and NIC. The card assi
     <meta property="og:url" content="https://relentlesstorm.github.io/posts/network-ring-buffer/" />
     <meta property="og:image" content="https://images.unsplash.com/photo-1491118217331-c147f566d809?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDg4fHxuZXR3b3JrfGVufDB8fHx8MTY3Mjc5MDY4Mw&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000" />
     <meta property="article:published_time" content="2021-03-04T00:00:00.000Z" />
-    <meta property="article:modified_time" content="2023-01-04T00:45:20.000Z" />
+    <meta property="article:modified_time" content="2023-01-09T02:18:08.000Z" />
     <meta property="article:tag" content="Linux" />
     
     <meta property="article:publisher" content="https://www.facebook.com/ghost" />
@@ -109,7 +109,7 @@ Receive ring buffers are shared between the device driver and NIC. The card assi
     "headline": "Network ring buffer",
     "url": "https://relentlesstorm.github.io/posts/network-ring-buffer/",
     "datePublished": "2021-03-04T00:00:00.000Z",
-    "dateModified": "2023-01-04T00:45:20.000Z",
+    "dateModified": "2023-01-09T02:18:08.000Z",
     "image": {
         "@type": "ImageObject",
         "url": "https://images.unsplash.com/photo-1491118217331-c147f566d809?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxMTc3M3wwfDF8c2VhcmNofDg4fHxuZXR3b3JrfGVufDB8fHx8MTY3Mjc5MDY4Mw&ixlib=rb-4.0.3&q=80&w=2000",
@@ -228,6 +228,13 @@ Receive ring buffers are shared between the device driver and NIC. The card assi
 
             <section class="gh-content gh-canvas">
                 <aside class="gh-sidebar"><div class="gh-toc"></div></aside> 
+
+                <!-- native ads start -->
+                <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8578408127828851" crossorigin="anonymous"></script>
+                <ins class="adsbygoogle" style="display:block; text-align:center;" data-ad-layout="in-article" data-ad-format="fluid" data-ad-client="ca-pub-8578408127828851" data-ad-slot="5596270594"></ins>
+                <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+                <!-- native ads end -->
+                
                 <!--kg-card-begin: markdown--><h2 id="introduction">Introduction</h2>
 <p>Receive ring buffers are shared between the device driver and NIC. The card assigns a transmit (TX) and receive (RX) ring buffer. As the name implies, the ring buffer is a circular buffer where an overflow simply overwrites existing data. It should be noted that there are two ways to move data from the NIC to the kernel, hardware interrupts and software interrupts, also called SoftIRQs.</p>
 <p>The RX ring buffer is used to store incoming packets until they can be processed by the device driver. The device driver drains the RX ring, typically via SoftIRQs, which puts the incoming packets into a kernel data structure called an sk_buff or “skb” to begin its journey through the kernel and up to the application which owns the relevant socket. The TX ring buffer is used to hold outgoing packets which are destined for the wire.</p>
@@ -240,7 +247,15 @@ Receive ring buffers are shared between the device driver and NIC. The card assi
 <li>timeouts</li>
 <li>failed backups</li>
 </ul>
-<h2 id="interrupts-and-interrupt-handlers">Interrupts and Interrupt Handlers</h2>
+<!--kg-card-end: markdown--><!--kg-card-begin: html--><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8578408127828851"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-8578408127828851"
+     data-ad-slot="5596270594"></ins>
+<script>(adsbygoogle = window.adsbygoogle || []).push({});</script><!--kg-card-end: html--><!--kg-card-begin: markdown--><h2 id="interrupts-and-interrupt-handlers">Interrupts and Interrupt Handlers</h2>
 <p>Interrupts from the hardware are known as “top-half” interrupts. When a NIC receives incoming data, it copies the data into kernel buffers using DMA. The NIC notifies the kernel of this data by raising a hard interrupt. These interrupts are processed by interrupt handlers which do minimal work, as they have already interrupted another task and cannot be interrupted themselves. Hard interrupts can be expensive in terms of CPU usage, especially when holding kernel locks. The hard interrupt handler then leaves the majority of packet reception to a software interrupt, or SoftIRQ, process which can be scheduled more fairly.</p>
 <p>Hard interrupts can be seen in /proc/interrupts where each queue has an interrupt vector in the 1st column assigned to it. These are initialized when the system boots or when the NIC device driver module is loaded. Each RX and TX queue is assigned a unique vector, which informs the interrupt handler as to which NIC/queue the interrupt is coming from. The columns represent the number of incoming interrupts as a counter value:</p>
 <pre><code class="language-shell">$ egrep “CPU0|eth2” /proc/interrupts
@@ -251,7 +266,15 @@ Receive ring buffers are shared between the device driver and NIC. The card assi
  108: 3 0 0 194370 0 0 IR-PCI-MSI-edge eth2-rx-3
  109: 0 0 0 0 0 0 IR-PCI-MSI-edge eth2-tx
 </code></pre>
-<h2 id="softirqs">SoftIRQs</h2>
+<!--kg-card-end: markdown--><!--kg-card-begin: html--><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8578408127828851"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-8578408127828851"
+     data-ad-slot="5596270594"></ins>
+<script>(adsbygoogle = window.adsbygoogle || []).push({});</script><!--kg-card-end: html--><!--kg-card-begin: markdown--><h2 id="softirqs">SoftIRQs</h2>
 <p>Also known as “bottom-half” interrupts, software interrupt requests (SoftIRQs) are kernel routines which are scheduled to run at a time when other tasks will not be interrupted. The SoftIRQ's purpose is to drain the network adapter receive ring buffers. These routines run in the form of ksoftirqd/cpu-number processes and call driver-specific code functions. They can be seen in process monitoring tools such as ps and top.</p>
 <p>The following call stack, read from the bottom up, is an example of a SoftIRQ polling a Mellanox card. The functions marked [mlx4_en] are the Mellanox polling routines in the mlx4_en.ko driver kernel module, called by the kernel's generic polling routines such as net_rx_action. After moving from the driver to the kernel, the traffic being received will then move up to the socket, ready for the application to consume:</p>
 <pre><code class="language-shell"> mlx4_en_complete_rx_desc [mlx4_en]
@@ -270,7 +293,15 @@ Receive ring buffers are shared between the device driver and NIC. The card assi
 <pre><code class="language-shell">$ watch -n1 grep RX /proc/softirqs
 $ watch -n1 grep TX /proc/softirqs
 </code></pre>
-<h2 id="displaying-the-number-of-dropped-packets">Displaying the number of dropped packets</h2>
+<!--kg-card-end: markdown--><!--kg-card-begin: html--><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8578408127828851"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-8578408127828851"
+     data-ad-slot="5596270594"></ins>
+<script>(adsbygoogle = window.adsbygoogle || []).push({});</script><!--kg-card-end: html--><!--kg-card-begin: markdown--><h2 id="displaying-the-number-of-dropped-packets">Displaying the number of dropped packets</h2>
 <p>The ethtool utility enables administrators to query, configure, or control network driver settings.</p>
 <p>The exhaustion of the RX ring buffer causes an increment in the counters, such as &quot;discard&quot; or &quot;drop&quot; in the output of ethtool -S interface_name. The discarded packets indicate that the available buffer is filling up faster than the kernel can process the packets.</p>
 <p>To display drop counters for the enp1s0 interface, enter:</p>
@@ -309,7 +340,15 @@ TX:             2048
 </ul>
 </li>
 </ol>
-<h2 id="understanding-the-maximum-rxtx-ring-buffer">Understanding the maximum RX/TX ring buffer</h2>
+<!--kg-card-end: markdown--><!--kg-card-begin: html--><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8578408127828851"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-8578408127828851"
+     data-ad-slot="5596270594"></ins>
+<script>(adsbygoogle = window.adsbygoogle || []).push({});</script><!--kg-card-end: html--><!--kg-card-begin: markdown--><h2 id="understanding-the-maximum-rxtx-ring-buffer">Understanding the maximum RX/TX ring buffer</h2>
 <p>From <a href="https://elixir.bootlin.com/linux/latest/source/include/linux/ethtool.h">ethtool</a> source code, we can find the following function which is used by command &quot;ethtool -g [nic]&quot;</p>
 <pre><code class="language-shell">* @get_ringparam: Report ring sizes
 </code></pre>

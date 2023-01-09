@@ -68,7 +68,7 @@ To run fio benchmark on multiple files or deives, we should understand the follo
     <meta property="og:url" content="https://relentlesstorm.github.io/posts/fio-benchmark-on-multiple-files/" />
     <meta property="og:image" content="https://images.unsplash.com/photo-1516147697747-02adcafd3fda?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDE3fHxyYWNlfGVufDB8fHx8MTY3Mjc4MTk3Mg&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000" />
     <meta property="article:published_time" content="2021-10-13T00:00:00.000Z" />
-    <meta property="article:modified_time" content="2023-01-03T23:47:06.000Z" />
+    <meta property="article:modified_time" content="2023-01-09T02:09:09.000Z" />
     <meta property="article:tag" content="Benchmarking" />
     
     <meta property="article:publisher" content="https://www.facebook.com/ghost" />
@@ -127,7 +127,7 @@ To run fio benchmark on multiple files or deives, we should understand the follo
     "headline": "fio benchmark on multiple files",
     "url": "https://relentlesstorm.github.io/posts/fio-benchmark-on-multiple-files/",
     "datePublished": "2021-10-13T00:00:00.000Z",
-    "dateModified": "2023-01-03T23:47:06.000Z",
+    "dateModified": "2023-01-09T02:09:09.000Z",
     "image": {
         "@type": "ImageObject",
         "url": "https://images.unsplash.com/photo-1516147697747-02adcafd3fda?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxMTc3M3wwfDF8c2VhcmNofDE3fHxyYWNlfGVufDB8fHx8MTY3Mjc4MTk3Mg&ixlib=rb-4.0.3&q=80&w=2000",
@@ -246,6 +246,13 @@ To run fio benchmark on multiple files or deives, we should understand the follo
 
             <section class="gh-content gh-canvas">
                 <aside class="gh-sidebar"><div class="gh-toc"></div></aside> 
+
+                <!-- native ads start -->
+                <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8578408127828851" crossorigin="anonymous"></script>
+                <ins class="adsbygoogle" style="display:block; text-align:center;" data-ad-layout="in-article" data-ad-format="fluid" data-ad-client="ca-pub-8578408127828851" data-ad-slot="5596270594"></ins>
+                <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+                <!-- native ads end -->
+                
                 <!--kg-card-begin: markdown--><h2 id="fio-directory-and-filename-options">fio <em>directory</em> and <em>filename</em> options</h2>
 <p>To run fio benchmark on multiple files or deives, we should understand the following fio options.</p>
 <ul>
@@ -258,7 +265,15 @@ To run fio benchmark on multiple files or deives, we should understand the follo
 <p>Fio normally makes up a filename based on the job name, thread number, and file number (see filename_format). If you want to share files between threads in a job or several jobs with fixed file paths, specify a filename for each of them to override the default. If the ioengine is file based, you can specify a number of files by separating the names with a ‘:’ colon. So if you wanted a job to open /dev/sda and /dev/sdb as the two working files, you would use filename=/dev/sda:/dev/sdb. This also means that whenever this option is specified, nrfiles is ignored. The size of regular files specified by this option will be size divided by number of files unless an explicit size is specified by filesize.</p>
 </li>
 </ul>
-<h2 id="run-fio-on-single-directory">Run fio on single directory</h2>
+<!--kg-card-end: markdown--><!--kg-card-begin: html--><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8578408127828851"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-8578408127828851"
+     data-ad-slot="5596270594"></ins>
+<script>(adsbygoogle = window.adsbygoogle || []).push({});</script><!--kg-card-end: html--><!--kg-card-begin: markdown--><h2 id="run-fio-on-single-directory">Run fio on single directory</h2>
 <p>The following example runs four fio jobs on single directory <em>dir1</em>. Four different files are laid out automatically before the benchmark.</p>
 <pre><code class="language-shell">$ fio --name=4kwrite --ioengine=libaio --directory=dir1 --blocksize=4k --readwrite=write --filesize=10G --end_fsync=1 --numjobs=4 --iodepth=128 --direct=1 --group_reporting
 4kwrite: (g=0): rw=write, bs=(R) 4096B-4096B, (W) 4096B-4096B, (T) 4096B-4096B, ioengine=libaio, iodepth=128
@@ -291,7 +306,15 @@ $ ls -la dir1 | grep write
 -rw-r--r-- 1 root root 10737418240 Mar  1 21:11 4kwrite.2.0
 -rw-r--r-- 1 root root 10737418240 Mar  1 21:11 4kwrite.3.0
 </code></pre>
-<h2 id="run-fio-on-multiple-directories">Run fio on multiple directories</h2>
+<!--kg-card-end: markdown--><!--kg-card-begin: html--><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8578408127828851"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-8578408127828851"
+     data-ad-slot="5596270594"></ins>
+<script>(adsbygoogle = window.adsbygoogle || []).push({});</script><!--kg-card-end: html--><!--kg-card-begin: markdown--><h2 id="run-fio-on-multiple-directories">Run fio on multiple directories</h2>
 <p>The following example runs four fio jobs on two directories <em>dir1</em> and <em>dir2</em>. Two files are laid out automatically under each directory.</p>
 <pre><code class="language-shell">$ fio --name=4kwrite --ioengine=libaio --directory=dir1:dir2 --blocksize=4k --readwrite=write --filesize=10G --end_fsync=1 --numjobs=4 --iodepth=128 --direct=1 --group_reporting
 
@@ -347,7 +370,15 @@ total 0
 drwxr-xr-x 2 root root   6 Mar  1 21:16 .
 drwxr-xr-x 7 root root 225 Mar  1 20:28 ..
 </code></pre>
-<h2 id="run-multiple-fio-jobs-on-single-file">Run multiple fio jobs on single file</h2>
+<!--kg-card-end: markdown--><!--kg-card-begin: html--><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8578408127828851"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-8578408127828851"
+     data-ad-slot="5596270594"></ins>
+<script>(adsbygoogle = window.adsbygoogle || []).push({});</script><!--kg-card-end: html--><!--kg-card-begin: markdown--><h2 id="run-multiple-fio-jobs-on-single-file">Run multiple fio jobs on single file</h2>
 <p>The following example runs four jobs on single file.</p>
 <pre><code class="language-shell">$ fio --name=4kwrite --ioengine=libaio --directory=dir1 --filename=testfile --blocksize=4k --readwrite=write --filesize=10G --end_fsync=1 --numjobs=4 --iodepth=128 --direct=1 --group_reporting
 
@@ -364,7 +395,15 @@ fio       28885          root    3u      REG              253,2 10737418240   23
 fio       28886          root    3u      REG              253,2 10737418240   23782491 /dir1/testfile
 fio       28887          root    3u      REG              253,2 10737418240   23782491 /dir1/testfile
 </code></pre>
-<h2 id="run-fio-on-multiple-files-from-different-directories">Run fio on multiple files from different directories</h2>
+<!--kg-card-end: markdown--><!--kg-card-begin: html--><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8578408127828851"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-8578408127828851"
+     data-ad-slot="5596270594"></ins>
+<script>(adsbygoogle = window.adsbygoogle || []).push({});</script><!--kg-card-end: html--><!--kg-card-begin: markdown--><h2 id="run-fio-on-multiple-files-from-different-directories">Run fio on multiple files from different directories</h2>
 <h3 id="one-job-writes-two-files">One job writes two files</h3>
 <p>In this example, there is one fio job to write two files from two different directories. The total iodepth on the two files is 128. Note that, the iodepth for each file is about 64 which is only half of the specified iodepth in the fio command.</p>
 <pre><code class="language-shell">$ fio --blocksize=4k --filename=/mnt/dir1/testfile:/mnt/dir2/testfile --ioengine=libaio --readwrite=write --size=50G --name=test --numjobs=1 --group_reporting --direct=1 --iodepth=128 --end_fsync=1
