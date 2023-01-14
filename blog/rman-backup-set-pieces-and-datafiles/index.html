@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Flamingbytes</title>
+    <link rel="stylesheet" href="/assets/built/screen.css?v=92211a7592">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.12.3/tocbot.css">
+    
+    <style>
+    .gh-content {
+        position: relative;
+    }
+
+    .gh-toc > .toc-list {
+        position: relative;
+    }
+
+    .toc-list {
+        overflow: hidden;
+        list-style: none;
+    }
+
+    @media (min-width: 1300px) {
+        .gh-sidebar {
+            position: absolute; 
+            top: 0;
+            bottom: 0;
+            margin-top: 4vmin;
+            margin-left: 2vmin;
+            /*grid-column: wide-start / main-start; *//* Place the TOC to the left of the content */
+            grid-column: wide-end / main-end; /* Place the TOC to the right of the content */
+        }
+    
+        .gh-toc {
+            position: sticky; /* On larger screens, TOC will stay in the same spot on the page */
+            top: 4vmin;
+        }
+    }
+
+    .gh-toc .is-active-link::before {
+        background-color: var(--ghost-accent-color); /* Defines TOC accent color based on Accent color set in Ghost Admin */
+    } 
+    </style>
+
+    <link rel="icon" href="https://www.flamingbytes.com/content/images/size/w256h256/2023/01/FlamingBytes-icon-64x64.png" type="image/png" />
+    <link rel="canonical" href="https://www.flamingbytes.com/blog/rman-backup-set-pieces-and-datafiles/" />
+    <meta name="referrer" content="no-referrer-when-downgrade" />
+    
+    <meta property="og:site_name" content="Flamingbytes" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="RMAN backup set, pieces, and datafiles" />
+    <meta property="og:description" content="RMAN backs up the datafiles, control file, archived log files, and server parameter files in a RMAN specific format called a backup piece. In a nutshell, a backup set is a bundle of dbf, ctl and redo file that can restore a database. A set of one or more such" />
+    <meta property="og:url" content="https://www.flamingbytes.com/blog/rman-backup-set-pieces-and-datafiles/" />
+    <meta property="og:image" content="https://images.unsplash.com/photo-1506399558188-acca6f8cbf41?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDl8fGJhY2t1cHxlbnwwfHx8fDE2NzI3ODk3NDA&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000" />
+    <meta property="article:published_time" content="2020-11-08T00:00:00.000Z" />
+    <meta property="article:modified_time" content="2023-01-04T04:54:39.000Z" />
+    <meta property="article:tag" content="Big Data" />
+    
+    <meta property="article:publisher" content="https://www.facebook.com/ghost" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="RMAN backup set, pieces, and datafiles" />
+    <meta name="twitter:description" content="RMAN backs up the datafiles, control file, archived log files, and server parameter files in a RMAN specific format called a backup piece. In a nutshell, a backup set is a bundle of dbf, ctl and redo file that can restore a database. A set of one or more such" />
+    <meta name="twitter:url" content="https://www.flamingbytes.com/blog/rman-backup-set-pieces-and-datafiles/" />
+    <meta name="twitter:image" content="https://images.unsplash.com/photo-1506399558188-acca6f8cbf41?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDl8fGJhY2t1cHxlbnwwfHx8fDE2NzI3ODk3NDA&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000" />
+    <meta name="twitter:label1" content="Written by" />
+    <meta name="twitter:data1" content="relentlesstorm" />
+    <meta name="twitter:label2" content="Filed under" />
+    <meta name="twitter:data2" content="Big Data" />
+    <meta name="twitter:site" content="@ghost" />
+    <meta property="og:image:width" content="2000" />
+    <meta property="og:image:height" content="1192" />
+    
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "publisher": {
+        "@type": "Organization",
+        "name": "Flamingbytes",
+        "url": "https://www.flamingbytes.com/",
+        "logo": {
+            "@type": "ImageObject",
+            "url": "https://www.flamingbytes.com/content/images/size/w256h256/2023/01/FlamingBytes-icon-64x64.png",
+            "width": 60,
+            "height": 60
+        }
+    },
+    "author": {
+        "@type": "Person",
+        "name": "relentlesstorm",
+        "image": {
+            "@type": "ImageObject",
+            "url": "https://www.flamingbytes.com/content/images/2023/01/FlamingBytes-icon-64x64-1.png",
+            "width": 64,
+            "height": 64
+        },
+        "url": "https://www.flamingbytes.com/author/relentlesstorm/",
+        "sameAs": []
+    },
+    "headline": "RMAN backup set, pieces, and datafiles",
+    "url": "https://www.flamingbytes.com/blog/rman-backup-set-pieces-and-datafiles/",
+    "datePublished": "2020-11-08T00:00:00.000Z",
+    "dateModified": "2023-01-04T04:54:39.000Z",
+    "image": {
+        "@type": "ImageObject",
+        "url": "https://images.unsplash.com/photo-1506399558188-acca6f8cbf41?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxMTc3M3wwfDF8c2VhcmNofDl8fGJhY2t1cHxlbnwwfHx8fDE2NzI3ODk3NDA&ixlib=rb-4.0.3&q=80&w=2000",
+        "width": 2000,
+        "height": 1192
+    },
+    "keywords": "Big Data",
+    "description": "RMAN backs up the datafiles, control file, archived log files, and server parameter files in a RMAN specific format called a backup piece. In a nutshell, a backup set is a bundle of dbf, ctl and redo file that can restore a database. A set of one or more such backup pieces makes up a backup set. A backup set is created using the BACKUP command.\n\n\n\nUseful views for backup query\n\n\n * \n   \n   \n   V$BACKUP_SET displays information about backup sets from the control file. A backup set record is inser",
+    "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https://www.flamingbytes.com/"
+    }
+}
+    </script>
+
+    <meta name="generator" content="Ghost 5.26" />
+    <link rel="alternate" type="application/rss+xml" title="Flamingbytes" href="https://www.flamingbytes.com/rss/" />
+    
+    <script defer src="https://cdn.jsdelivr.net/ghost/sodo-search@~1.1/umd/sodo-search.min.js" data-key="321a1d1aea33fd468f6e61f563" data-styles="https://cdn.jsdelivr.net/ghost/sodo-search@~1.1/umd/main.css" data-sodo-search="https://www.flamingbytes.com/" crossorigin="anonymous"></script>
+    <script defer src="/public/cards.min.js?v=92211a7592"></script>
+    <link rel="stylesheet" type="text/css" href="/public/cards.min.css?v=92211a7592">
+    <script defer src="/public/comment-counts.min.js?v=92211a7592" data-ghost-comments-counts-api="https://www.flamingbytes.com/members/api/comments/counts/"></script>
+    <style>.gh-head-logo img{max-height:100px;height:100%;}</style>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-B8PQ47L2H0"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-B8PQ47L2H0');
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8578408127828851" crossorigin="anonymous"></script><style>:root {--ghost-accent-color: #6a13ec;}</style>
+</head>
+
+<body class="post-template tag-bigdata is-head-left-logo has-serif-body">
+<div class="gh-site">
+
+    <header id="gh-head" class="gh-head gh-outer">
+        <div class="gh-head-inner gh-inner">
+            <div class="gh-head-brand">
+                <div class="gh-head-brand-wrapper">
+                    <a class="gh-head-logo" href="https://www.flamingbytes.com">
+                            Flamingbytes
+                    </a>
+                </div>
+                <button class="gh-search gh-icon-btn" data-ghost-search><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" width="20" height="20"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg></button>
+                <button class="gh-burger"></button>
+            </div>
+
+            <nav class="gh-head-menu">
+                <ul class="nav">
+    <li class="nav-home"><a href="https://www.flamingbytes.com/">Home</a></li>
+    <li class="nav-tags"><a href="https://www.flamingbytes.com/blog/tags/">Tags</a></li>
+    <li class="nav-archive"><a href="https://www.flamingbytes.com/blog/archive/">Archive</a></li>
+    <li class="nav-about"><a href="https://www.flamingbytes.com/about/">About</a></li>
+</ul>
+
+            </nav>
+
+            <div class="gh-head-actions">
+                        <button class="gh-search gh-icon-btn" data-ghost-search><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" width="20" height="20"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg></button>
+            </div>
+        </div>
+    </header>
+
+    
+<main class="gh-main">
+        <article class="gh-article post tag-bigdata">
+
+            <header class="gh-article-header gh-canvas">
+                    <a class="gh-article-tag" href="https://www.flamingbytes.com/blog/tag/bigdata/">Big Data</a>
+
+                <h1 class="gh-article-title">RMAN backup set, pieces, and datafiles</h1>
+
+                    <aside class="gh-article-sidebar">
+
+        <div class="gh-author-image-list">
+                <a class="gh-author-image" href="/author/relentlesstorm/">
+                        <img src="https://www.flamingbytes.com/content/images/2023/01/FlamingBytes-icon-64x64-1.png" alt="relentlesstorm">
+                </a>
+        </div>
+
+        <div class="gh-author-name-list">
+                <h4 class="gh-author-name">
+                    <a href="/author/relentlesstorm/">relentlesstorm</a>
+                </h4>
+                
+        </div>
+
+        <div class="gh-article-meta">
+            <div class="gh-article-meta-inner">
+                <time class="gh-article-date" datetime="2020-11-08">Nov 8, 2020</time>
+                    <span class="gh-article-meta-sep"></span>
+                    <span class="gh-article-length">3 min</span>
+            </div>
+        </div>
+
+    </aside>
+
+
+                    <figure class="gh-article-image">
+        <img
+            srcset="https://images.unsplash.com/photo-1506399558188-acca6f8cbf41?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDl8fGJhY2t1cHxlbnwwfHx8fDE2NzI3ODk3NDA&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;300 300w,
+                    https://images.unsplash.com/photo-1506399558188-acca6f8cbf41?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDl8fGJhY2t1cHxlbnwwfHx8fDE2NzI3ODk3NDA&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720 720w,
+                    https://images.unsplash.com/photo-1506399558188-acca6f8cbf41?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDl8fGJhY2t1cHxlbnwwfHx8fDE2NzI3ODk3NDA&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;960 960w,
+                    https://images.unsplash.com/photo-1506399558188-acca6f8cbf41?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDl8fGJhY2t1cHxlbnwwfHx8fDE2NzI3ODk3NDA&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1200 1200w,
+                    https://images.unsplash.com/photo-1506399558188-acca6f8cbf41?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDl8fGJhY2t1cHxlbnwwfHx8fDE2NzI3ODk3NDA&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000 2000w"
+            sizes="(max-width: 1200px) 100vw, 1200px"
+            src="https://images.unsplash.com/photo-1506399558188-acca6f8cbf41?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDl8fGJhY2t1cHxlbnwwfHx8fDE2NzI3ODk3NDA&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1200"
+            alt="RMAN backup set, pieces, and datafiles"
+        >
+            <figcaption>Photo by <a href="https://unsplash.com/@imgix?utm_source=ghost&utm_medium=referral&utm_campaign=api-credit">imgix</a> / <a href="https://unsplash.com/?utm_source=ghost&utm_medium=referral&utm_campaign=api-credit">Unsplash</a></figcaption>
+    </figure>
+            </header>
+
+            <section class="gh-content gh-canvas">
+                <aside class="gh-sidebar"><div class="gh-toc"></div></aside> 
+
+                <!--kg-card-begin: markdown--><p>RMAN backs up the datafiles, control file, archived log files, and server parameter files in a RMAN specific format called a backup piece. In a nutshell, a backup set is a bundle of dbf, ctl and redo file that can restore a database. A set of one or more such backup pieces makes up a backup set. A backup set is created using the BACKUP command.</p>
+<h2 id="useful-views-for-backup-query">Useful views for backup query</h2>
+<ul>
+<li>
+<p>V$BACKUP_SET displays information about backup sets from the control file. A backup set record is inserted after the backup set is successfully completed. The backup set stamp (SET_STAMP) and count (SET_COUNT) uniquely identify the backup set.</p>
+</li>
+<li>
+<p>V$BACKUP_PIECE displays information about backup pieces from the control file. Each backup set consists of one or more backup pieces.</p>
+</li>
+<li>
+<p>V$BACKUP_DATAFILE displays information about control files and datafiles in backup sets from the control file.</p>
+</li>
+<li>
+<p>V$BACKUP_FILES displays information about all RMAN backups (both image copies and backup sets) and archived logs.This view simulates the LIST BACKUP and LIST COPY RMAN commands. This view requires that the database be set using the DBMS_RCVMAN.SETDATABASE procedure.</p>
+</li>
+</ul>
+<h2 id="useful-sql-statements">Useful SQL statements</h2>
+<ul>
+<li>
+<p>Query backup set information. The very last record(e.g. RECID=360) could be used as the start point for future queries.</p>
+<pre><code class="language-shell">SQL&gt; select recid, set_stamp, set_count, backup_type,incremental_level,pieces,start_time,completion_time,elapsed_seconds,block_size from v$backup_set;
+</code></pre>
+<p><img src="https://www.flamingbytes.com/content/images/posts/rman01.png" alt="Image" loading="lazy"></p>
+</li>
+<li>
+<p>Query backup pieces for certain backup set.</p>
+<pre><code class="language-shell">SQL&gt; select piece#,compressed,start_time,completion_time,elapsed_seconds,bytes/1024/1024 from v$backup_piece where set_stamp=1029939968 and set_count=372;
+</code></pre>
+<p><img src="https://www.flamingbytes.com/content/images/posts/rman02.png" alt="Image" loading="lazy"></p>
+</li>
+<li>
+<p>Query backup files for certain backup set.</p>
+<pre><code class="language-shell">SQL&gt; select pkey,fname,file_type,bytes/1024/1024,bs_key,bs_type,bs_pieces,bs_incr_type,bs_bytes/1024/1024, bs_completion_time from v$backup_files where FILE_TYPE='PIECE'order by bs_key;
+</code></pre>
+<p><img src="https://www.flamingbytes.com/content/images/posts/rman03.png" alt="Image" loading="lazy"></p>
+<pre><code class="language-shell">SQL&gt; select pkey,file_type, fname, bytes/1024/1024,bs_key,bs_type,bs_incr_type,bs_bytes/1024/1024 from v$backup_files where bs_key=360;
+</code></pre>
+<p><img src="https://www.flamingbytes.com/content/images/posts/rman04.png" alt="Image" loading="lazy"></p>
+</li>
+<li>
+<p>Query total blocks and read blocks for certain backup set.</p>
+<pre><code class="language-shell">SQL&gt; select set_stamp,set_count,incremental_level,datafile_blocks,blocks,block_size, CREATION_TIME ,completion_time,used_change_tracking,blocks_read from v$backup_datafile where set_count&gt;365;
+</code></pre>
+<p><img src="https://www.flamingbytes.com/content/images/posts/rman05.png" alt="Image" loading="lazy"></p>
+</li>
+<li>
+<p>Query total blocks and read blocks for certain backup. The following example checks the read and write ratio when BCT is enabled and a full backup is done.</p>
+<pre><code class="language-shell">SQL&gt; select sum(BLOCKS_READ*BLOCK_SIZE)/1024/1024/1024 read_GB from v$backup_datafile where USED_CHANGE_TRACKING = 'YES';
+
+READ_GB
+1195.7244
+
+SQL&gt; select sum(BLOCKS*BLOCK_SIZE)/1024/1024/1024 write_GB from v$backup_datafile where USED_CHANGE_TRACKING = 'YES';
+
+  WRITE_GB
+898.733315
+
+SQL&gt; select sum(DATAFILE_BLOCKS*BLOCK_SIZE)/1024/1024/1024 datafile_GB from v$backup_datafile where USED_CHANGE_TRACKING = 'YES';
+
+DATAFILE_GB
+1195.7244
+
+SQL&gt; select sum(BLOCKS_READ)/sum(DATAFILE_BLOCKS) from v$backup_datafile where USED_CHANGE_TRACKING = 'YES';
+
+SUM(BLOCKS_READ)/SUM(DATAFILE_BLOCKS)
+  1
+
+SQL&gt; select sum(BLOCKS)/sum(DATAFILE_BLOCKS) from v$backup_datafile where USED_CHANGE_TRACKING = 'YES';
+
+SUM(BLOCKS)/SUM(DATAFILE_BLOCKS)
+  .751622457
+</code></pre>
+</li>
+<li>
+<p>The following example checks the read and write blocks ratio after incremental backup is done which is based on previous full backup. The write blocks ratio can be treated as data change ratio.</p>
+<pre><code class="language-shell">$ cat bct_check.sql
+set linesize 500;
+
+select set_stamp,set_count,incremental_level, used_change_tracking,blocks_read,blocks,datafile_blocks,block_size from v$backup_datafile where set_count&gt;372 order by set_count;
+
+select sum(BLOCKS_READ*BLOCK_SIZE)/1024/1024/1024 read_GB from v$backup_datafile where set_count&gt;372;
+
+select sum(BLOCKS*BLOCK_SIZE)/1024/1024/1024 write_GB from v$backup_datafile where set_count&gt;372;
+
+select sum(DATAFILE_BLOCKS*BLOCK_SIZE)/1024/1024/1024 total_GB from v$backup_datafile where set_count&gt;372;
+
+select sum(BLOCKS_READ)/sum(DATAFILE_BLOCKS) &quot;%READ&quot; from v$backup_datafile where set_count&gt;372;
+
+select sum(BLOCKS)/sum(DATAFILE_BLOCKS) &quot;%WRITE&quot; from v$backup_datafile where set_count&gt;372;
+
+exit
+</code></pre>
+<p>$ sqlplus / as sysdba @bct_check.sql</p>
+<p><img src="https://www.flamingbytes.com/content/images/posts/rman06.png" alt="Image" loading="lazy"></p>
+<pre><code class="language-shell">READ_GB
+662.855164
+
+WRITE_GB
+103.244957
+
+TOTAL_GB
+1195.75419
+
+%READ
+.554337382
+
+%WRITE
+.086336245
+</code></pre>
+</li>
+<li>
+<p>The following command also checks total write data during backup.</p>
+<pre><code class="language-shell">SQL&gt; select sum(BYTES)/1024/1024/1024 from v$backup_piece where set_count&gt;372;
+
+SUM(BYTES)/1024/1024/1024
+130.938721
+</code></pre>
+</li>
+</ul>
+<!--kg-card-end: markdown-->
+
+                <!-- native ads start -->
+                <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8578408127828851" crossorigin="anonymous"></script>
+                <ins class="adsbygoogle" style="display:block; text-align:center;" data-ad-layout="in-article" data-ad-format="fluid" data-ad-client="ca-pub-8578408127828851" data-ad-slot="5596270594"></ins>
+                <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+                <!-- native ads end -->
+                
+            </section>
+
+        </article>
+
+                <div class="gh-read-next gh-canvas">
+                <section class="gh-pagehead">
+                    <h4 class="gh-pagehead-title">Read next</h4>
+                </section>
+
+                <div class="gh-topic gh-topic-grid">
+                    <div class="gh-topic-content">
+                            <article class="gh-card post">
+    <a class="gh-card-link" href="/blog/analysis-us-quartely-covid-data-from-cdc/">
+            <figure class="gh-card-image">
+                <img
+                    srcset="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDE1fHxkYXRhJTIwbWluaW5nfGVufDB8fHx8MTY3MzMyNTgxNw&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;300 300w,
+                            https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDE1fHxkYXRhJTIwbWluaW5nfGVufDB8fHx8MTY3MzMyNTgxNw&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720 720w,
+                            https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDE1fHxkYXRhJTIwbWluaW5nfGVufDB8fHx8MTY3MzMyNTgxNw&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;960 960w,
+                            https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDE1fHxkYXRhJTIwbWluaW5nfGVufDB8fHx8MTY3MzMyNTgxNw&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1200 1200w,
+                            https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDE1fHxkYXRhJTIwbWluaW5nfGVufDB8fHx8MTY3MzMyNTgxNw&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000 2000w"
+                    sizes="(max-width: 1200px) 100vw, 1200px"
+                    src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDE1fHxkYXRhJTIwbWluaW5nfGVufDB8fHx8MTY3MzMyNTgxNw&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720"
+                    alt="Using R to analyze the quarterly US COVID data"
+                >
+            </figure>
+
+        <div class="gh-card-wrapper">
+            <header class="gh-card-header">
+                <h3 class="gh-card-title">Using R to analyze the quarterly US COVID data</h3>
+            </header>
+
+                    <div class="gh-card-excerpt">An R example to analyze big amount of data</div>
+
+            <footer class="gh-card-footer">
+                <span class="gh-card-author">relentlesstorm</span>
+                <time class="gh-card-date" datetime="2023-01-10">Jan 10, 2023</time>
+                    <script
+    data-ghost-comment-count="63bced3f16d5d70e3a76d7f2"
+    data-ghost-comment-count-empty=""
+    data-ghost-comment-count-singular="comment"
+    data-ghost-comment-count-plural="comments"
+    data-ghost-comment-count-tag="span"
+    data-ghost-comment-count-class-name="gh-card-comments"
+    data-ghost-comment-count-autowrap="true"
+>
+</script>
+            </footer>
+        </div>
+    </a>
+</article>                            <article class="gh-card post">
+    <a class="gh-card-link" href="/blog/getting-started-with-r/">
+            <figure class="gh-card-image">
+                <img
+                    srcset="https://images.unsplash.com/photo-1640158615573-cd28feb1bf4e?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDl8fGRhdGElMjBtaW58ZW58MHx8fHwxNjczMzI1ODE2&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;300 300w,
+                            https://images.unsplash.com/photo-1640158615573-cd28feb1bf4e?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDl8fGRhdGElMjBtaW58ZW58MHx8fHwxNjczMzI1ODE2&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720 720w,
+                            https://images.unsplash.com/photo-1640158615573-cd28feb1bf4e?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDl8fGRhdGElMjBtaW58ZW58MHx8fHwxNjczMzI1ODE2&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;960 960w,
+                            https://images.unsplash.com/photo-1640158615573-cd28feb1bf4e?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDl8fGRhdGElMjBtaW58ZW58MHx8fHwxNjczMzI1ODE2&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1200 1200w,
+                            https://images.unsplash.com/photo-1640158615573-cd28feb1bf4e?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDl8fGRhdGElMjBtaW58ZW58MHx8fHwxNjczMzI1ODE2&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000 2000w"
+                    sizes="(max-width: 1200px) 100vw, 1200px"
+                    src="https://images.unsplash.com/photo-1640158615573-cd28feb1bf4e?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDl8fGRhdGElMjBtaW58ZW58MHx8fHwxNjczMzI1ODE2&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720"
+                    alt="Getting started with R"
+                >
+            </figure>
+
+        <div class="gh-card-wrapper">
+            <header class="gh-card-header">
+                <h3 class="gh-card-title">Getting started with R</h3>
+            </header>
+
+                    <div class="gh-card-excerpt">Installation
+
+
+The simplest way is to use Homebrew:
+
+
+$ brew install r
+
+
+
+Another way is to download installation package from https://cloud.r-project.org/
+
+
+
+"Hello world" of R
+
+
+
+Run it from R console
+
+
+Command R will start a R console, and you can run R code inside R console.
+
+
+(base) ➜  benchling</div>
+
+            <footer class="gh-card-footer">
+                <span class="gh-card-author">relentlesstorm</span>
+                <time class="gh-card-date" datetime="2023-01-08">Jan 8, 2023</time>
+                    <script
+    data-ghost-comment-count="63bcea3316d5d70e3a76d7c5"
+    data-ghost-comment-count-empty=""
+    data-ghost-comment-count-singular="comment"
+    data-ghost-comment-count-plural="comments"
+    data-ghost-comment-count-tag="span"
+    data-ghost-comment-count-class-name="gh-card-comments"
+    data-ghost-comment-count-autowrap="true"
+>
+</script>
+            </footer>
+        </div>
+    </a>
+</article>                            <article class="gh-card post">
+    <a class="gh-card-link" href="/blog/using-virtctl-to-access-virtual-machine-in-kubernetes/">
+            <figure class="gh-card-image">
+                <img
+                    srcset="https://images.unsplash.com/photo-1667372335936-3dc4ff716017?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDEwfHxrdWJlcm5ldGVzfGVufDB8fHx8MTY3Mjc3NzAxNg&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;300 300w,
+                            https://images.unsplash.com/photo-1667372335936-3dc4ff716017?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDEwfHxrdWJlcm5ldGVzfGVufDB8fHx8MTY3Mjc3NzAxNg&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720 720w,
+                            https://images.unsplash.com/photo-1667372335936-3dc4ff716017?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDEwfHxrdWJlcm5ldGVzfGVufDB8fHx8MTY3Mjc3NzAxNg&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;960 960w,
+                            https://images.unsplash.com/photo-1667372335936-3dc4ff716017?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDEwfHxrdWJlcm5ldGVzfGVufDB8fHx8MTY3Mjc3NzAxNg&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1200 1200w,
+                            https://images.unsplash.com/photo-1667372335936-3dc4ff716017?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDEwfHxrdWJlcm5ldGVzfGVufDB8fHx8MTY3Mjc3NzAxNg&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000 2000w"
+                    sizes="(max-width: 1200px) 100vw, 1200px"
+                    src="https://images.unsplash.com/photo-1667372335936-3dc4ff716017?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDEwfHxrdWJlcm5ldGVzfGVufDB8fHx8MTY3Mjc3NzAxNg&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720"
+                    alt="Using virtctl to access virtual machine in Kubernetes"
+                >
+            </figure>
+
+        <div class="gh-card-wrapper">
+            <header class="gh-card-header">
+                <h3 class="gh-card-title">Using virtctl to access virtual machine in Kubernetes</h3>
+            </header>
+
+                    <div class="gh-card-excerpt">Install the virtctl client tool
+
+
+Basic VirtualMachineInstance operations can be performed with the stock kubectl utility. However, the virtctl binary utility is required to use advanced features such as:
+
+
+ * Serial and graphical console access
+
+
+It also provides convenience commands for:
+
+
+ * Starting and stopping VirtualMachineInstances
+ * Live migrating VirtualMachineInstances
+ * Uploading virtual machine</div>
+
+            <footer class="gh-card-footer">
+                <span class="gh-card-author">relentlesstorm</span>
+                <time class="gh-card-date" datetime="2023-01-02">Jan 2, 2023</time>
+                    <script
+    data-ghost-comment-count="63b4b4a91527a00d97449fdf"
+    data-ghost-comment-count-empty=""
+    data-ghost-comment-count-singular="comment"
+    data-ghost-comment-count-plural="comments"
+    data-ghost-comment-count-tag="span"
+    data-ghost-comment-count-class-name="gh-card-comments"
+    data-ghost-comment-count-autowrap="true"
+>
+</script>
+            </footer>
+        </div>
+    </a>
+</article>                    </div>
+                </div>
+            </div>
+
+    
+        <!-- ghost native comments
+                    <div class="gh-comments gh-read-next gh-canvas">
+            <section class="gh-pagehead">
+                <h4 class="gh-pagehead-title">Comments (<script
+    data-ghost-comment-count="63b4d20e1527a00d9744a2ec"
+    data-ghost-comment-count-empty="0"
+    data-ghost-comment-count-singular=""
+    data-ghost-comment-count-plural=""
+    data-ghost-comment-count-tag="span"
+    data-ghost-comment-count-class-name=""
+    data-ghost-comment-count-autowrap="true"
+>
+</script>)</h3>
+            </section>
+            
+        <script defer src="https://cdn.jsdelivr.net/ghost/comments-ui@~0.12/umd/comments-ui.min.js" data-ghost-comments="https://www.flamingbytes.com/" data-api="https://www.flamingbytes.com/ghost/api/content/" data-admin="https://www.flamingbytes.com/ghost/" data-key="321a1d1aea33fd468f6e61f563" data-styles="https://cdn.jsdelivr.net/ghost/comments-ui@~0.12/umd/main.css" data-title="" data-count="false" data-post-id="63b4d20e1527a00d9744a2ec" data-sentry-dsn="" data-color-scheme="auto" data-avatar-saturation="60" data-accent-color="#6a13ec" data-app-version="0.12" data-comments-enabled="all" data-publication="Flamingbytes" crossorigin="anonymous"></script>
+    
+        </div>
+        -->
+
+        <!-- disqus comments 
+        <div id="disqus_thread"></div>
+<script>
+    var disqus_config = function () {
+        this.page.url = "https://www.flamingbytes.com/blog/rman-backup-set-pieces-and-datafiles/";
+        this.page.identifier = "ghost-63b4d20e1527a00d9744a2ec"
+    };
+    (function() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://www-flamingbytes-com.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+    })();
+</script>
+-->
+
+</main>
+
+    <footer class="gh-foot gh-outer">
+        <div class="gh-foot-inner gh-inner">
+
+            <!--<nav class="gh-foot-menu">
+                <<ul class="nav">
+    <li class="nav-sign-up"><a href="#/portal/">Sign up</a></li>
+</ul>
+
+            </nav>-->
+
+            <div class="gh-copyright">
+                    Flamingbytes © 2023. Powered by <a href="https://ghost.org/" target="_blank" rel="noopener">Ghost</a>
+            </div>
+        </div>
+    </footer>
+
+</div>
+
+    <div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="pswp__bg"></div>
+
+    <div class="pswp__scroll-wrap">
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)"></button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)"></button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="/assets/built/main.min.js?v=92211a7592"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.12.3/tocbot.min.js"></script>
+
+<script>
+    tocbot.init({
+        // Where to render the table of contents.
+        tocSelector: '.gh-toc',
+        // Where to grab the headings to build the table of contents.
+        contentSelector: '.gh-content',
+        // Which headings to grab inside of the contentSelector element.
+        headingSelector: 'h1, h2, h3, h4',
+        // Ensure correct positioning
+        hasInnerContainers: true,
+    });
+</script>
+
+
+
+</body>
+
+</html>

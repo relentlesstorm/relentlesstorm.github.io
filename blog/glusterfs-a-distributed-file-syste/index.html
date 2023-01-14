@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Flamingbytes</title>
+    <link rel="stylesheet" href="/assets/built/screen.css?v=92211a7592">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.12.3/tocbot.css">
+    
+    <style>
+    .gh-content {
+        position: relative;
+    }
+
+    .gh-toc > .toc-list {
+        position: relative;
+    }
+
+    .toc-list {
+        overflow: hidden;
+        list-style: none;
+    }
+
+    @media (min-width: 1300px) {
+        .gh-sidebar {
+            position: absolute; 
+            top: 0;
+            bottom: 0;
+            margin-top: 4vmin;
+            margin-left: 2vmin;
+            /*grid-column: wide-start / main-start; *//* Place the TOC to the left of the content */
+            grid-column: wide-end / main-end; /* Place the TOC to the right of the content */
+        }
+    
+        .gh-toc {
+            position: sticky; /* On larger screens, TOC will stay in the same spot on the page */
+            top: 4vmin;
+        }
+    }
+
+    .gh-toc .is-active-link::before {
+        background-color: var(--ghost-accent-color); /* Defines TOC accent color based on Accent color set in Ghost Admin */
+    } 
+    </style>
+
+    <link rel="icon" href="https://www.flamingbytes.com/content/images/size/w256h256/2023/01/FlamingBytes-icon-64x64.png" type="image/png" />
+    <link rel="canonical" href="https://www.flamingbytes.com/blog/glusterfs-a-distributed-file-syste/" />
+    <meta name="referrer" content="no-referrer-when-downgrade" />
+    
+    <meta property="og:site_name" content="Flamingbytes" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="GlusterFS - A distributed file syste" />
+    <meta property="og:description" content="What is Gluster?
+
+
+Gluster is a scalable, distributed file system that aggregates disk storage resources from multiple servers into a single global namespace.
+
+
+Advantages
+
+
+ * Scales to several petabytes
+ * Handles thousands of clients
+ * POSIX compatible
+ * Uses commodity hardware
+ * Can use any ondisk filesystem that supports extended attributes
+ * Accessible using industry standard" />
+    <meta property="og:url" content="https://www.flamingbytes.com/blog/glusterfs-a-distributed-file-syste/" />
+    <meta property="og:image" content="https://images.unsplash.com/photo-1495592822108-9e6261896da8?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDExfHxiaWclMjBkYXRhfGVufDB8fHx8MTY3Mjc3OTI0NA&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000" />
+    <meta property="article:published_time" content="2021-02-27T00:00:00.000Z" />
+    <meta property="article:modified_time" content="2023-01-04T00:52:12.000Z" />
+    <meta property="article:tag" content="Cloud Storage" />
+    
+    <meta property="article:publisher" content="https://www.facebook.com/ghost" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="GlusterFS - A distributed file syste" />
+    <meta name="twitter:description" content="What is Gluster?
+
+
+Gluster is a scalable, distributed file system that aggregates disk storage resources from multiple servers into a single global namespace.
+
+
+Advantages
+
+
+ * Scales to several petabytes
+ * Handles thousands of clients
+ * POSIX compatible
+ * Uses commodity hardware
+ * Can use any ondisk filesystem that supports extended attributes
+ * Accessible using industry standard" />
+    <meta name="twitter:url" content="https://www.flamingbytes.com/blog/glusterfs-a-distributed-file-syste/" />
+    <meta name="twitter:image" content="https://images.unsplash.com/photo-1495592822108-9e6261896da8?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDExfHxiaWclMjBkYXRhfGVufDB8fHx8MTY3Mjc3OTI0NA&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000" />
+    <meta name="twitter:label1" content="Written by" />
+    <meta name="twitter:data1" content="relentlesstorm" />
+    <meta name="twitter:label2" content="Filed under" />
+    <meta name="twitter:data2" content="Cloud Storage" />
+    <meta name="twitter:site" content="@ghost" />
+    <meta property="og:image:width" content="2000" />
+    <meta property="og:image:height" content="1333" />
+    
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "publisher": {
+        "@type": "Organization",
+        "name": "Flamingbytes",
+        "url": "https://www.flamingbytes.com/",
+        "logo": {
+            "@type": "ImageObject",
+            "url": "https://www.flamingbytes.com/content/images/size/w256h256/2023/01/FlamingBytes-icon-64x64.png",
+            "width": 60,
+            "height": 60
+        }
+    },
+    "author": {
+        "@type": "Person",
+        "name": "relentlesstorm",
+        "image": {
+            "@type": "ImageObject",
+            "url": "https://www.flamingbytes.com/content/images/2023/01/FlamingBytes-icon-64x64-1.png",
+            "width": 64,
+            "height": 64
+        },
+        "url": "https://www.flamingbytes.com/author/relentlesstorm/",
+        "sameAs": []
+    },
+    "headline": "GlusterFS - A distributed file syste",
+    "url": "https://www.flamingbytes.com/blog/glusterfs-a-distributed-file-syste/",
+    "datePublished": "2021-02-27T00:00:00.000Z",
+    "dateModified": "2023-01-04T00:52:12.000Z",
+    "image": {
+        "@type": "ImageObject",
+        "url": "https://images.unsplash.com/photo-1495592822108-9e6261896da8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxMTc3M3wwfDF8c2VhcmNofDExfHxiaWclMjBkYXRhfGVufDB8fHx8MTY3Mjc3OTI0NA&ixlib=rb-4.0.3&q=80&w=2000",
+        "width": 2000,
+        "height": 1333
+    },
+    "keywords": "Cloud Storage",
+    "description": "What is Gluster?\n\n\nGluster is a scalable, distributed file system that aggregates disk storage resources from multiple servers into a single global namespace.\n\n\nAdvantages\n\n\n * Scales to several petabytes\n * Handles thousands of clients\n * POSIX compatible\n * Uses commodity hardware\n * Can use any ondisk filesystem that supports extended attributes\n * Accessible using industry standard protocols like NFS and SMB\n * Provides replication, quotas, geo-replication, snapshots and bitrot detection\n * ",
+    "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https://www.flamingbytes.com/"
+    }
+}
+    </script>
+
+    <meta name="generator" content="Ghost 5.26" />
+    <link rel="alternate" type="application/rss+xml" title="Flamingbytes" href="https://www.flamingbytes.com/rss/" />
+    
+    <script defer src="https://cdn.jsdelivr.net/ghost/sodo-search@~1.1/umd/sodo-search.min.js" data-key="321a1d1aea33fd468f6e61f563" data-styles="https://cdn.jsdelivr.net/ghost/sodo-search@~1.1/umd/main.css" data-sodo-search="https://www.flamingbytes.com/" crossorigin="anonymous"></script>
+    <script defer src="/public/cards.min.js?v=92211a7592"></script>
+    <link rel="stylesheet" type="text/css" href="/public/cards.min.css?v=92211a7592">
+    <script defer src="/public/comment-counts.min.js?v=92211a7592" data-ghost-comments-counts-api="https://www.flamingbytes.com/members/api/comments/counts/"></script>
+    <style>.gh-head-logo img{max-height:100px;height:100%;}</style>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-B8PQ47L2H0"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-B8PQ47L2H0');
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8578408127828851" crossorigin="anonymous"></script><style>:root {--ghost-accent-color: #6a13ec;}</style>
+</head>
+
+<body class="post-template tag-cloudstorage is-head-left-logo has-serif-body">
+<div class="gh-site">
+
+    <header id="gh-head" class="gh-head gh-outer">
+        <div class="gh-head-inner gh-inner">
+            <div class="gh-head-brand">
+                <div class="gh-head-brand-wrapper">
+                    <a class="gh-head-logo" href="https://www.flamingbytes.com">
+                            Flamingbytes
+                    </a>
+                </div>
+                <button class="gh-search gh-icon-btn" data-ghost-search><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" width="20" height="20"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg></button>
+                <button class="gh-burger"></button>
+            </div>
+
+            <nav class="gh-head-menu">
+                <ul class="nav">
+    <li class="nav-home"><a href="https://www.flamingbytes.com/">Home</a></li>
+    <li class="nav-tags"><a href="https://www.flamingbytes.com/blog/tags/">Tags</a></li>
+    <li class="nav-archive"><a href="https://www.flamingbytes.com/blog/archive/">Archive</a></li>
+    <li class="nav-about"><a href="https://www.flamingbytes.com/about/">About</a></li>
+</ul>
+
+            </nav>
+
+            <div class="gh-head-actions">
+                        <button class="gh-search gh-icon-btn" data-ghost-search><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" width="20" height="20"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg></button>
+            </div>
+        </div>
+    </header>
+
+    
+<main class="gh-main">
+        <article class="gh-article post tag-cloudstorage">
+
+            <header class="gh-article-header gh-canvas">
+                    <a class="gh-article-tag" href="https://www.flamingbytes.com/blog/tag/cloudstorage/">Cloud Storage</a>
+
+                <h1 class="gh-article-title">GlusterFS - A distributed file syste</h1>
+
+                    <aside class="gh-article-sidebar">
+
+        <div class="gh-author-image-list">
+                <a class="gh-author-image" href="/author/relentlesstorm/">
+                        <img src="https://www.flamingbytes.com/content/images/2023/01/FlamingBytes-icon-64x64-1.png" alt="relentlesstorm">
+                </a>
+        </div>
+
+        <div class="gh-author-name-list">
+                <h4 class="gh-author-name">
+                    <a href="/author/relentlesstorm/">relentlesstorm</a>
+                </h4>
+                
+        </div>
+
+        <div class="gh-article-meta">
+            <div class="gh-article-meta-inner">
+                <time class="gh-article-date" datetime="2021-02-27">Feb 27, 2021</time>
+                    <span class="gh-article-meta-sep"></span>
+                    <span class="gh-article-length">3 min</span>
+            </div>
+        </div>
+
+    </aside>
+
+
+                    <figure class="gh-article-image">
+        <img
+            srcset="https://images.unsplash.com/photo-1495592822108-9e6261896da8?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDExfHxiaWclMjBkYXRhfGVufDB8fHx8MTY3Mjc3OTI0NA&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;300 300w,
+                    https://images.unsplash.com/photo-1495592822108-9e6261896da8?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDExfHxiaWclMjBkYXRhfGVufDB8fHx8MTY3Mjc3OTI0NA&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720 720w,
+                    https://images.unsplash.com/photo-1495592822108-9e6261896da8?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDExfHxiaWclMjBkYXRhfGVufDB8fHx8MTY3Mjc3OTI0NA&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;960 960w,
+                    https://images.unsplash.com/photo-1495592822108-9e6261896da8?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDExfHxiaWclMjBkYXRhfGVufDB8fHx8MTY3Mjc3OTI0NA&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1200 1200w,
+                    https://images.unsplash.com/photo-1495592822108-9e6261896da8?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDExfHxiaWclMjBkYXRhfGVufDB8fHx8MTY3Mjc3OTI0NA&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000 2000w"
+            sizes="(max-width: 1200px) 100vw, 1200px"
+            src="https://images.unsplash.com/photo-1495592822108-9e6261896da8?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDExfHxiaWclMjBkYXRhfGVufDB8fHx8MTY3Mjc3OTI0NA&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1200"
+            alt="GlusterFS - A distributed file syste"
+        >
+            <figcaption>Photo by <a href="https://unsplash.com/@pietrozj?utm_source=ghost&utm_medium=referral&utm_campaign=api-credit">Pietro Jeng</a> / <a href="https://unsplash.com/?utm_source=ghost&utm_medium=referral&utm_campaign=api-credit">Unsplash</a></figcaption>
+    </figure>
+            </header>
+
+            <section class="gh-content gh-canvas">
+                <aside class="gh-sidebar"><div class="gh-toc"></div></aside> 
+
+                <!--kg-card-begin: markdown--><h2 id="what-is-gluster">What is Gluster?</h2>
+<p><a href="https://docs.gluster.org/en/latest/Administrator-Guide/GlusterFS-Introduction/">Gluster</a> is a scalable, distributed file system that aggregates disk storage resources from multiple servers into a single global namespace.</p>
+<p>Advantages</p>
+<ul>
+<li>Scales to several petabytes</li>
+<li>Handles thousands of clients</li>
+<li>POSIX compatible</li>
+<li>Uses commodity hardware</li>
+<li>Can use any ondisk filesystem that supports extended attributes</li>
+<li>Accessible using industry standard protocols like NFS and SMB</li>
+<li>Provides replication, quotas, geo-replication, snapshots and bitrot detection</li>
+<li>Allows optimization for different workloads</li>
+<li>Open Source</li>
+</ul>
+<h2 id="installation-and-configuration">Installation and configuration</h2>
+<ol>
+<li>
+<p>To install gluster and start gluster service:</p>
+<pre><code class="language-shell">[root@centos83-1 ~]# cat /etc/centos-release
+CentOS Linux release 8.3.2011
+
+[root@centos83-1 ~]# systemctl stop firewalld
+[root@centos83-1 ~]# systemctl disable firewalld
+
+[root@centos83-1 ~]# yum install -y centos-release-gluster
+[root@centos83-1 ~]# yum install -y glusterfs-server
+[root@centos83-1 ~]# rpm -qa |grep gluster
+glusterfs-cli-8.3-1.el8.x86_64
+libvirt-daemon-driver-storage-gluster-6.0.0-28.module_el8.3.0+555+a55c8938.x86_64
+glusterfs-client-xlators-8.3-1.el8.x86_64
+qemu-kvm-block-gluster-4.2.0-34.module_el8.3.0+555+a55c8938.x86_64
+libglusterd0-8.3-1.el8.x86_64
+glusterfs-8.3-1.el8.x86_64
+pcp-pmda-gluster-5.1.1-3.el8.x86_64
+glusterfs-fuse-8.3-1.el8.x86_64
+centos-release-gluster8-1.0-1.el8.noarch
+libglusterfs0-8.3-1.el8.x86_64
+glusterfs-server-8.3-1.el8.x86_64
+
+[root@centos83-1 ~]# systemctl enable glusterd
+[root@centos83-1 ~]# systemctl restart glusterd
+
+[root@centos83-1 ~]# systemctl status glusterd
+ glusterd.service - GlusterFS, a clustered file-system server
+ Loaded: loaded (/usr/lib/systemd/system/glusterd.service; enabled; vendor preset: enabled)
+ Active: active (running) since Tue 2021-01-05 17:28:42 PST; 1 months 22 days ago
+  Docs: man:glusterd(8)
+ Main PID: 1420 (glusterd)
+ Tasks: 26 (limit: 409792)
+ Memory: 152.3M
+ CGroup: /system.slice/glusterd.service
+</code></pre>
+</li>
+<li>
+<p>To form a trusted storage pool with the second server:</p>
+<pre><code class="language-shell">[root@centos83-1 ~]# gluster peer probe centos83-2
+[root@centos83-1 ~]# gluster peer status
+Number of Peers: 1
+
+Hostname: centos83-2
+Uuid: b07d3d6e-4d6e-42a9-ad21-018223843fd5
+State: Peer in Cluster (Connected)
+</code></pre>
+</li>
+<li>
+<p>To create brick on the first server:</p>
+<pre><code class="language-shell">[root@centos83-1 ~]# lsblk | egrep &quot;NAME|sdb&quot;
+NAME               MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
+sdb                  8:16   0    1T  0 disk
+
+[root@centos83-1 ~]# pvcreate /dev/sdb
+[root@centos83-1 ~]# vgcreate vg_bricks /dev/sdb
+[root@centos83-1 ~]# lvcreate -L 800g -n gfslv1 vg_bricks
+[root@centos83-1 ~]# mkfs.xfs /dev/vg_bricks/gfslv1
+[root@centos83-1 ~]# mkdir -p /bricks/vm1_brick1
+[root@centos83-1 ~]# vim /etc/fstab
+/dev/vg_bricks/gfslv1 /bricks/vm1_brick1        xfs     defaults        0 0
+[root@centos83-1 ~]# mount -a
+[root@centos83-1 ~]# df -h |grep gfs
+/dev/mapper/vg_bricks-gfslv1  800G  5.7G  794G   1% /bricks/vm1_brick1
+</code></pre>
+</li>
+<li>
+<p>To create brick on the second server:</p>
+<pre><code class="language-shell">[root@centos83-2 ~]# lsblk | egrep &quot;NAME|sdb&quot;
+NAME               MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
+sdb                  8:16   0    1T  0 disk
+
+[root@centos83-2 ~]# pvcreate /dev/sdb
+[root@centos83-2 ~]# vgcreate vg_bricks /dev/sdb
+[root@centos83-2 ~]# lvcreate -L 800g -n gfslv1 vg_bricks
+[root@centos83-2 ~]# mkfs.xfs /dev/vg_bricks/gfslv1
+[root@centos83-2 ~]# mkdir -p /bricks/vm2_brick1
+[root@centos83-2 ~]# vim /etc/fstab
+/dev/vg_bricks/gfslv1 /bricks/vm2_brick1        xfs     defaults        0 0
+[root@centos83-2 ~]# mount -a
+[root@centos83-2 ~]# df -h |grep gfs
+/dev/mapper/vg_bricks-gfslv1  800G  5.7G  794G   1% /bricks/vm2_brick1
+</code></pre>
+</li>
+<li>
+<p>To create distributed volume with the two bricks which are created on the two nodes:</p>
+<pre><code class="language-shell">[root@centos83-1 ~]# gluster volume create gv0 centos83-1:/bricks/vm1_brick1/gv0 centos83-2:/bricks/vm2_brick1/gv0
+[root@centos83-1 ~]# gluster volume start gv0
+</code></pre>
+</li>
+<li>
+<p>To verify the volume status:</p>
+<pre><code class="language-shell">[root@centos83-1 ~]#  gluster volume info gv0
+
+Volume Name: gv0
+Type: Distribute
+Volume ID: ee08d16a-f940-4ec2-aba8-5f1fcfe41bd4
+Status: Started
+Snapshot Count: 0
+Number of Bricks: 2
+Transport-type: tcp
+Bricks:
+Brick1: centos83-1:/bricks/vm1_brick1/gv0
+Brick2: centos83-2:/bricks/vm2_brick1/gv0
+Options Reconfigured:
+storage.fips-mode-rchecksum: on
+transport.address-family: inet
+nfs.disable: on
+</code></pre>
+</li>
+<li>
+<p>To mount the distributed volume on one of the servers(treat it as client for simple demonstration):</p>
+<pre><code class="language-shell">[root@centos83-1 ~]# mkdir /testmnt
+[root@centos83-1 ~]# mount -t glusterfs centos83-2:/gv0 /testmnt
+[root@centos83-1 ~]# df -h | grep testmnt
+centos83-2:/gv0               1.6T   28G  1.6T   2% /testmnt
+</code></pre>
+<p>As shown above, the usable storage size is the sum of the brick size from two nodes.</p>
+</li>
+</ol>
+<h2 id="references">References</h2>
+<ul>
+<li><a href="https://docs.gluster.org/en/latest/Administrator-Guide/GlusterFS-Introduction/">https://docs.gluster.org/en/latest/Administrator-Guide/GlusterFS-Introduction/</a></li>
+</ul>
+<!--kg-card-end: markdown-->
+
+                <!-- native ads start -->
+                <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8578408127828851" crossorigin="anonymous"></script>
+                <ins class="adsbygoogle" style="display:block; text-align:center;" data-ad-layout="in-article" data-ad-format="fluid" data-ad-client="ca-pub-8578408127828851" data-ad-slot="5596270594"></ins>
+                <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+                <!-- native ads end -->
+                
+            </section>
+
+        </article>
+
+                <div class="gh-read-next gh-canvas">
+                <section class="gh-pagehead">
+                    <h4 class="gh-pagehead-title">Read next</h4>
+                </section>
+
+                <div class="gh-topic gh-topic-grid">
+                    <div class="gh-topic-content">
+                            <article class="gh-card post">
+    <a class="gh-card-link" href="/blog/understanding-azure-disk-bursting/">
+            <figure class="gh-card-image">
+                <img
+                    srcset="https://images.unsplash.com/photo-1615293889204-6db03c596147?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDR8fGhhcmRkaXNrfGVufDB8fHx8MTY3Mjc3NzYzNA&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;300 300w,
+                            https://images.unsplash.com/photo-1615293889204-6db03c596147?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDR8fGhhcmRkaXNrfGVufDB8fHx8MTY3Mjc3NzYzNA&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720 720w,
+                            https://images.unsplash.com/photo-1615293889204-6db03c596147?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDR8fGhhcmRkaXNrfGVufDB8fHx8MTY3Mjc3NzYzNA&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;960 960w,
+                            https://images.unsplash.com/photo-1615293889204-6db03c596147?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDR8fGhhcmRkaXNrfGVufDB8fHx8MTY3Mjc3NzYzNA&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1200 1200w,
+                            https://images.unsplash.com/photo-1615293889204-6db03c596147?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDR8fGhhcmRkaXNrfGVufDB8fHx8MTY3Mjc3NzYzNA&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000 2000w"
+                    sizes="(max-width: 1200px) 100vw, 1200px"
+                    src="https://images.unsplash.com/photo-1615293889204-6db03c596147?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDR8fGhhcmRkaXNrfGVufDB8fHx8MTY3Mjc3NzYzNA&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720"
+                    alt="Understanding Azure disk bursting"
+                >
+            </figure>
+
+        <div class="gh-card-wrapper">
+            <header class="gh-card-header">
+                <h3 class="gh-card-title">Understanding Azure disk bursting</h3>
+            </header>
+
+                    <div class="gh-card-excerpt">Currently, there are two managed disk types that can burst, premium SSDs, and standard SSDs. Other disk types cannot currently burst. There are two models of bursting for disks:
+
+
+An on-demand bursting model, where the disk bursts whenever its needs exceed its current capacity. This model incurs additional charges anytime</div>
+
+            <footer class="gh-card-footer">
+                <span class="gh-card-author">relentlesstorm</span>
+                <time class="gh-card-date" datetime="2022-09-15">Sep 15, 2022</time>
+                    <script
+    data-ghost-comment-count="63b48f561527a00d97449cbf"
+    data-ghost-comment-count-empty=""
+    data-ghost-comment-count-singular="comment"
+    data-ghost-comment-count-plural="comments"
+    data-ghost-comment-count-tag="span"
+    data-ghost-comment-count-class-name="gh-card-comments"
+    data-ghost-comment-count-autowrap="true"
+>
+</script>
+            </footer>
+        </div>
+    </a>
+</article>                            <article class="gh-card post">
+    <a class="gh-card-link" href="/blog/understanding-rpo-and-rto/">
+            <figure class="gh-card-image">
+                <img
+                    srcset="https://images.unsplash.com/photo-1586974175094-0a7259238613?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDJ8fHJlY292ZXJ5fGVufDB8fHx8MTY3Mjc3OTU4Ng&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;300 300w,
+                            https://images.unsplash.com/photo-1586974175094-0a7259238613?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDJ8fHJlY292ZXJ5fGVufDB8fHx8MTY3Mjc3OTU4Ng&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720 720w,
+                            https://images.unsplash.com/photo-1586974175094-0a7259238613?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDJ8fHJlY292ZXJ5fGVufDB8fHx8MTY3Mjc3OTU4Ng&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;960 960w,
+                            https://images.unsplash.com/photo-1586974175094-0a7259238613?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDJ8fHJlY292ZXJ5fGVufDB8fHx8MTY3Mjc3OTU4Ng&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1200 1200w,
+                            https://images.unsplash.com/photo-1586974175094-0a7259238613?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDJ8fHJlY292ZXJ5fGVufDB8fHx8MTY3Mjc3OTU4Ng&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000 2000w"
+                    sizes="(max-width: 1200px) 100vw, 1200px"
+                    src="https://images.unsplash.com/photo-1586974175094-0a7259238613?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDJ8fHJlY292ZXJ5fGVufDB8fHx8MTY3Mjc3OTU4Ng&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720"
+                    alt="Understanding RPO and RTO"
+                >
+            </figure>
+
+        <div class="gh-card-wrapper">
+            <header class="gh-card-header">
+                <h3 class="gh-card-title">Understanding RPO and RTO</h3>
+            </header>
+
+                    <div class="gh-card-excerpt">The disasters could occur unexpectedly and it could take down the whole data center in an application region. In the real world, a well designed disaster recovery solution would help restore the applications and related data at the time of disaster.
+
+
+There are two critical metrics to measure how timely</div>
+
+            <footer class="gh-card-footer">
+                <span class="gh-card-author">relentlesstorm</span>
+                <time class="gh-card-date" datetime="2022-05-01">May 1, 2022</time>
+                    <script
+    data-ghost-comment-count="63b497051527a00d97449dca"
+    data-ghost-comment-count-empty=""
+    data-ghost-comment-count-singular="comment"
+    data-ghost-comment-count-plural="comments"
+    data-ghost-comment-count-tag="span"
+    data-ghost-comment-count-class-name="gh-card-comments"
+    data-ghost-comment-count-autowrap="true"
+>
+</script>
+            </footer>
+        </div>
+    </a>
+</article>                            <article class="gh-card post">
+    <a class="gh-card-link" href="/blog/access-a-sharedv4-volume-outside-of-a-portwrox-cluster/">
+            <figure class="gh-card-image">
+                <img
+                    srcset="https://images.unsplash.com/photo-1614902333346-d0caef873a11?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDIzfHxuZnN8ZW58MHx8fHwxNjcyNzc4ODEx&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;300 300w,
+                            https://images.unsplash.com/photo-1614902333346-d0caef873a11?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDIzfHxuZnN8ZW58MHx8fHwxNjcyNzc4ODEx&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720 720w,
+                            https://images.unsplash.com/photo-1614902333346-d0caef873a11?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDIzfHxuZnN8ZW58MHx8fHwxNjcyNzc4ODEx&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;960 960w,
+                            https://images.unsplash.com/photo-1614902333346-d0caef873a11?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDIzfHxuZnN8ZW58MHx8fHwxNjcyNzc4ODEx&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1200 1200w,
+                            https://images.unsplash.com/photo-1614902333346-d0caef873a11?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDIzfHxuZnN8ZW58MHx8fHwxNjcyNzc4ODEx&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000 2000w"
+                    sizes="(max-width: 1200px) 100vw, 1200px"
+                    src="https://images.unsplash.com/photo-1614902333346-d0caef873a11?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDIzfHxuZnN8ZW58MHx8fHwxNjcyNzc4ODEx&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720"
+                    alt="Access a sharedv4 volume outside of a Portwrox cluster"
+                >
+            </figure>
+
+        <div class="gh-card-wrapper">
+            <header class="gh-card-header">
+                <h3 class="gh-card-title">Access a sharedv4 volume outside of a Portwrox cluster</h3>
+            </header>
+
+                    <div class="gh-card-excerpt">To access a sharedv4 volume outside of the Portworx cluster, add the allow_ips label to the volume you wish to export, specifying a semi-colon separated list of IP addresses of non-Portworx nodes you wish to mount your sharedv4 volume to:
+
+
+$ /opt/pwx/bin/pxctl -j volume create datavol --sharedv4</div>
+
+            <footer class="gh-card-footer">
+                <span class="gh-card-author">relentlesstorm</span>
+                <time class="gh-card-date" datetime="2022-04-20">Apr 20, 2022</time>
+                    <script
+    data-ghost-comment-count="63b49f591527a00d97449e25"
+    data-ghost-comment-count-empty=""
+    data-ghost-comment-count-singular="comment"
+    data-ghost-comment-count-plural="comments"
+    data-ghost-comment-count-tag="span"
+    data-ghost-comment-count-class-name="gh-card-comments"
+    data-ghost-comment-count-autowrap="true"
+>
+</script>
+            </footer>
+        </div>
+    </a>
+</article>                    </div>
+                </div>
+            </div>
+
+    
+        <!-- ghost native comments
+                    <div class="gh-comments gh-read-next gh-canvas">
+            <section class="gh-pagehead">
+                <h4 class="gh-pagehead-title">Comments (<script
+    data-ghost-comment-count="63b4cd301527a00d9744a258"
+    data-ghost-comment-count-empty="0"
+    data-ghost-comment-count-singular=""
+    data-ghost-comment-count-plural=""
+    data-ghost-comment-count-tag="span"
+    data-ghost-comment-count-class-name=""
+    data-ghost-comment-count-autowrap="true"
+>
+</script>)</h3>
+            </section>
+            
+        <script defer src="https://cdn.jsdelivr.net/ghost/comments-ui@~0.12/umd/comments-ui.min.js" data-ghost-comments="https://www.flamingbytes.com/" data-api="https://www.flamingbytes.com/ghost/api/content/" data-admin="https://www.flamingbytes.com/ghost/" data-key="321a1d1aea33fd468f6e61f563" data-styles="https://cdn.jsdelivr.net/ghost/comments-ui@~0.12/umd/main.css" data-title="" data-count="false" data-post-id="63b4cd301527a00d9744a258" data-sentry-dsn="" data-color-scheme="auto" data-avatar-saturation="60" data-accent-color="#6a13ec" data-app-version="0.12" data-comments-enabled="all" data-publication="Flamingbytes" crossorigin="anonymous"></script>
+    
+        </div>
+        -->
+
+        <!-- disqus comments 
+        <div id="disqus_thread"></div>
+<script>
+    var disqus_config = function () {
+        this.page.url = "https://www.flamingbytes.com/blog/glusterfs-a-distributed-file-syste/";
+        this.page.identifier = "ghost-63b4cd301527a00d9744a258"
+    };
+    (function() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://www-flamingbytes-com.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+    })();
+</script>
+-->
+
+</main>
+
+    <footer class="gh-foot gh-outer">
+        <div class="gh-foot-inner gh-inner">
+
+            <!--<nav class="gh-foot-menu">
+                <<ul class="nav">
+    <li class="nav-sign-up"><a href="#/portal/">Sign up</a></li>
+</ul>
+
+            </nav>-->
+
+            <div class="gh-copyright">
+                    Flamingbytes © 2023. Powered by <a href="https://ghost.org/" target="_blank" rel="noopener">Ghost</a>
+            </div>
+        </div>
+    </footer>
+
+</div>
+
+    <div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="pswp__bg"></div>
+
+    <div class="pswp__scroll-wrap">
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)"></button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)"></button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="/assets/built/main.min.js?v=92211a7592"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.12.3/tocbot.min.js"></script>
+
+<script>
+    tocbot.init({
+        // Where to render the table of contents.
+        tocSelector: '.gh-toc',
+        // Where to grab the headings to build the table of contents.
+        contentSelector: '.gh-content',
+        // Which headings to grab inside of the contentSelector element.
+        headingSelector: 'h1, h2, h3, h4',
+        // Ensure correct positioning
+        hasInnerContainers: true,
+    });
+</script>
+
+
+
+</body>
+
+</html>
