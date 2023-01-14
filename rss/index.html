@@ -1,8 +1,8 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:media="http://search.yahoo.com/mrss/"><channel><title><![CDATA[Flamingbytes]]></title><description><![CDATA[Stay hungry, Stay foolish.]]></description><link>https://www.flamingbytes.com/</link><image><url>https://www.flamingbytes.com/favicon.png</url><title>Flamingbytes</title><link>https://www.flamingbytes.com/</link></image><generator>Ghost 5.26</generator><lastBuildDate>Sat, 14 Jan 2023 18:45:14 GMT</lastBuildDate><atom:link href="https://www.flamingbytes.com/rss/" rel="self" type="application/rss+xml"/><ttl>60</ttl><item><title><![CDATA[Using R to analyze US COVID pandemic waves and peaks]]></title><description><![CDATA[<!--kg-card-begin: markdown--><h2 id="goal">Goal</h2>
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:media="http://search.yahoo.com/mrss/"><channel><title><![CDATA[Flamingbytes]]></title><description><![CDATA[Stay hungry, Stay foolish.]]></description><link>https://www.flamingbytes.com/</link><image><url>https://www.flamingbytes.com/favicon.png</url><title>Flamingbytes</title><link>https://www.flamingbytes.com/</link></image><generator>Ghost 5.26</generator><lastBuildDate>Sat, 14 Jan 2023 19:22:28 GMT</lastBuildDate><atom:link href="https://www.flamingbytes.com/rss/" rel="self" type="application/rss+xml"/><ttl>60</ttl><item><title><![CDATA[Using R to analyze US COVID pandemic waves and peaks]]></title><description><![CDATA[<!--kg-card-begin: markdown--><h2 id="goal">Goal</h2>
 <p>According to weekly data between 2020 to 2022, we want to get to know the waves and peaks of COVID pandemic in these years.</p>
 <h2 id="download-the-data">Download the data</h2>
 <p>We will continue to use NCHS(National Center for Health Statistics) as our data source.<br>
-Visit <a href="https://data.cdc.gov/browse?category=NCHS&amp;sortBy=last_modified">https://data.cdc.gov/browse?category=</a></p>]]></description><link>https://www.flamingbytes.com/blog/using-r-to-analyze-us-covid-waves-and-peaks/</link><guid isPermaLink="false">63c2f4d2639c6f0d6ee203e3</guid><dc:creator><![CDATA[relentlesstorm]]></dc:creator><pubDate>Sat, 14 Jan 2023 18:33:26 GMT</pubDate><media:content url="https://images.unsplash.com/photo-1593007791459-4b05e1158229?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=MnwxMTc3M3wwfDF8c2VhcmNofDh8fGNvdmlkfGVufDB8fHx8MTY3MzcyMTIyMw&amp;ixlib=rb-4.0.3&amp;q=80&amp;w=2000" medium="image"/><content:encoded><![CDATA[<!--kg-card-begin: markdown--><h2 id="goal">Goal</h2>
+Visit <a href="https://data.cdc.gov/browse?category=NCHS&amp;sortBy=last_modified">https://data.cdc.gov/browse?category=</a></p>]]></description><link>https://www.flamingbytes.com/blog/using-r-to-analyze-us-covid-waves-and-peaks/</link><guid isPermaLink="false">63c2f4d2639c6f0d6ee203e3</guid><category><![CDATA[Big Data]]></category><dc:creator><![CDATA[relentlesstorm]]></dc:creator><pubDate>Wed, 11 Jan 2023 18:33:00 GMT</pubDate><media:content url="https://images.unsplash.com/photo-1593007791459-4b05e1158229?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=MnwxMTc3M3wwfDF8c2VhcmNofDh8fGNvdmlkfGVufDB8fHx8MTY3MzcyMTIyMw&amp;ixlib=rb-4.0.3&amp;q=80&amp;w=2000" medium="image"/><content:encoded><![CDATA[<!--kg-card-begin: markdown--><h2 id="goal">Goal</h2>
 <img src="https://images.unsplash.com/photo-1593007791459-4b05e1158229?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=MnwxMTc3M3wwfDF8c2VhcmNofDh8fGNvdmlkfGVufDB8fHx8MTY3MzcyMTIyMw&amp;ixlib=rb-4.0.3&amp;q=80&amp;w=2000" alt="Using R to analyze US COVID pandemic waves and peaks"><p>According to weekly data between 2020 to 2022, we want to get to know the waves and peaks of COVID pandemic in these years.</p>
 <h2 id="download-the-data">Download the data</h2>
 <p>We will continue to use NCHS(National Center for Health Statistics) as our data source.<br>
@@ -176,31 +176,6 @@ save_plot(&quot;covid_plot_weekly_peak.svg&quot;, fig = p, width=60, height=20)
  &gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.
     7100   58522   60451   63780   68610   87415
  &gt;
-</code></pre>
-<!--kg-card-end: markdown-->]]></content:encoded></item><item><title><![CDATA[How to install GUI desktop on CentOS 7]]></title><description><![CDATA[<!--kg-card-begin: markdown--><p>Install GNOME desktop via the groups option of yum:</p>
-<pre><code>$ yum update
-$ yum -y groups install &quot;GNOME Desktop&quot;
-</code></pre>
-<p>Inform the startx command which desktop env to run:</p>
-<pre><code>$ echo &quot;exec gnome-session&quot; &gt;&gt; ~/.xinitrc
-</code></pre>
-<p>Manually start the GUI desktop:</p>
-<pre><code>$ startx
-</code></pre>
-<p>Automaticlly start the GUI desktop after reboot:</p>
-<pre><code>$ systemctl</code></pre>]]></description><link>https://www.flamingbytes.com/blog/how-to-install-gui-desktop-on-centos-7/</link><guid isPermaLink="false">63c2f5b9639c6f0d6ee203fa</guid><dc:creator><![CDATA[relentlesstorm]]></dc:creator><pubDate>Wed, 11 Jan 2023 18:35:00 GMT</pubDate><media:content url="https://images.unsplash.com/photo-1508739773434-c26b3d09e071?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=MnwxMTc3M3wwfDF8c2VhcmNofDR8fGRlc2t0b3B8ZW58MHx8fHwxNjczNzIxNDg0&amp;ixlib=rb-4.0.3&amp;q=80&amp;w=2000" medium="image"/><content:encoded><![CDATA[<!--kg-card-begin: markdown--><img src="https://images.unsplash.com/photo-1508739773434-c26b3d09e071?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=MnwxMTc3M3wwfDF8c2VhcmNofDR8fGRlc2t0b3B8ZW58MHx8fHwxNjczNzIxNDg0&amp;ixlib=rb-4.0.3&amp;q=80&amp;w=2000" alt="How to install GUI desktop on CentOS 7"><p>Install GNOME desktop via the groups option of yum:</p>
-<pre><code>$ yum update
-$ yum -y groups install &quot;GNOME Desktop&quot;
-</code></pre>
-<p>Inform the startx command which desktop env to run:</p>
-<pre><code>$ echo &quot;exec gnome-session&quot; &gt;&gt; ~/.xinitrc
-</code></pre>
-<p>Manually start the GUI desktop:</p>
-<pre><code>$ startx
-</code></pre>
-<p>Automaticlly start the GUI desktop after reboot:</p>
-<pre><code>$ systemctl set-default graphical.target
-$ reboot
 </code></pre>
 <!--kg-card-end: markdown-->]]></content:encoded></item><item><title><![CDATA[Using R to analyze the quarterly US COVID data]]></title><description><![CDATA[An R example to analyze big amount of data]]></description><link>https://www.flamingbytes.com/blog/analysis-us-quartely-covid-data-from-cdc/</link><guid isPermaLink="false">63bced3f16d5d70e3a76d7f2</guid><category><![CDATA[Big Data]]></category><dc:creator><![CDATA[relentlesstorm]]></dc:creator><pubDate>Tue, 10 Jan 2023 05:02:33 GMT</pubDate><media:content url="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=MnwxMTc3M3wwfDF8c2VhcmNofDE1fHxkYXRhJTIwbWluaW5nfGVufDB8fHx8MTY3MzMyNTgxNw&amp;ixlib=rb-4.0.3&amp;q=80&amp;w=2000" medium="image"/><content:encoded><![CDATA[<!--kg-card-begin: markdown--><h2 id="goal">Goal</h2>
 <img src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=MnwxMTc3M3wwfDF8c2VhcmNofDE1fHxkYXRhJTIwbWluaW5nfGVufDB8fHx8MTY3MzMyNTgxNw&amp;ixlib=rb-4.0.3&amp;q=80&amp;w=2000" alt="Using R to analyze the quarterly US COVID data"><p>Based on the overall death data and COVID realated death data since 2019, we want to study the impact trend of COVID to the overall pupulation death of US in these years.</p>
@@ -508,6 +483,31 @@ trying URL &apos;https://cloud.r-project.org/bin/macosx/big-sur-arm64/contrib/4.
 <li><a href="https://www.w3schools.com/r/r_get_started.asp">https://www.w3schools.com/r/r_get_started.asp</a></li>
 <li><a href="https://www.datacamp.com/tutorial/top-ten-most-important-packages-in-r-for-data-science">https://www.datacamp.com/tutorial/top-ten-most-important-packages-in-r-for-data-science</a></li>
 </ul>
+<!--kg-card-end: markdown-->]]></content:encoded></item><item><title><![CDATA[How to install GUI desktop on CentOS 7]]></title><description><![CDATA[<!--kg-card-begin: markdown--><p>Install GNOME desktop via the groups option of yum:</p>
+<pre><code>$ yum update
+$ yum -y groups install &quot;GNOME Desktop&quot;
+</code></pre>
+<p>Inform the startx command which desktop env to run:</p>
+<pre><code>$ echo &quot;exec gnome-session&quot; &gt;&gt; ~/.xinitrc
+</code></pre>
+<p>Manually start the GUI desktop:</p>
+<pre><code>$ startx
+</code></pre>
+<p>Automaticlly start the GUI desktop after reboot:</p>
+<pre><code>$ systemctl</code></pre>]]></description><link>https://www.flamingbytes.com/blog/how-to-install-gui-desktop-on-centos-7/</link><guid isPermaLink="false">63c2f5b9639c6f0d6ee203fa</guid><category><![CDATA[Linux]]></category><dc:creator><![CDATA[relentlesstorm]]></dc:creator><pubDate>Wed, 04 Jan 2023 18:35:00 GMT</pubDate><media:content url="https://images.unsplash.com/photo-1508739773434-c26b3d09e071?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=MnwxMTc3M3wwfDF8c2VhcmNofDR8fGRlc2t0b3B8ZW58MHx8fHwxNjczNzIxNDg0&amp;ixlib=rb-4.0.3&amp;q=80&amp;w=2000" medium="image"/><content:encoded><![CDATA[<!--kg-card-begin: markdown--><img src="https://images.unsplash.com/photo-1508739773434-c26b3d09e071?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=MnwxMTc3M3wwfDF8c2VhcmNofDR8fGRlc2t0b3B8ZW58MHx8fHwxNjczNzIxNDg0&amp;ixlib=rb-4.0.3&amp;q=80&amp;w=2000" alt="How to install GUI desktop on CentOS 7"><p>Install GNOME desktop via the groups option of yum:</p>
+<pre><code>$ yum update
+$ yum -y groups install &quot;GNOME Desktop&quot;
+</code></pre>
+<p>Inform the startx command which desktop env to run:</p>
+<pre><code>$ echo &quot;exec gnome-session&quot; &gt;&gt; ~/.xinitrc
+</code></pre>
+<p>Manually start the GUI desktop:</p>
+<pre><code>$ startx
+</code></pre>
+<p>Automaticlly start the GUI desktop after reboot:</p>
+<pre><code>$ systemctl set-default graphical.target
+$ reboot
+</code></pre>
 <!--kg-card-end: markdown-->]]></content:encoded></item><item><title><![CDATA[Using virtctl to access virtual machine in Kubernetes]]></title><description><![CDATA[<!--kg-card-begin: html--><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8578408127828851" crossorigin="anonymous">
 </script>
 <ins class="adsbygoogle" style="display:block; text-align:center;" data-ad-layout="in-article" data-ad-format="fluid" data-ad-client="ca-pub-8578408127828851" data-ad-slot="5596270594">
