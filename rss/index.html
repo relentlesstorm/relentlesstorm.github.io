@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:media="http://search.yahoo.com/mrss/"><channel><title><![CDATA[Flamingbytes]]></title><description><![CDATA[Stay hungry, Stay foolish.]]></description><link>https://www.flamingbytes.com/</link><image><url>https://www.flamingbytes.com/favicon.png</url><title>Flamingbytes</title><link>https://www.flamingbytes.com/</link></image><generator>Ghost 5.26</generator><lastBuildDate>Sat, 14 Jan 2023 22:57:32 GMT</lastBuildDate><atom:link href="https://www.flamingbytes.com/rss/" rel="self" type="application/rss+xml"/><ttl>60</ttl><item><title><![CDATA[Using R to analyze US COVID pandemic waves and peaks]]></title><description><![CDATA[<!--kg-card-begin: markdown--><h2 id="goal">Goal</h2>
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:media="http://search.yahoo.com/mrss/"><channel><title><![CDATA[Flamingbytes]]></title><description><![CDATA[Stay hungry, Stay foolish.]]></description><link>https://www.flamingbytes.com/</link><image><url>https://www.flamingbytes.com/favicon.png</url><title>Flamingbytes</title><link>https://www.flamingbytes.com/</link></image><generator>Ghost 5.26</generator><lastBuildDate>Sat, 14 Jan 2023 23:24:15 GMT</lastBuildDate><atom:link href="https://www.flamingbytes.com/rss/" rel="self" type="application/rss+xml"/><ttl>60</ttl><item><title><![CDATA[Using R to analyze US COVID pandemic waves and peaks]]></title><description><![CDATA[<!--kg-card-begin: markdown--><h2 id="goal">Goal</h2>
 <p>According to weekly data between 2020 to 2022, we want to get to know the waves and peaks of COVID pandemic in these years.</p>
 <h2 id="download-the-data">Download the data</h2>
 <p>We will continue to use NCHS(National Center for Health Statistics) as our data source.<br>
@@ -483,6 +483,20 @@ trying URL &apos;https://cloud.r-project.org/bin/macosx/big-sur-arm64/contrib/4.
 <li><a href="https://www.w3schools.com/r/r_get_started.asp">https://www.w3schools.com/r/r_get_started.asp</a></li>
 <li><a href="https://www.datacamp.com/tutorial/top-ten-most-important-packages-in-r-for-data-science">https://www.datacamp.com/tutorial/top-ten-most-important-packages-in-r-for-data-science</a></li>
 </ul>
+<!--kg-card-end: markdown-->]]></content:encoded></item><item><title><![CDATA[How to redirect the default "404 page not found" error page in Ghost blog]]></title><description><![CDATA[<!--kg-card-begin: markdown--><p>When users access a non-existent page, they may see a page which shows the message &quot;404 page not found&quot; in Ghost blog.</p>
+<p>We can redirect the page to another page by creating a <strong>error-404.hbs</strong> file under the theme folder.</p>
+<p>In the following example, we redirect the users</p>]]></description><link>https://www.flamingbytes.com/blog/how-to-redirect-the-default-404-page-not-found-error-page-in-ghost-blog/</link><guid isPermaLink="false">63c335e0acbe8dfd252da58a</guid><category><![CDATA[Blog]]></category><dc:creator><![CDATA[relentlesstorm]]></dc:creator><pubDate>Thu, 05 Jan 2023 23:23:00 GMT</pubDate><media:content url="https://images.unsplash.com/photo-1499750310107-5fef28a66643?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=MnwxMTc3M3wwfDF8c2VhcmNofDF8fGJsb2d8ZW58MHx8fHwxNjczNzM4NjE1&amp;ixlib=rb-4.0.3&amp;q=80&amp;w=2000" medium="image"/><content:encoded><![CDATA[<!--kg-card-begin: markdown--><img src="https://images.unsplash.com/photo-1499750310107-5fef28a66643?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=MnwxMTc3M3wwfDF8c2VhcmNofDF8fGJsb2d8ZW58MHx8fHwxNjczNzM4NjE1&amp;ixlib=rb-4.0.3&amp;q=80&amp;w=2000" alt="How to redirect the default &quot;404 page not found&quot; error page in Ghost blog"><p>When users access a non-existent page, they may see a page which shows the message &quot;404 page not found&quot; in Ghost blog.</p>
+<p>We can redirect the page to another page by creating a <strong>error-404.hbs</strong> file under the theme folder.</p>
+<p>In the following example, we redirect the users to the website home page when they access a non-existent page.</p>
+<pre><code>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+  &lt;head&gt;
+    &lt;meta http-equiv=&quot;refresh&quot; content=&quot;0; url=&apos;https://www.flamingbytes.com/&apos;&quot; /&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
 <!--kg-card-end: markdown-->]]></content:encoded></item><item><title><![CDATA[How to install GUI desktop on CentOS 7]]></title><description><![CDATA[<!--kg-card-begin: markdown--><p>Install GNOME desktop via the groups option of yum:</p>
 <pre><code>$ yum update
 $ yum -y groups install &quot;GNOME Desktop&quot;
@@ -1740,112 +1754,5 @@ testdb=&gt; show tables from testdb;
 <li><a href="https://www.cockroachlabs.com/blog/postgresql-vs-cockroachdb/">https://www.cockroachlabs.com/blog/postgresql-vs-cockroachdb/</a></li>
 <li><a href="https://www.cockroachlabs.com/blog/unpacking-competitive-benchmarks/">https://www.cockroachlabs.com/blog/unpacking-competitive-benchmarks/</a></li>
 <li><a href="https://blog.purestorage.com/purely-informational/how-to-benchmark-mysql-performance/">https://blog.purestorage.com/purely-informational/how-to-benchmark-mysql-performance/</a></li>
-</ul>
-<!--kg-card-end: markdown-->]]></content:encoded></item><item><title><![CDATA[Using cgroups to limit block device bandwidth]]></title><description><![CDATA[<!--kg-card-begin: markdown--><p>The block I/O controller specifies upper IO rate limits on devices.</p>
-<pre><code class="language-shell">$ mount | egrep &quot;/cgroup |/blkio&quot;
-tmpfs on /sys/fs/cgroup type tmpfs (ro,nosuid,nodev,noexec,mode=755)
-cgroup on /sys/fs/cgroup/blkio type cgroup (rw,nosuid,nodev,noexec,relatime,blkio)
-
-$ lscgroup  | grep blkio
-blkio:/
-</code></pre>
-<p>In</p>]]></description><link>https://www.flamingbytes.com/blog/cgroups-limit-io/</link><guid isPermaLink="false">63afc44996dbf412f1f80353</guid><category><![CDATA[Linux]]></category><dc:creator><![CDATA[relentlesstorm]]></dc:creator><pubDate>Mon, 05 Dec 2022 05:11:00 GMT</pubDate><media:content url="https://images.unsplash.com/photo-1646226343350-1ee5021e342a?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=MnwxMTc3M3wwfDF8c2VhcmNofDN8fGhhcmRkaXNrfGVufDB8fHx8MTY3MjQ2MzUxOQ&amp;ixlib=rb-4.0.3&amp;q=80&amp;w=2000" medium="image"/><content:encoded><![CDATA[<!--kg-card-begin: markdown--><img src="https://images.unsplash.com/photo-1646226343350-1ee5021e342a?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=MnwxMTc3M3wwfDF8c2VhcmNofDN8fGhhcmRkaXNrfGVufDB8fHx8MTY3MjQ2MzUxOQ&amp;ixlib=rb-4.0.3&amp;q=80&amp;w=2000" alt="Using cgroups to limit block device bandwidth"><p>The block I/O controller specifies upper IO rate limits on devices.</p>
-<pre><code class="language-shell">$ mount | egrep &quot;/cgroup |/blkio&quot;
-tmpfs on /sys/fs/cgroup type tmpfs (ro,nosuid,nodev,noexec,mode=755)
-cgroup on /sys/fs/cgroup/blkio type cgroup (rw,nosuid,nodev,noexec,relatime,blkio)
-
-$ lscgroup  | grep blkio
-blkio:/
-</code></pre>
-<p>In this post, we will learn how to use the following control files to limit block device bandwidth for the user tasks.</p>
-<ul>
-<li>blkio.throttle.read_bps_device - Specifies upper limit on READ rate from the device. IO rate is specified in bytes per second. Rules are per device.</li>
-<li>blkio.throttle.read_iops_device - Specifies upper limit on READ rate from the device. IO rate is specified in IO per second. Rules are per device.</li>
-<li>blkio.throttle.write_bps_device - Specifies upper limit on WRITE rate to the device. IO rate is specified in bytes per second. Rules are per device.</li>
-<li>blkio.throttle.write_iops_device - Specifies upper limit on WRITE rate to the device. IO rate is specified in io per second. Rules are per device.</li>
-</ul>
-<h2 id="create-blkio-control-group">Create blkio control group</h2>
-<p>Install libcgroup package to manage cgroups:</p>
-<pre><code class="language-shell">$ yum install libcgroup libcgroup-tools
-</code></pre>
-<p>Create blkio control group:</p>
-<pre><code class="language-shell">$ cgcreate -g blkio:/blkiolimited
-
-$ lscgroup | grep blkio
-blkio:/
-blkio:/blkiolimited
-
-$ ls /sys/fs/cgroup/blkio/blkiolimited/
-blkio.bfq.io_service_bytes            blkio.bfq.weight                 blkio.throttle.io_service_bytes_recursive  blkio.throttle.read_iops_device   cgroup.procs
-blkio.bfq.io_service_bytes_recursive  blkio.bfq.weight_device          blkio.throttle.io_serviced                 blkio.throttle.write_bps_device   notify_on_release
-blkio.bfq.io_serviced                 blkio.reset_stats                blkio.throttle.io_serviced_recursive       blkio.throttle.write_iops_device  tasks
-blkio.bfq.io_serviced_recursive       blkio.throttle.io_service_bytes  blkio.throttle.read_bps_device             cgroup.clone_children
-</code></pre>
-<h2 id="limit-the-block-device-bandwidth">Limit the block device bandwidth</h2>
-<h3 id="limit-block-device-bandwidth-for-root-group">Limit block device bandwidth for root group</h3>
-<p>To specify a bandwidth rate on particular device for root group, we can use the policy format as &#x201C;major:minor bytes_per_second&#x201D;.</p>
-<p>The following example puts a bandwidth limit of 1MB/s on writes for root group on device having major/minor number 259:12.</p>
-<pre><code class="language-shell">$ ls -la /dev/ | grep &quot;nvme3n1&quot;
-brw-rw----   1 root disk    259,  12 Dec 23 21:44 nvme3n1
-
-$ echo &quot;259:12  1048576&quot; &gt; /sys/fs/cgroup/blkio/blkio.throttle.write_bps_device
-</code></pre>
-<h3 id="limit-block-device-bandwidth-for-user-defined-group">Limit block device bandwidth for user defined group</h3>
-<p>The following examples specifies the IOPS limit on the device 259:12 for the user defined cgroups &quot;blkio:/blkiolimited&quot;.</p>
-<p>Use control files to specify the limit directly:</p>
-<pre><code class="language-shell">$ cat /sys/fs/cgroup/blkio/blkiolimited/blkio.throttle.write_iops_device
-$ echo &quot;259:12  8192&quot; &gt; /sys/fs/cgroup/blkio/blkiolimited/blkio.throttle.write_iops_device
-$ cat /sys/fs/cgroup/blkio/blkiolimited/blkio.throttle.write_iops_device
-259:12 8192
-</code></pre>
-<p>Use libcgroup tools to specify the limit:</p>
-<pre><code class="language-shell">$ cgset -r blkio.throttle.write_iops_device=&quot;259:12 8192&quot; blkiolimited
-$ cgget -r blkio.throttle.write_iops_device blkiolimited
-blkiolimited:
-blkio.throttle.write_iops_device: 259:12 8192
-</code></pre>
-<h2 id="verify-the-disk-bandwidth-usage">Verify the disk bandwidth usage</h2>
-<h3 id="use-fio-to-write-50g-data-on-root-groupunlimited-bandwidth">Use fio to write 50G data on root group(unlimited bandwidth)</h3>
-<pre><code class="language-shell">$ fio --blocksize=4k --ioengine=libaio --readwrite=randwrite --filesize=50G --group_reporting --direct=1 --iodepth=128 --end_fsync=1 --name=job1 --filename=/mnt/fio.dat
-</code></pre>
-<pre><code class="language-shell">$ iostat -ktdx 5 | grep &quot;nvme3n1&quot;
-Device:         rrqm/s   wrqm/s     r/s     w/s    rkB/s    wkB/s avgrq-sz avgqu-sz   await r_await w_await  svctm  %util
-nvme3n1           0.00     0.05    0.00    8.02     0.01   508.54   126.83     0.06    7.80    0.08    7.80   0.04   0.03
-nvme3n1           0.00     0.00    0.00 133828.60     0.00 535314.40     8.00     1.18    0.01    0.00    0.01   0.00  55.64
-nvme3n1           0.00     0.20    0.00 246289.20     0.00 985157.60     8.00     2.21    0.01    0.00    0.01   0.00 100.04
-nvme3n1           0.00     0.20    0.00 246518.80     0.00 986076.80     8.00     2.23    0.01    0.00    0.01   0.00 100.04
-nvme3n1           0.00     0.20    0.00 244115.60     0.00 976462.40     8.00     2.24    0.01    0.00    0.01   0.00 100.00
-nvme3n1           0.00     0.20    0.00 240184.00     0.00 960736.80     8.00     2.23    0.01    0.00    0.01   0.00 100.04
-nvme3n1           0.00     0.20    0.00 250391.60     0.00 1001567.20     8.00     2.41    0.01    0.00    0.01   0.00 100.04
-nvme3n1           0.00     0.20    0.00 262449.60     0.00 1049799.20     8.00     2.53    0.01    0.00    0.01   0.00 100.00
-nvme3n1           0.00     0.20    0.00 252171.20     0.00 1008685.60     8.00     2.30    0.01    0.00    0.01   0.00 100.00
-nvme3n1           0.00     0.20    0.00 236467.60     0.00 945872.00     8.00     2.16    0.01    0.00    0.01   0.00 100.00
-nvme3n1           0.00     0.20    0.00 255060.80     0.00 1020244.00     8.00    17.04    0.07    0.00    0.07   0.00 100.00
-nvme3n1           0.00     0.20    0.00 235199.60     0.00 940798.40     8.00    44.76    0.19    0.00    0.19   0.00 100.00
-nvme3n1           0.00     0.20    0.00 18768.00     0.00 75072.80     8.00     5.81    0.31    0.00    0.31   0.00   8.40
-nvme3n1           0.00     0.00    0.00    0.00     0.00     0.00     0.00     0.00    0.00    0.00    0.00   0.00   0.00
-^C
-</code></pre>
-<h3 id="use-fio-to-write-50g-data-on-user-defined-grouplimited-bandwidth">Use fio to write 50G data on user defined group(limited bandwidth)</h3>
-<pre><code class="language-shell">$ cgget -r blkio.throttle.write_iops_device blkiolimited
-blkiolimited:
-blkio.throttle.write_iops_device: 259:12 8192
-
-$ cgexec -g blkio:blkiolimited fio --blocksize=4k --ioengine=libaio --readwrite=randwrite --filesize=50G --group_reporting --direct=1 --iodepth=128 --end_fsync=1 --name=job1 --filename=/mnt/fio.dat
-</code></pre>
-<pre><code class="language-shell">$ iostat -ktdx 5 | grep &quot;nvme3n1&quot;
-nvme3n1           0.00     0.05    0.00   24.54     0.01   574.51    46.82     0.06    2.57    0.08    2.57   0.01   0.04
-nvme3n1           0.00     0.00    0.00 3112.20     0.00 12448.80     8.00     0.04    0.01    0.00    0.01   0.01   4.60
-nvme3n1           0.00     0.20    0.00 8190.40     0.00 32762.40     8.00     0.11    0.01    0.00    0.01   0.01  11.92
-nvme3n1           0.00     0.20    0.00 8190.40     0.00 32762.40     8.00     0.12    0.01    0.00    0.01   0.01  12.02
-nvme3n1           0.00     0.20    0.00 8190.40     0.00 32762.40     8.00     0.12    0.01    0.00    0.01   0.01  12.22
-nvme3n1           0.00     0.20    0.00 8190.40     0.00 32762.40     8.00     0.12    0.01    0.00    0.01   0.01  12.10
-nvme3n1           0.00     0.20    0.00 8190.40     0.00 32762.40     8.00     0.12    0.01    0.00    0.01   0.02  12.36
-^C
-</code></pre>
-<h2 id="reference">Reference</h2>
-<ul>
-<li><a href="https://docs.kernel.org/admin-guide/cgroup-v1/blkio-controller.html">https://docs.kernel.org/admin-guide/cgroup-v1/blkio-controller.html</a></li>
-<li><a href="https://andrestc.com/post/cgroups-io/">https://andrestc.com/post/cgroups-io/</a></li>
 </ul>
 <!--kg-card-end: markdown-->]]></content:encoded></item></channel></rss>
