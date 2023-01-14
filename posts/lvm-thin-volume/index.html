@@ -46,52 +46,52 @@
     </style>
 
     <link rel="icon" href="https://www.flamingbytes.com/content/images/size/w256h256/2023/01/FlamingBytes-icon-64x64.png" type="image/png" />
-    <link rel="canonical" href="https://www.flamingbytes.com/posts/proc-filesystem-diskstats/" />
+    <link rel="canonical" href="https://www.flamingbytes.com/posts/lvm-thin-volume/" />
     <meta name="referrer" content="no-referrer-when-downgrade" />
     
     <meta property="og:site_name" content="Flamingbytes" />
     <meta property="og:type" content="article" />
-    <meta property="og:title" content="Proc filesystem - diskstats" />
-    <meta property="og:description" content="The /proc/diskstats file displays the I/O statistics of block devices.
+    <meta property="og:title" content="Understanding thin provisioning volume and snapshot" />
+    <meta property="og:description" content="Thin provisioning volume
 
 
-Here we have a system which has one disk sda used by Linux operating system and two disks sdb sdc for other purpose.
+Logical volume can be thinly provisioned. It allows storage administrator to overcommit the physical storage. In other words, it&#x27;s possible to create a logical volume which is larger than the available extents.
 
 
-$ cat /etc/centos-release
-CentOS Linux release 7.9.2009 (Core)
 
-$ uname -r
-3.10.0-1160." />
-    <meta property="og:url" content="https://www.flamingbytes.com/posts/proc-filesystem-diskstats/" />
-    <meta property="og:image" content="https://images.unsplash.com/photo-1518186285589-2f7649de83e0?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDF8fHN0YXRpc3RpY3N8ZW58MHx8fHwxNjcyNzg1NzQz&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000" />
-    <meta property="article:published_time" content="2022-03-05T00:00:00.000Z" />
-    <meta property="article:modified_time" content="2023-01-09T02:19:13.000Z" />
+Create thin provisioning volume
+
+
+In the following example, we create a 500GiB thin pool and" />
+    <meta property="og:url" content="https://www.flamingbytes.com/posts/lvm-thin-volume/" />
+    <meta property="og:image" content="https://images.unsplash.com/photo-1595981234058-a9302fb97229?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDZ8fHNuYXBzaG90fGVufDB8fHx8MTY3Mjc4NzA4Mw&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000" />
+    <meta property="article:published_time" content="2022-01-06T00:00:00.000Z" />
+    <meta property="article:modified_time" content="2023-01-14T01:23:46.000Z" />
     <meta property="article:tag" content="Linux" />
     
     <meta property="article:publisher" content="https://www.facebook.com/ghost" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Proc filesystem - diskstats" />
-    <meta name="twitter:description" content="The /proc/diskstats file displays the I/O statistics of block devices.
+    <meta name="twitter:title" content="Understanding thin provisioning volume and snapshot" />
+    <meta name="twitter:description" content="Thin provisioning volume
 
 
-Here we have a system which has one disk sda used by Linux operating system and two disks sdb sdc for other purpose.
+Logical volume can be thinly provisioned. It allows storage administrator to overcommit the physical storage. In other words, it&#x27;s possible to create a logical volume which is larger than the available extents.
 
 
-$ cat /etc/centos-release
-CentOS Linux release 7.9.2009 (Core)
 
-$ uname -r
-3.10.0-1160." />
-    <meta name="twitter:url" content="https://www.flamingbytes.com/posts/proc-filesystem-diskstats/" />
-    <meta name="twitter:image" content="https://images.unsplash.com/photo-1518186285589-2f7649de83e0?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDF8fHN0YXRpc3RpY3N8ZW58MHx8fHwxNjcyNzg1NzQz&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000" />
+Create thin provisioning volume
+
+
+In the following example, we create a 500GiB thin pool and" />
+    <meta name="twitter:url" content="https://www.flamingbytes.com/posts/lvm-thin-volume/" />
+    <meta name="twitter:image" content="https://images.unsplash.com/photo-1595981234058-a9302fb97229?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDZ8fHNuYXBzaG90fGVufDB8fHx8MTY3Mjc4NzA4Mw&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000" />
     <meta name="twitter:label1" content="Written by" />
     <meta name="twitter:data1" content="relentlesstorm" />
     <meta name="twitter:label2" content="Filed under" />
     <meta name="twitter:data2" content="Linux" />
     <meta name="twitter:site" content="@ghost" />
     <meta property="og:image:width" content="2000" />
-    <meta property="og:image:height" content="1500" />
+    <meta property="og:image:height" content="1333" />
     
     <script type="application/ld+json">
 {
@@ -120,18 +120,18 @@ $ uname -r
         "url": "https://www.flamingbytes.com/author/relentlesstorm/",
         "sameAs": []
     },
-    "headline": "Proc filesystem - diskstats",
-    "url": "https://www.flamingbytes.com/posts/proc-filesystem-diskstats/",
-    "datePublished": "2022-03-05T00:00:00.000Z",
-    "dateModified": "2023-01-09T02:19:13.000Z",
+    "headline": "Understanding thin provisioning volume and snapshot",
+    "url": "https://www.flamingbytes.com/posts/lvm-thin-volume/",
+    "datePublished": "2022-01-06T00:00:00.000Z",
+    "dateModified": "2023-01-14T01:23:46.000Z",
     "image": {
         "@type": "ImageObject",
-        "url": "https://images.unsplash.com/photo-1518186285589-2f7649de83e0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxMTc3M3wwfDF8c2VhcmNofDF8fHN0YXRpc3RpY3N8ZW58MHx8fHwxNjcyNzg1NzQz&ixlib=rb-4.0.3&q=80&w=2000",
+        "url": "https://images.unsplash.com/photo-1595981234058-a9302fb97229?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxMTc3M3wwfDF8c2VhcmNofDZ8fHNuYXBzaG90fGVufDB8fHx8MTY3Mjc4NzA4Mw&ixlib=rb-4.0.3&q=80&w=2000",
         "width": 2000,
-        "height": 1500
+        "height": 1333
     },
     "keywords": "Linux",
-    "description": "The /proc/diskstats file displays the I/O statistics of block devices.\n\n\nHere we have a system which has one disk sda used by Linux operating system and two disks sdb sdc for other purpose.\n\n\n$ cat /etc/centos-release\nCentOS Linux release 7.9.2009 (Core)\n\n$ uname -r\n3.10.0-1160.11.1.el7.x86_64\n\n$ lsblk\nNAME   MAJ:MIN RM   SIZE RO TYPE MOUNTPOINT\nsda      8:0    0   128G  0 disk\n├─sda1   8:1    0   3.7G  0 part /boot\n└─sda2   8:2    0 124.3G  0 part /\nsdb      8:16   0    60G  0 disk\nsdc      8:3",
+    "description": "Thin provisioning volume\n\n\nLogical volume can be thinly provisioned. It allows storage administrator to overcommit the physical storage. In other words, it&#x27;s possible to create a logical volume which is larger than the available extents.\n\n\n\nCreate thin provisioning volume\n\n\nIn the following example, we create a 500GiB thin pool and 100GiB volume.\n\n\n$ vgcreate vg1 /dev/nvme0n1\n  Physical volume &quot;/dev/nvme0n1&quot; successfully created.\n  Volume group &quot;vg1&quot; successfully created\n\n$ vgs\n  VG     #PV #LV ",
     "mainEntityOfPage": {
         "@type": "WebPage",
         "@id": "https://www.flamingbytes.com/"
@@ -197,7 +197,7 @@ $ uname -r
             <header class="gh-article-header gh-canvas">
                     <a class="gh-article-tag" href="https://www.flamingbytes.com/posts/tag/linux/">Linux</a>
 
-                <h1 class="gh-article-title">Proc filesystem - diskstats</h1>
+                <h1 class="gh-article-title">Understanding thin provisioning volume and snapshot</h1>
 
                     <aside class="gh-article-sidebar">
 
@@ -216,9 +216,9 @@ $ uname -r
 
         <div class="gh-article-meta">
             <div class="gh-article-meta-inner">
-                <time class="gh-article-date" datetime="2022-03-05">Mar 5, 2022</time>
+                <time class="gh-article-date" datetime="2022-01-06">Jan 6, 2022</time>
                     <span class="gh-article-meta-sep"></span>
-                    <span class="gh-article-length">1 min</span>
+                    <span class="gh-article-length">5 min</span>
             </div>
         </div>
 
@@ -227,45 +227,66 @@ $ uname -r
 
                     <figure class="gh-article-image">
         <img
-            srcset="https://images.unsplash.com/photo-1518186285589-2f7649de83e0?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDF8fHN0YXRpc3RpY3N8ZW58MHx8fHwxNjcyNzg1NzQz&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;300 300w,
-                    https://images.unsplash.com/photo-1518186285589-2f7649de83e0?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDF8fHN0YXRpc3RpY3N8ZW58MHx8fHwxNjcyNzg1NzQz&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720 720w,
-                    https://images.unsplash.com/photo-1518186285589-2f7649de83e0?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDF8fHN0YXRpc3RpY3N8ZW58MHx8fHwxNjcyNzg1NzQz&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;960 960w,
-                    https://images.unsplash.com/photo-1518186285589-2f7649de83e0?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDF8fHN0YXRpc3RpY3N8ZW58MHx8fHwxNjcyNzg1NzQz&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1200 1200w,
-                    https://images.unsplash.com/photo-1518186285589-2f7649de83e0?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDF8fHN0YXRpc3RpY3N8ZW58MHx8fHwxNjcyNzg1NzQz&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000 2000w"
+            srcset="https://images.unsplash.com/photo-1595981234058-a9302fb97229?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDZ8fHNuYXBzaG90fGVufDB8fHx8MTY3Mjc4NzA4Mw&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;300 300w,
+                    https://images.unsplash.com/photo-1595981234058-a9302fb97229?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDZ8fHNuYXBzaG90fGVufDB8fHx8MTY3Mjc4NzA4Mw&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720 720w,
+                    https://images.unsplash.com/photo-1595981234058-a9302fb97229?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDZ8fHNuYXBzaG90fGVufDB8fHx8MTY3Mjc4NzA4Mw&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;960 960w,
+                    https://images.unsplash.com/photo-1595981234058-a9302fb97229?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDZ8fHNuYXBzaG90fGVufDB8fHx8MTY3Mjc4NzA4Mw&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1200 1200w,
+                    https://images.unsplash.com/photo-1595981234058-a9302fb97229?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDZ8fHNuYXBzaG90fGVufDB8fHx8MTY3Mjc4NzA4Mw&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000 2000w"
             sizes="(max-width: 1200px) 100vw, 1200px"
-            src="https://images.unsplash.com/photo-1518186285589-2f7649de83e0?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDF8fHN0YXRpc3RpY3N8ZW58MHx8fHwxNjcyNzg1NzQz&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1200"
-            alt="Proc filesystem - diskstats"
+            src="https://images.unsplash.com/photo-1595981234058-a9302fb97229?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDZ8fHNuYXBzaG90fGVufDB8fHx8MTY3Mjc4NzA4Mw&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1200"
+            alt="Understanding thin provisioning volume and snapshot"
         >
-            <figcaption>Photo by <a href="https://unsplash.com/@chrisliverani?utm_source=ghost&utm_medium=referral&utm_campaign=api-credit">Chris Liverani</a> / <a href="https://unsplash.com/?utm_source=ghost&utm_medium=referral&utm_campaign=api-credit">Unsplash</a></figcaption>
+            <figcaption>Photo by <a href="https://unsplash.com/@rirri01?utm_source=ghost&utm_medium=referral&utm_campaign=api-credit">Rirri</a> / <a href="https://unsplash.com/?utm_source=ghost&utm_medium=referral&utm_campaign=api-credit">Unsplash</a></figcaption>
     </figure>
             </header>
 
             <section class="gh-content gh-canvas">
                 <aside class="gh-sidebar"><div class="gh-toc"></div></aside> 
 
-                <!--kg-card-begin: markdown--><p>The /proc/diskstats file displays the I/O statistics of block devices.</p>
-<p>Here we have a system which has one disk <em>sda</em> used by Linux operating system and two disks <em>sdb sdc</em> for other purpose.</p>
-<pre><code class="language-shell">$ cat /etc/centos-release
-CentOS Linux release 7.9.2009 (Core)
+                <!--kg-card-begin: markdown--><h2 id="thin-provisioning-volume">Thin provisioning volume</h2>
+<p>Logical volume can be thinly provisioned. It allows storage administrator to overcommit the physical storage. In other words, it's possible to create a logical volume which is larger than the available extents.</p>
+<h2 id="create-thin-provisioning-volume">Create thin provisioning volume</h2>
+<p>In the following example, we create a 500GiB thin pool and 100GiB volume.</p>
+<pre><code class="language-shell">$ vgcreate vg1 /dev/nvme0n1
+  Physical volume &quot;/dev/nvme0n1&quot; successfully created.
+  Volume group &quot;vg1&quot; successfully created
 
-$ uname -r
-3.10.0-1160.11.1.el7.x86_64
+$ vgs
+  VG     #PV #LV #SN Attr   VSize   VFree
+  centos   1   3   0 wz--n- 893.05g      0
+  vg1      1   0   0 wz--n- 931.51g 931.51g
 
-$ lsblk
-NAME   MAJ:MIN RM   SIZE RO TYPE MOUNTPOINT
-sda      8:0    0   128G  0 disk
-├─sda1   8:1    0   3.7G  0 part /boot
-└─sda2   8:2    0 124.3G  0 part /
-sdb      8:16   0    60G  0 disk
-sdc      8:32   0    60G  0 disk
-</code></pre>
-<p>The following is the content of /proc/diskstats file.</p>
-<pre><code class="language-shell">$ cat /proc/diskstats
-   8       0 sda 20076 3 798556 75864 23573766 4732398 253002144 24887356 0 9814563 24947775
-   8       1 sda1 143 0 22434 681 44 21 21664 588 0 397 1269
-   8       2 sda2 19905 3 774042 75034 23573722 4732377 252980480 24886768 0 9814404 24946360
-   8      32 sdc 88 0 4160 4 0 0 0 0 0 4 4
-   8      16 sdb 88 0 4160 2 0 0 0 0 0 2 2
+$ lvcreate -L 500G --thinpool thinpool1 vg1
+  Thin pool volume with chunk size 256.00 KiB can address at most 63.25 TiB of data.
+  Logical volume &quot;thinpool1&quot; created.
+
+$ lvs
+  LV        VG     Attr       LSize   Pool Origin Data%  Meta%  Move Log Cpy%Sync Convert
+  home      centos -wi-ao---- 839.05g
+  root      centos -wi-ao----  50.00g
+  swap      centos -wi-ao----   4.00g
+  thinpool1 vg1    twi-a-tz-- 500.00g             0.00   10.41
+
+$ lvs -ao name,size,stripesize,chunksize,metadata_percent
+  LV                LSize   Stripe Chunk   Meta%
+  home              839.05g     0       0
+  root               50.00g     0       0
+  swap                4.00g     0       0
+  [lvol0_pmspare]   128.00m     0       0
+  thinpool1         500.00g     0  256.00k 10.41
+  [thinpool1_tdata] 500.00g     0       0
+  [thinpool1_tmeta] 128.00m     0       
+  
+$ lvcreate -V 100G --thin -n thinvol1 vg1/thinpool1
+  Logical volume &quot;thinvol1&quot; created.
+
+$ lvs
+  LV        VG     Attr       LSize   Pool      Origin Data%  Meta%  Move Log Cpy%Sync Convert
+  home      centos -wi-ao---- 839.05g
+  root      centos -wi-ao----  50.00g
+  swap      centos -wi-ao----   4.00g
+  thinpool1 vg1    twi-aotz-- 500.00g                  0.00   10.42
+  thinvol1  vg1    Vwi-a-tz-- 100.00g thinpool1        0.00
 </code></pre>
 <!--kg-card-end: markdown--><!--kg-card-begin: html--><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8578408127828851"
      crossorigin="anonymous"></script>
@@ -275,24 +296,173 @@ sdc      8:32   0    60G  0 disk
      data-ad-format="fluid"
      data-ad-client="ca-pub-8578408127828851"
      data-ad-slot="5596270594"></ins>
-<script>(adsbygoogle = window.adsbygoogle || []).push({});</script><!--kg-card-end: html--><!--kg-card-begin: markdown--><p>Taking the <em>sda</em> line for example, the following explains the meaning of each column.</p>
+<script>(adsbygoogle = window.adsbygoogle || []).push({});</script><!--kg-card-end: html--><!--kg-card-begin: markdown--><h2 id="thin-pool-volume-chunk-size">Thin pool volume chunk size</h2>
+<p>By default, lvm2 starts with 64KiB chunk size and increase its value when the resulting size of the thin pool metadata device grows above 128MiB.</p>
+<p>In the previous example, the 500GiB thin pool results in 256KiB chunk size. In the following example, the 100MiB thin pool results in 64KiB chunk size.</p>
+<pre><code class="language-shell">$ lvcreate  -L 100M --thinpool thinpool2 vg1
+  Thin pool volume with chunk size 64.00 KiB can address at most 15.81 TiB of data.
+  Logical volume &quot;thinpool2&quot; created.
+
+$ lvs -ao name,size,stripesize,chunksize,metadata_percent
+  LV                LSize   Stripe Chunk   Meta%
+  home              839.05g     0       0
+  root               50.00g     0       0
+  swap                4.00g     0       0
+  [lvol0_pmspare]   128.00m     0       0
+  thinpool1         500.00g     0  256.00k 10.42
+  [thinpool1_tdata] 500.00g     0       0
+  [thinpool1_tmeta] 128.00m     0       0
+  thinpool2         100.00m     0   64.00k 10.84
+  [thinpool2_tdata] 100.00m     0       0
+  [thinpool2_tmeta]   4.00m     0       0
+  thinvol1          100.00g     0       0  
+</code></pre>
+<p>The &quot;-c&quot; option can be used to specify the desired chunk size if needed.</p>
+<pre><code class="language-shell">$ lvcreate -c 128k -L 100M --thinpool thinpool3 vg1
+  Thin pool volume with chunk size 128.00 KiB can address at most 31.62 TiB of data.
+  Logical volume &quot;thinpool3&quot; created.
+
+$ lvs -ao name,size,stripesize,chunksize,metadata_percent
+  LV                LSize   Stripe Chunk   Meta%
+  home              839.05g     0       0
+  root               50.00g     0       0
+  swap                4.00g     0       0
+  [lvol0_pmspare]   128.00m     0       0
+  thinpool1         500.00g     0  256.00k 10.42
+  [thinpool1_tdata] 500.00g     0       0
+  [thinpool1_tmeta] 128.00m     0       0
+  thinpool2         100.00m     0   64.00k 10.84
+  [thinpool2_tdata] 100.00m     0       0
+  [thinpool2_tmeta]   4.00m     0       0
+  thinpool3         100.00m     0  128.00k 10.84
+  [thinpool3_tdata] 100.00m     0       0
+  [thinpool3_tmeta]   4.00m     0       0
+  thinvol1          100.00g     0       0
+</code></pre>
+<p>Use the following criteria for using the chunk size:</p>
 <ul>
-<li>8          - major number</li>
-<li>0          - minor number</li>
-<li>sda        - device name</li>
-<li>20076      - reads completed successfully</li>
-<li>3          - reads merged</li>
-<li>798556     - sectors read</li>
-<li>75864      - time spent reading (ms)</li>
-<li>23573766   - writes completed</li>
-<li>4732398    - writes merged</li>
-<li>253002144  - sectors written</li>
-<li>24887356   - time spent writing (ms)</li>
-<li>0          - I/Os currently in progress</li>
-<li>9814563    - time spent doing I/Os (ms)</li>
-<li>24947775   - weighted time spent doing I/Os (ms)</li>
+<li>A smaller chunk size requires more metadata and hinders performance, but provides better space utilization with snapshots.</li>
+<li>A bigger chunk size requires less metadata manipulation, but makes the snapshot less space efficient.</li>
 </ul>
-<p>You may see more columns from the /proc/diskstats file if the kernel version is 4.18+ or 5.5+. For the detailed explanation, please refer to the <a href="https://www.kernel.org/doc/Documentation/ABI/testing/procfs-diskstats">documentation</a>.</p>
+<!--kg-card-end: markdown--><!--kg-card-begin: html--><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8578408127828851"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-8578408127828851"
+     data-ad-slot="5596270594"></ins>
+<script>(adsbygoogle = window.adsbygoogle || []).push({});</script><!--kg-card-end: html--><!--kg-card-begin: markdown--><h2 id="normal-snapshot-volume">Normal snapshot volume</h2>
+<p>The LVM snapshot provides the ability to create a virtual image of device at a point in time without a service interruption.</p>
+<p>When the original data block is overwritten after snapshot is taken, the original data needs to be copied to the snapshot volume. This will introduce copy-on-write overhead whenever the original block is overwritten. The state of original data can be reconstructed with the snapshot.</p>
+<h2 id="thinly-provisioned-snapshot-volume">Thinly-provisioned snapshot volume</h2>
+<p>Unlike normal snapshot volume, the thin snapshot and volume are all about metadata. When the volume is snapshot, its metadata are copied for the thin snapshot volume use. As the metadata of the volume is changed, the snapshot volume still addresses the original data blocks. The new data will be written to new blocks. In other words, overwrites actually write the data to new blocks. Thus, the original data blocks can be still addressed by snapshot volume metadata after the data change.</p>
+<!--kg-card-end: markdown--><!--kg-card-begin: html--><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8578408127828851"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-8578408127828851"
+     data-ad-slot="5596270594"></ins>
+<script>(adsbygoogle = window.adsbygoogle || []).push({});</script><!--kg-card-end: html--><!--kg-card-begin: markdown--><h2 id="create-the-snapshot-volume">Create the snapshot volume</h2>
+<pre><code class="language-shell">$ lvcreate -s -L 100G -n thinvol1-snap /dev/vg1/thinvol1
+  Logical volume &quot;thinvol1-snap&quot; created.
+
+$ ls /dev/vg1
+thinpool2  thinpool3   thinvol1  thinvol1-snap
+
+$ lvs
+  LV            VG     Attr       LSize   Pool      Origin   Data%  Meta%  Move Log Cpy%Sync Convert
+  home          centos -wi-ao---- 839.05g
+  root          centos -wi-ao----  50.00g
+  swap          centos -wi-ao----   4.00g
+  thinpool1     vg1    twi-aotz-- 500.00g                    0.00   10.42
+  thinpool2     vg1    twi-a-tz-- 100.00m                    0.00   10.84
+  thinpool3     vg1    twi-a-tz-- 100.00g                    0.00   10.43
+  thinvol1      vg1    owi-a-tz-- 100.00g thinpool1          0.00
+  thinvol1-snap vg1    swi-a-s--- 100.00g           thinvol1 0.00
+
+$ lvs -ao name,size,stripesize,chunksize,metadata_percent
+  LV                LSize   Stripe Chunk   Meta%
+  home              839.05g     0       0
+  root               50.00g     0       0
+  swap                4.00g     0       0
+  [lvol0_pmspare]   128.00m     0       0
+  thinpool1         500.00g     0  256.00k 10.42
+  [thinpool1_tdata] 500.00g     0       0
+  [thinpool1_tmeta] 128.00m     0       0
+  thinpool2         100.00m     0   64.00k 10.84
+  [thinpool2_tdata] 100.00m     0       0
+  [thinpool2_tmeta]   4.00m     0       0
+  thinpool3         100.00m     0  128.00k 10.84
+  [thinpool3_tdata] 100.00m     0       0
+  [thinpool3_tmeta]   4.00m     0       0
+  thinvol1          100.00g     0       0
+  thinvol1-snap     100.00g     0    4.00k
+</code></pre>
+<p>The chunk size of snapshot volume can be specified with &quot;-c&quot; option.</p>
+<pre><code class="language-shell">$ lvcreate -s -c 128k -L 100G -n thinvol1-snap2 /dev/vg1/thinvol1
+  Logical volume &quot;thinvol1-snap2&quot; created.
+
+$ lvs -ao name,size,stripesize,chunksize,metadata_percent
+  LV                LSize   Stripe Chunk   Meta%
+  home              839.05g     0       0
+  root               50.00g     0       0
+  swap                4.00g     0       0
+  [lvol0_pmspare]   128.00m     0       0
+  thinpool1         500.00g     0  256.00k 10.42
+  [thinpool1_tdata] 500.00g     0       0
+  [thinpool1_tmeta] 128.00m     0       0
+  thinpool2         100.00m     0   64.00k 10.84
+  [thinpool2_tdata] 100.00m     0       0
+  [thinpool2_tmeta]   4.00m     0       0
+  thinpool3         100.00m     0  128.00k 10.84
+  [thinpool3_tdata] 100.00m     0       0
+  [thinpool3_tmeta]   4.00m     0       0
+  thinvol1          100.00g     0       0
+  thinvol1-snap     100.00g     0    4.00k
+  thinvol1-snap2    100.00g     0  128.00k
+</code></pre>
+<!--kg-card-end: markdown--><!--kg-card-begin: html--><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8578408127828851"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-8578408127828851"
+     data-ad-slot="5596270594"></ins>
+<script>(adsbygoogle = window.adsbygoogle || []).push({});</script><!--kg-card-end: html--><!--kg-card-begin: markdown--><h2 id="remove-the-snaphost-volume">Remove the snaphost volume</h2>
+<pre><code class="language-shell">$ lvremove /dev/vg1/thinvol1-snap
+Do you really want to remove active logical volume vg1/thinvol1-snap? [y/n]: y
+  Logical volume &quot;thinvol1-snap&quot; successfully removed
+$ lvremove /dev/vg1/thinvol1-snap2
+Do you really want to remove active logical volume vg1/thinvol1-snap2? [y/n]: y
+  Logical volume &quot;thinvol1-snap2&quot; successfully removed
+
+$ lvs
+  LV        VG     Attr       LSize   Pool      Origin Data%  Meta%  Move Log Cpy%Sync Convert
+  home      centos -wi-ao---- 839.05g
+  root      centos -wi-ao----  50.00g
+  swap      centos -wi-ao----   4.00g
+  thinpool1 vg1    twi-aotz-- 500.00g                  0.00   10.42
+  thinpool2 vg1    twi-a-tz-- 100.00m                  0.00   10.84
+  thinpool3 vg1    twi-a-tz-- 100.00g                  0.00   10.43
+  thinvol1  vg1    Vwi-a-tz-- 100.00g thinpool1        0.00
+</code></pre>
+<h2 id="remove-the-volume-and-pool">Remove the volume and pool</h2>
+<pre><code class="language-shell">$ lvremove /dev/vg1/thinvol1 -f
+  Logical volume &quot;thinvol1&quot; successfully removed
+
+$ lvremove /dev/vg1/thinpool1
+Do you really want to remove active logical volume vg1/thinpool1? [y/n]: y
+  Logical volume &quot;thinpool1&quot; successfully removed  
+</code></pre>
+<h2 id="reference">Reference</h2>
+<ul>
+<li><a href="https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html/configuring_and_managing_logical_volumes/assembly_thinly-provisioned-logical-volumes_configuring-and-managing-logical-volumes">https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html/configuring_and_managing_logical_volumes/assembly_thinly-provisioned-logical-volumes_configuring-and-managing-logical-volumes</a></li>
+<li><a href="https://www.ilsistemista.net/index.php/linux-a-unix/46-lvm-thin-volume-explained.html?start=3">https://www.ilsistemista.net/index.php/linux-a-unix/46-lvm-thin-volume-explained.html?start=3</a></li>
+</ul>
 <!--kg-card-end: markdown-->
 
                 <!-- native ads start -->
@@ -460,7 +630,7 @@ The following commands output the available subsystems(resource controllers) for
                     <div class="gh-comments gh-read-next gh-canvas">
             <section class="gh-pagehead">
                 <h4 class="gh-pagehead-title">Comments (<script
-    data-ghost-comment-count="63b4af2b1527a00d97449ec8"
+    data-ghost-comment-count="63b4b44e1527a00d97449fca"
     data-ghost-comment-count-empty="0"
     data-ghost-comment-count-singular=""
     data-ghost-comment-count-plural=""
@@ -471,7 +641,7 @@ The following commands output the available subsystems(resource controllers) for
 </script>)</h3>
             </section>
             
-        <script defer src="https://cdn.jsdelivr.net/ghost/comments-ui@~0.12/umd/comments-ui.min.js" data-ghost-comments="https://www.flamingbytes.com/" data-api="https://www.flamingbytes.com/ghost/api/content/" data-admin="https://www.flamingbytes.com/ghost/" data-key="321a1d1aea33fd468f6e61f563" data-styles="https://cdn.jsdelivr.net/ghost/comments-ui@~0.12/umd/main.css" data-title="" data-count="false" data-post-id="63b4af2b1527a00d97449ec8" data-sentry-dsn="" data-color-scheme="auto" data-avatar-saturation="60" data-accent-color="#6a13ec" data-app-version="0.12" data-comments-enabled="all" data-publication="Flamingbytes" crossorigin="anonymous"></script>
+        <script defer src="https://cdn.jsdelivr.net/ghost/comments-ui@~0.12/umd/comments-ui.min.js" data-ghost-comments="https://www.flamingbytes.com/" data-api="https://www.flamingbytes.com/ghost/api/content/" data-admin="https://www.flamingbytes.com/ghost/" data-key="321a1d1aea33fd468f6e61f563" data-styles="https://cdn.jsdelivr.net/ghost/comments-ui@~0.12/umd/main.css" data-title="" data-count="false" data-post-id="63b4b44e1527a00d97449fca" data-sentry-dsn="" data-color-scheme="auto" data-avatar-saturation="60" data-accent-color="#6a13ec" data-app-version="0.12" data-comments-enabled="all" data-publication="Flamingbytes" crossorigin="anonymous"></script>
     
         </div>
         -->
@@ -480,8 +650,8 @@ The following commands output the available subsystems(resource controllers) for
         <div id="disqus_thread"></div>
 <script>
     var disqus_config = function () {
-        this.page.url = "https://www.flamingbytes.com/posts/proc-filesystem-diskstats/";
-        this.page.identifier = "ghost-63b4af2b1527a00d97449ec8"
+        this.page.url = "https://www.flamingbytes.com/posts/lvm-thin-volume/";
+        this.page.identifier = "ghost-63b4b44e1527a00d97449fca"
     };
     (function() {
     var d = document, s = d.createElement('script');
