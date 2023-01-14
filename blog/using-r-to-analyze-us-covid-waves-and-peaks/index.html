@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Flamingbytes</title>
+    <link rel="stylesheet" href="/assets/built/screen.css?v=92211a7592">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.12.3/tocbot.css">
+    
+    <style>
+    .gh-content {
+        position: relative;
+    }
+
+    .gh-toc > .toc-list {
+        position: relative;
+    }
+
+    .toc-list {
+        overflow: hidden;
+        list-style: none;
+    }
+
+    @media (min-width: 1300px) {
+        .gh-sidebar {
+            position: absolute; 
+            top: 0;
+            bottom: 0;
+            margin-top: 4vmin;
+            margin-left: 2vmin;
+            /*grid-column: wide-start / main-start; *//* Place the TOC to the left of the content */
+            grid-column: wide-end / main-end; /* Place the TOC to the right of the content */
+        }
+    
+        .gh-toc {
+            position: sticky; /* On larger screens, TOC will stay in the same spot on the page */
+            top: 4vmin;
+        }
+    }
+
+    .gh-toc .is-active-link::before {
+        background-color: var(--ghost-accent-color); /* Defines TOC accent color based on Accent color set in Ghost Admin */
+    } 
+    </style>
+
+    <link rel="icon" href="https://www.flamingbytes.com/content/images/size/w256h256/2023/01/FlamingBytes-icon-64x64.png" type="image/png" />
+    <link rel="canonical" href="https://www.flamingbytes.com/blog/using-r-to-analyze-us-covid-waves-and-peaks/" />
+    <meta name="referrer" content="no-referrer-when-downgrade" />
+    
+    <meta property="og:site_name" content="Flamingbytes" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="Using R to analyze US COVID pandemic waves and peaks" />
+    <meta property="og:description" content="Goal
+
+
+According to weekly data between 2020 to 2022, we want to get to know the waves and peaks of COVID pandemic in these years.
+
+
+
+Download the data
+
+
+We will continue to use NCHS(National Center for Health Statistics) as our data source.
+
+Visit https://data.cdc.gov/browse?category&#x3D;" />
+    <meta property="og:url" content="https://www.flamingbytes.com/blog/using-r-to-analyze-us-covid-waves-and-peaks/" />
+    <meta property="og:image" content="https://images.unsplash.com/photo-1593007791459-4b05e1158229?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDh8fGNvdmlkfGVufDB8fHx8MTY3MzcyMTIyMw&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000" />
+    <meta property="article:published_time" content="2023-01-14T18:33:26.000Z" />
+    <meta property="article:modified_time" content="2023-01-14T18:45:04.000Z" />
+    <meta property="article:publisher" content="https://www.facebook.com/ghost" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Using R to analyze US COVID pandemic waves and peaks" />
+    <meta name="twitter:description" content="Goal
+
+
+According to weekly data between 2020 to 2022, we want to get to know the waves and peaks of COVID pandemic in these years.
+
+
+
+Download the data
+
+
+We will continue to use NCHS(National Center for Health Statistics) as our data source.
+
+Visit https://data.cdc.gov/browse?category&#x3D;" />
+    <meta name="twitter:url" content="https://www.flamingbytes.com/blog/using-r-to-analyze-us-covid-waves-and-peaks/" />
+    <meta name="twitter:image" content="https://images.unsplash.com/photo-1593007791459-4b05e1158229?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDh8fGNvdmlkfGVufDB8fHx8MTY3MzcyMTIyMw&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000" />
+    <meta name="twitter:label1" content="Written by" />
+    <meta name="twitter:data1" content="relentlesstorm" />
+    <meta name="twitter:site" content="@ghost" />
+    <meta property="og:image:width" content="2000" />
+    <meta property="og:image:height" content="1333" />
+    
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "publisher": {
+        "@type": "Organization",
+        "name": "Flamingbytes",
+        "url": "https://www.flamingbytes.com/",
+        "logo": {
+            "@type": "ImageObject",
+            "url": "https://www.flamingbytes.com/content/images/size/w256h256/2023/01/FlamingBytes-icon-64x64.png",
+            "width": 60,
+            "height": 60
+        }
+    },
+    "author": {
+        "@type": "Person",
+        "name": "relentlesstorm",
+        "image": {
+            "@type": "ImageObject",
+            "url": "https://www.flamingbytes.com/content/images/2023/01/FlamingBytes-icon-64x64-1.png",
+            "width": 64,
+            "height": 64
+        },
+        "url": "https://www.flamingbytes.com/author/relentlesstorm/",
+        "sameAs": []
+    },
+    "headline": "Using R to analyze US COVID pandemic waves and peaks",
+    "url": "https://www.flamingbytes.com/blog/using-r-to-analyze-us-covid-waves-and-peaks/",
+    "datePublished": "2023-01-14T18:33:26.000Z",
+    "dateModified": "2023-01-14T18:45:04.000Z",
+    "image": {
+        "@type": "ImageObject",
+        "url": "https://images.unsplash.com/photo-1593007791459-4b05e1158229?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxMTc3M3wwfDF8c2VhcmNofDh8fGNvdmlkfGVufDB8fHx8MTY3MzcyMTIyMw&ixlib=rb-4.0.3&q=80&w=2000",
+        "width": 2000,
+        "height": 1333
+    },
+    "description": "Goal\n\n\nAccording to weekly data between 2020 to 2022, we want to get to know the waves and peaks of COVID pandemic in these years.\n\n\n\nDownload the data\n\n\nWe will continue to use NCHS(National Center for Health Statistics) as our data source.\n\nVisit https://data.cdc.gov/browse?category&#x3D;NCHS&amp;sortBy&#x3D;last_modified, and search Provisional COVID-19 Death Counts by Week, we will find the data we are intrest.\n\n\nhttps://data.cdc.gov/NCHS/Provisional-COVID-19-Death-Counts-by-Week-Ending-D/r8kw-7aab, in th",
+    "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https://www.flamingbytes.com/"
+    }
+}
+    </script>
+
+    <meta name="generator" content="Ghost 5.26" />
+    <link rel="alternate" type="application/rss+xml" title="Flamingbytes" href="https://www.flamingbytes.com/rss/" />
+    
+    <script defer src="https://cdn.jsdelivr.net/ghost/sodo-search@~1.1/umd/sodo-search.min.js" data-key="321a1d1aea33fd468f6e61f563" data-styles="https://cdn.jsdelivr.net/ghost/sodo-search@~1.1/umd/main.css" data-sodo-search="https://www.flamingbytes.com/" crossorigin="anonymous"></script>
+    <script defer src="/public/cards.min.js?v=92211a7592"></script>
+    <link rel="stylesheet" type="text/css" href="/public/cards.min.css?v=92211a7592">
+    <script defer src="/public/comment-counts.min.js?v=92211a7592" data-ghost-comments-counts-api="https://www.flamingbytes.com/members/api/comments/counts/"></script>
+    <style>.gh-head-logo img{max-height:100px;height:100%;}</style>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-B8PQ47L2H0"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-B8PQ47L2H0');
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8578408127828851" crossorigin="anonymous"></script><style>:root {--ghost-accent-color: #6a13ec;}</style>
+</head>
+
+<body class="post-template is-head-left-logo has-serif-body">
+<div class="gh-site">
+
+    <header id="gh-head" class="gh-head gh-outer">
+        <div class="gh-head-inner gh-inner">
+            <div class="gh-head-brand">
+                <div class="gh-head-brand-wrapper">
+                    <a class="gh-head-logo" href="https://www.flamingbytes.com">
+                            Flamingbytes
+                    </a>
+                </div>
+                <button class="gh-search gh-icon-btn" data-ghost-search><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" width="20" height="20"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg></button>
+                <button class="gh-burger"></button>
+            </div>
+
+            <nav class="gh-head-menu">
+                <ul class="nav">
+    <li class="nav-home"><a href="https://www.flamingbytes.com/">Home</a></li>
+    <li class="nav-tags"><a href="https://www.flamingbytes.com/blog/tags/">Tags</a></li>
+    <li class="nav-archive"><a href="https://www.flamingbytes.com/blog/archive/">Archive</a></li>
+    <li class="nav-about"><a href="https://www.flamingbytes.com/about/">About</a></li>
+</ul>
+
+            </nav>
+
+            <div class="gh-head-actions">
+                        <button class="gh-search gh-icon-btn" data-ghost-search><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" width="20" height="20"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg></button>
+            </div>
+        </div>
+    </header>
+
+    
+<main class="gh-main">
+        <article class="gh-article post">
+
+            <header class="gh-article-header gh-canvas">
+
+                <h1 class="gh-article-title">Using R to analyze US COVID pandemic waves and peaks</h1>
+
+                    <aside class="gh-article-sidebar">
+
+        <div class="gh-author-image-list">
+                <a class="gh-author-image" href="/author/relentlesstorm/">
+                        <img src="https://www.flamingbytes.com/content/images/2023/01/FlamingBytes-icon-64x64-1.png" alt="relentlesstorm">
+                </a>
+        </div>
+
+        <div class="gh-author-name-list">
+                <h4 class="gh-author-name">
+                    <a href="/author/relentlesstorm/">relentlesstorm</a>
+                </h4>
+                
+        </div>
+
+        <div class="gh-article-meta">
+            <div class="gh-article-meta-inner">
+                <time class="gh-article-date" datetime="2023-01-14">Jan 14, 2023</time>
+                    <span class="gh-article-meta-sep"></span>
+                    <span class="gh-article-length">6 min</span>
+            </div>
+        </div>
+
+    </aside>
+
+
+                    <figure class="gh-article-image">
+        <img
+            srcset="https://images.unsplash.com/photo-1593007791459-4b05e1158229?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDh8fGNvdmlkfGVufDB8fHx8MTY3MzcyMTIyMw&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;300 300w,
+                    https://images.unsplash.com/photo-1593007791459-4b05e1158229?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDh8fGNvdmlkfGVufDB8fHx8MTY3MzcyMTIyMw&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720 720w,
+                    https://images.unsplash.com/photo-1593007791459-4b05e1158229?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDh8fGNvdmlkfGVufDB8fHx8MTY3MzcyMTIyMw&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;960 960w,
+                    https://images.unsplash.com/photo-1593007791459-4b05e1158229?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDh8fGNvdmlkfGVufDB8fHx8MTY3MzcyMTIyMw&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1200 1200w,
+                    https://images.unsplash.com/photo-1593007791459-4b05e1158229?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDh8fGNvdmlkfGVufDB8fHx8MTY3MzcyMTIyMw&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000 2000w"
+            sizes="(max-width: 1200px) 100vw, 1200px"
+            src="https://images.unsplash.com/photo-1593007791459-4b05e1158229?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDh8fGNvdmlkfGVufDB8fHx8MTY3MzcyMTIyMw&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1200"
+            alt="Using R to analyze US COVID pandemic waves and peaks"
+        >
+            <figcaption>Photo by <a href="https://unsplash.com/@jannerboy62?utm_source=ghost&utm_medium=referral&utm_campaign=api-credit">Nick Fewings</a> / <a href="https://unsplash.com/?utm_source=ghost&utm_medium=referral&utm_campaign=api-credit">Unsplash</a></figcaption>
+    </figure>
+            </header>
+
+            <section class="gh-content gh-canvas">
+                <aside class="gh-sidebar"><div class="gh-toc"></div></aside> 
+
+                <!--kg-card-begin: markdown--><h2 id="goal">Goal</h2>
+<p>According to weekly data between 2020 to 2022, we want to get to know the waves and peaks of COVID pandemic in these years.</p>
+<h2 id="download-the-data">Download the data</h2>
+<p>We will continue to use NCHS(National Center for Health Statistics) as our data source.<br>
+Visit <a href="https://data.cdc.gov/browse?category=NCHS&amp;sortBy=last_modified">https://data.cdc.gov/browse?category=NCHS&amp;sortBy=last_modified</a>, and search <code>Provisional COVID-19 Death Counts by Week</code>, we will find the data we are intrest.</p>
+<p><a href="https://data.cdc.gov/NCHS/Provisional-COVID-19-Death-Counts-by-Week-Ending-D/r8kw-7aab">https://data.cdc.gov/NCHS/Provisional-COVID-19-Death-Counts-by-Week-Ending-D/r8kw-7aab</a>, in this page, we can export data into csv file.</p>
+<p>With that, we may get the data source csv, <code>Provisional_COVID-19_Death_Counts_by_Week_Ending_Date_and_State.csv</code>.</p>
+<h2 id="load-the-data">Load the data</h2>
+<pre><code>library(&quot;dplyr&quot;)
+library(&quot;janitor&quot;)
+library(&quot;tidyr&quot;)
+library(&quot;readr&quot;)
+df &lt;- readr::read_csv(file.path(getwd(), &quot;Provisional_COVID-19_Death_Counts_by_Week_Ending_Date_and_State.csv&quot;), col_names = TRUE)
+df &lt;- clean_names(df)
+tmp_start_date &lt;- strptime(df$start_date, &quot;%m/%d/%Y&quot;)
+df$start_date &lt;- format(tmp_start_date, &quot;%Y-%m-%d&quot;)
+
+ &gt; glimpse(df)
+ Rows: 10,800
+ Columns: 17
+ $ data_as_of                             &lt;chr&gt; &quot;01/09/2023&quot;, &quot;01/09/2023&quot;, &quot;01…
+ $ start_date                             &lt;chr&gt; &quot;2019-12-29&quot;, &quot;2020-01-05&quot;, &quot;20…
+ $ end_date                               &lt;chr&gt; &quot;01/04/2020&quot;, &quot;01/11/2020&quot;, &quot;01…
+ $ group                                  &lt;chr&gt; &quot;By Week&quot;, &quot;By Week&quot;, &quot;By Week&quot;…
+ $ year                                   &lt;chr&gt; &quot;2019/2020&quot;, &quot;2020&quot;, &quot;2020&quot;, &quot;2…
+ $ month                                  &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA,…
+ $ mmwr_week                              &lt;dbl&gt; 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, …
+ $ week_ending_date                       &lt;chr&gt; &quot;01/04/2020&quot;, &quot;01/11/2020&quot;, &quot;01…
+ $ state                                  &lt;chr&gt; &quot;United States&quot;, &quot;United States…
+ $ covid_19_deaths                        &lt;dbl&gt; 0, 1, 2, 3, 0, 4, 6, 6, 9, 38, …
+ $ total_deaths                           &lt;dbl&gt; 60176, 60734, 59362, 59162, 588…
+ $ percent_of_expected_deaths             &lt;dbl&gt; 98, 97, 98, 99, 99, 100, 100, 1…
+ $ pneumonia_deaths                       &lt;dbl&gt; 4111, 4153, 4066, 3915, 3818, 3…
+ $ pneumonia_and_covid_19_deaths          &lt;dbl&gt; 0, 1, 2, 0, 0, 1, 1, 3, 5, 19, …
+ $ influenza_deaths                       &lt;dbl&gt; 434, 475, 468, 500, 481, 520, 5…
+ $ pneumonia_influenza_or_covid_19_deaths &lt;dbl&gt; 4545, 4628, 4534, 4418, 4299, 4…
+ $ footnote                               &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, NA,…
+
+ !&gt; df
+ # A tibble: 10,800 × 17
+    data_as_of start_date end_d…¹ group year  month mmwr_…² week_…³ state covid…⁴
+    &lt;chr&gt;      &lt;chr&gt;      &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt; &lt;dbl&gt;   &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;   &lt;dbl&gt;
+  1 01/09/2023 2019-12-29 01/04/… By W… 2019…    NA       1 01/04/… Unit…       0
+  2 01/09/2023 2020-01-05 01/11/… By W… 2020     NA       2 01/11/… Unit…       1
+  3 01/09/2023 2020-01-12 01/18/… By W… 2020     NA       3 01/18/… Unit…       2
+  4 01/09/2023 2020-01-19 01/25/… By W… 2020     NA       4 01/25/… Unit…       3
+  5 01/09/2023 2020-01-26 02/01/… By W… 2020     NA       5 02/01/… Unit…       0
+  6 01/09/2023 2020-02-02 02/08/… By W… 2020     NA       6 02/08/… Unit…       4
+  7 01/09/2023 2020-02-09 02/15/… By W… 2020     NA       7 02/15/… Unit…       6
+  8 01/09/2023 2020-02-16 02/22/… By W… 2020     NA       8 02/22/… Unit…       6
+  9 01/09/2023 2020-02-23 02/29/… By W… 2020     NA       9 02/29/… Unit…       9
+ 10 01/09/2023 2020-03-01 03/07/… By W… 2020     NA      10 03/07/… Unit…      38
+ # … with 10,790 more rows, 7 more variables: total_deaths &lt;dbl&gt;,
+ #   percent_of_expected_deaths &lt;dbl&gt;, pneumonia_deaths &lt;dbl&gt;,
+ #   pneumonia_and_covid_19_deaths &lt;dbl&gt;, influenza_deaths &lt;dbl&gt;,
+ #   pneumonia_influenza_or_covid_19_deaths &lt;dbl&gt;, footnote &lt;chr&gt;, and
+ #   abbreviated variable names ¹ end_date, ² mmwr_week, ³ week_ending_date,
+ #   ⁴ covid_19_deaths
+ # ℹ Use `print(n = ...)` to see more rows, and `colnames()` to see all variable names
+</code></pre>
+<h2 id="identify-the-data-we-want-to-focus">Identify the data we want to focus</h2>
+<p>As we can see, there are 4 diffrent groups, and it has the <code>whole United states</code> and each state's data</p>
+<pre><code>&gt; unique(df$group)
+[1] &quot;By Week&quot;  &quot;By Month&quot; &quot;By Year&quot;  &quot;By Total&quot;
+&gt;
+</code></pre>
+<p>We only want to get the weekly data, so we may want to <code>filter</code> with &quot;group=By Week&quot;, and &quot;state=United states&quot;<br>
+in the mean time, we may only want to <code>select</code> only 2 columns.</p>
+<ul>
+<li>start_date</li>
+<li>covid_19_deaths</li>
+</ul>
+<pre><code>&gt; df1 &lt;- df %&gt;%
+    filter(state == &quot;United States&quot; &amp; group == &quot;By Week&quot;) %&gt;%
+    select(start_date, covid_19_deaths)
+&gt; print(df1,n=20)
++ &gt; # A tibble: 158 × 2
+   start_date covid_19_deaths
+   &lt;chr&gt;                &lt;dbl&gt;
+ 1 2019-12-29               0
+ 2 2020-01-05               1
+ 3 2020-01-12               2
+ 4 2020-01-19               3
+ 5 2020-01-26               0
+ 6 2020-02-02               4
+ 7 2020-02-09               6
+ 8 2020-02-16               6
+ 9 2020-02-23               9
+10 2020-03-01              38
+11 2020-03-08              60
+12 2020-03-15             588
+13 2020-03-22            3226
+14 2020-03-29           10141
+15 2020-04-05           16347
+16 2020-04-12           17221
+17 2020-04-19           15557
+18 2020-04-26           13223
+19 2020-05-03           11243
+20 2020-05-10            9239
+...
+
+</code></pre>
+<h2 id="draw-the-graph-to-see-the-wave">Draw the graph to see the wave</h2>
+<pre><code>library(&quot;ggplot2&quot;)
+library(&quot;sjPlot&quot;)
+p = ggplot(df1, aes( x=start_date, y=covid_19_deaths, group=1)) +
+    geom_line(color=&quot;blue&quot;) +
+    theme(axis.text.x=element_text(angle=45,hjust=1,size=5))
+save_plot(&quot;covid_plot_weekly_wave.svg&quot;, fig = p, width=60, height=20)
+</code></pre>
+<p><img src="https://www.flamingbytes.com/content/images/posts/covid_plot_weekly_wave.svg" alt="Image" loading="lazy"></p>
+<h2 id="find-the-peak-by-r-mark-it-in-the-graph">Find the peak by R mark it in the graph</h2>
+<p>From above graph, we can easily to figure out the waves and peaks, but we also can let R help us to do it, it's pretty useful if we have to deal with many data and many graphs.</p>
+<p>To achive it, firstly we can call <code>findpeaks</code> from <code>pracma</code> library to find the peaks</p>
+<pre><code>library(&quot;pracma&quot;)
++ peaks = findpeaks(df1$covid_19_deaths, npeaks=5,  sortstr=TRUE)
+&gt; &gt; peaks
+      [,1] [,2] [,3] [,4]
+[1,] 26027   54   40   66
+[2,] 21364  108   98  121
+[3,] 17221   16    8   26
+[4,] 15536   88   79   98
+[5,]  8308   31   26   38
+&gt;
+</code></pre>
+<p>The 2nd column means the the row index of the peak. in this case, we can tell, the 54th row has the top peak covid death number <code>26027</code>.</p>
+<p>It's not very obvious which week(start_date) is hitting the peak, so we can do something like this.</p>
+<pre><code>is_peak &lt;- vector( &quot;logical&quot; , length(df1$covid_19_deaths ))
+df1$is_peak = is_peak
+
+for (x in peaks[,2]) {
+  df1$is_peak[x] = TRUE
+}
+</code></pre>
+<p>As you can see, we added a new column <code>is_peak</code>, so we can use it to filter out those none peak data, sort the peak data points.</p>
+<pre><code>!&gt; df2 = df1 %&gt;% filter(is_peak == TRUE)
+ + df2[order(-df2$covid_19_deaths),]
+ &gt; # A tibble: 5 × 3
+   start_date covid_19_deaths is_peak
+   &lt;chr&gt;                &lt;dbl&gt; &lt;lgl&gt;
+ 1 2021-01-03           26027 TRUE
+ 2 2022-01-16           21364 TRUE
+ 3 2020-04-12           17221 TRUE
+ 4 2021-08-29           15536 TRUE
+ 5 2020-07-26            8308 TRUE
+ &gt; &gt;
+</code></pre>
+<h2 id="hightlight-the-peak-points">Hightlight the peak points</h2>
+<pre><code>p = ggplot(df1, aes(x=start_date, y=covid_19_deaths, group=1)) +
+    geom_line(color=&quot;blue&quot;) +
+    geom_point(data = . %&gt;% filter(is_peak == TRUE), stat=&quot;identity&quot;, size = 4, color = &quot;red&quot;) +
+    scale_y_continuous(breaks=seq(0,30000,4000)) +
+    theme(axis.text.x=element_text(angle=45,hjust=1,size=5))
+
+save_plot(&quot;covid_plot_weekly_peak.svg&quot;, fig = p, width=60, height=20)
+</code></pre>
+<p><img src="https://www.flamingbytes.com/content/images/posts/covid_plot_weekly_peak.svg" alt="Image" loading="lazy"></p>
+<h2 id="other-finding">Other finding</h2>
+<pre><code>!&gt; &gt; sum(df1$covid_19_deaths)
+ [1] 1089714   ===&gt; the total covid_19_deaths death number from 2020 to 2022
+
+!&gt; summary(df1$covid_19_deaths)
+    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.
+       0    2223    4428    6897    9862   26027
+ &gt;
+!&gt; df3 &lt;- df %&gt;%
+ +     filter(state == &quot;United States&quot; &amp; group == &quot;By Week&quot;) %&gt;%
+ +     select(start_date, total_deaths)
+ + sum(df3$total_deaths)
+ + &gt; [1] 10077273  ===&gt; the total death number from 2020 to 2022 
+ + summary(df3$total_deaths)
+ &gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.
+    7100   58522   60451   63780   68610   87415
+ &gt;
+</code></pre>
+<!--kg-card-end: markdown-->
+
+                <!-- native ads start -->
+                <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8578408127828851" crossorigin="anonymous"></script>
+                <ins class="adsbygoogle" style="display:block; text-align:center;" data-ad-layout="in-article" data-ad-format="fluid" data-ad-client="ca-pub-8578408127828851" data-ad-slot="5596270594"></ins>
+                <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+                <!-- native ads end -->
+                
+            </section>
+
+        </article>
+
+    
+    
+        <!-- ghost native comments
+                    <div class="gh-comments gh-read-next gh-canvas">
+            <section class="gh-pagehead">
+                <h4 class="gh-pagehead-title">Comments (<script
+    data-ghost-comment-count="63c2f4d2639c6f0d6ee203e3"
+    data-ghost-comment-count-empty="0"
+    data-ghost-comment-count-singular=""
+    data-ghost-comment-count-plural=""
+    data-ghost-comment-count-tag="span"
+    data-ghost-comment-count-class-name=""
+    data-ghost-comment-count-autowrap="true"
+>
+</script>)</h3>
+            </section>
+            
+        <script defer src="https://cdn.jsdelivr.net/ghost/comments-ui@~0.12/umd/comments-ui.min.js" data-ghost-comments="https://www.flamingbytes.com/" data-api="https://www.flamingbytes.com/ghost/api/content/" data-admin="https://www.flamingbytes.com/ghost/" data-key="321a1d1aea33fd468f6e61f563" data-styles="https://cdn.jsdelivr.net/ghost/comments-ui@~0.12/umd/main.css" data-title="" data-count="false" data-post-id="63c2f4d2639c6f0d6ee203e3" data-sentry-dsn="" data-color-scheme="auto" data-avatar-saturation="60" data-accent-color="#6a13ec" data-app-version="0.12" data-comments-enabled="all" data-publication="Flamingbytes" crossorigin="anonymous"></script>
+    
+        </div>
+        -->
+
+        <!-- disqus comments 
+        <div id="disqus_thread"></div>
+<script>
+    var disqus_config = function () {
+        this.page.url = "https://www.flamingbytes.com/blog/using-r-to-analyze-us-covid-waves-and-peaks/";
+        this.page.identifier = "ghost-63c2f4d2639c6f0d6ee203e3"
+    };
+    (function() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://www-flamingbytes-com.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+    })();
+</script>
+-->
+
+</main>
+
+    <footer class="gh-foot gh-outer">
+        <div class="gh-foot-inner gh-inner">
+
+            <!--<nav class="gh-foot-menu">
+                <<ul class="nav">
+    <li class="nav-sign-up"><a href="#/portal/">Sign up</a></li>
+</ul>
+
+            </nav>-->
+
+            <div class="gh-copyright">
+                    Flamingbytes © 2023. Powered by <a href="https://ghost.org/" target="_blank" rel="noopener">Ghost</a>
+            </div>
+        </div>
+    </footer>
+
+</div>
+
+    <div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="pswp__bg"></div>
+
+    <div class="pswp__scroll-wrap">
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)"></button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)"></button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="/assets/built/main.min.js?v=92211a7592"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.12.3/tocbot.min.js"></script>
+
+<script>
+    tocbot.init({
+        // Where to render the table of contents.
+        tocSelector: '.gh-toc',
+        // Where to grab the headings to build the table of contents.
+        contentSelector: '.gh-content',
+        // Which headings to grab inside of the contentSelector element.
+        headingSelector: 'h1, h2, h3, h4',
+        // Ensure correct positioning
+        hasInnerContainers: true,
+    });
+</script>
+
+
+
+</body>
+
+</html>
