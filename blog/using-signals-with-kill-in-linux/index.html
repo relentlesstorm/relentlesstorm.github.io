@@ -46,44 +46,48 @@
     </style>
 
     <link rel="icon" href="https://www.flamingbytes.com/content/images/size/w256h256/2023/01/FlamingBytes-icon-64x64.png" type="image/png" />
-    <link rel="canonical" href="https://www.flamingbytes.com/blog/dstat-a-replacement-for-vmstat-iostat-and-ifstat/" />
+    <link rel="canonical" href="https://www.flamingbytes.com/blog/using-signals-with-kill-in-linux/" />
     <meta name="referrer" content="no-referrer-when-downgrade" />
     
     <meta property="og:site_name" content="Flamingbytes" />
     <meta property="og:type" content="article" />
-    <meta property="og:title" content="dstat - A replacement for vmstat, iostat and ifstat" />
-    <meta property="og:description" content="Introduction
+    <meta property="og:title" content="Using signals with kill command in Linux" />
+    <meta property="og:description" content="Usage of signals with kill
 
 
-dstat is a versatile tool for generating system resource statistics. It can be a replacement for vmstat, iostat and ifstat. It overcomes some of the limitations and adds some extra features.
-
-
-Dstat allows you to view all of your system resources instantly, you can eg. compare disk usage in" />
-    <meta property="og:url" content="https://www.flamingbytes.com/blog/dstat-a-replacement-for-vmstat-iostat-and-ifstat/" />
-    <meta property="og:image" content="https://images.unsplash.com/flagged/photo-1553267252-d100936057c1?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDV8fHN0YXRpc3RpY3N8ZW58MHx8fHwxNjcyNzg1NzQz&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000" />
-    <meta property="article:published_time" content="2022-03-04T00:00:00.000Z" />
-    <meta property="article:modified_time" content="2023-01-04T04:38:54.000Z" />
+$ kill -l
+ 1) SIGHUP 2) SIGINT 3) SIGQUIT 4) SIGILL 5) SIGTRAP
+ 6) SIGABRT 7) SIGBUS 8) SIGFPE 9) SIGKILL 10) SIGUSR1
+11) SIGSEGV 12) SIGUSR2 13) SIGPIPE 14) SIGALRM 15) SIGTERM
+16) SIGSTKFLT 17) SIGCHLD 18) SIGCONT 19) SIGSTOP 20) SIGTSTP
+21) SIGTTIN 22)" />
+    <meta property="og:url" content="https://www.flamingbytes.com/blog/using-signals-with-kill-in-linux/" />
+    <meta property="og:image" content="https://images.unsplash.com/photo-1530635481267-00edc014d006?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDY3fHxzaWduYWx8ZW58MHx8fHwxNjczNzU2MTMy&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000" />
+    <meta property="article:published_time" content="2023-01-04T04:15:00.000Z" />
+    <meta property="article:modified_time" content="2023-01-15T04:18:46.000Z" />
     <meta property="article:tag" content="Linux" />
     
     <meta property="article:publisher" content="https://www.facebook.com/ghost" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="dstat - A replacement for vmstat, iostat and ifstat" />
-    <meta name="twitter:description" content="Introduction
+    <meta name="twitter:title" content="Using signals with kill command in Linux" />
+    <meta name="twitter:description" content="Usage of signals with kill
 
 
-dstat is a versatile tool for generating system resource statistics. It can be a replacement for vmstat, iostat and ifstat. It overcomes some of the limitations and adds some extra features.
-
-
-Dstat allows you to view all of your system resources instantly, you can eg. compare disk usage in" />
-    <meta name="twitter:url" content="https://www.flamingbytes.com/blog/dstat-a-replacement-for-vmstat-iostat-and-ifstat/" />
-    <meta name="twitter:image" content="https://images.unsplash.com/flagged/photo-1553267252-d100936057c1?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDV8fHN0YXRpc3RpY3N8ZW58MHx8fHwxNjcyNzg1NzQz&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000" />
+$ kill -l
+ 1) SIGHUP 2) SIGINT 3) SIGQUIT 4) SIGILL 5) SIGTRAP
+ 6) SIGABRT 7) SIGBUS 8) SIGFPE 9) SIGKILL 10) SIGUSR1
+11) SIGSEGV 12) SIGUSR2 13) SIGPIPE 14) SIGALRM 15) SIGTERM
+16) SIGSTKFLT 17) SIGCHLD 18) SIGCONT 19) SIGSTOP 20) SIGTSTP
+21) SIGTTIN 22)" />
+    <meta name="twitter:url" content="https://www.flamingbytes.com/blog/using-signals-with-kill-in-linux/" />
+    <meta name="twitter:image" content="https://images.unsplash.com/photo-1530635481267-00edc014d006?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDY3fHxzaWduYWx8ZW58MHx8fHwxNjczNzU2MTMy&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000" />
     <meta name="twitter:label1" content="Written by" />
     <meta name="twitter:data1" content="relentlesstorm" />
     <meta name="twitter:label2" content="Filed under" />
     <meta name="twitter:data2" content="Linux" />
     <meta name="twitter:site" content="@ghost" />
     <meta property="og:image:width" content="2000" />
-    <meta property="og:image:height" content="1333" />
+    <meta property="og:image:height" content="1123" />
     
     <script type="application/ld+json">
 {
@@ -112,18 +116,18 @@ Dstat allows you to view all of your system resources instantly, you can eg. com
         "url": "https://www.flamingbytes.com/author/relentlesstorm/",
         "sameAs": []
     },
-    "headline": "dstat - A replacement for vmstat, iostat and ifstat",
-    "url": "https://www.flamingbytes.com/blog/dstat-a-replacement-for-vmstat-iostat-and-ifstat/",
-    "datePublished": "2022-03-04T00:00:00.000Z",
-    "dateModified": "2023-01-04T04:38:54.000Z",
+    "headline": "Using signals with kill command in Linux",
+    "url": "https://www.flamingbytes.com/blog/using-signals-with-kill-in-linux/",
+    "datePublished": "2023-01-04T04:15:00.000Z",
+    "dateModified": "2023-01-15T04:18:46.000Z",
     "image": {
         "@type": "ImageObject",
-        "url": "https://images.unsplash.com/flagged/photo-1553267252-d100936057c1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxMTc3M3wwfDF8c2VhcmNofDV8fHN0YXRpc3RpY3N8ZW58MHx8fHwxNjcyNzg1NzQz&ixlib=rb-4.0.3&q=80&w=2000",
+        "url": "https://images.unsplash.com/photo-1530635481267-00edc014d006?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxMTc3M3wwfDF8c2VhcmNofDY3fHxzaWduYWx8ZW58MHx8fHwxNjczNzU2MTMy&ixlib=rb-4.0.3&q=80&w=2000",
         "width": 2000,
-        "height": 1333
+        "height": 1123
     },
     "keywords": "Linux",
-    "description": "Introduction\n\n\ndstat is a versatile tool for generating system resource statistics. It can be a replacement for vmstat, iostat and ifstat. It overcomes some of the limitations and adds some extra features.\n\n\nDstat allows you to view all of your system resources instantly, you can eg. compare disk usage in combination with interrupts from your IDE controller, or compare the network bandwidth numbers directly with the disk throughput (in the same interval).\n\n\n\nUsage examples\n\n\nDisplay statistics o",
+    "description": "Usage of signals with kill\n\n\n$ kill -l\n 1) SIGHUP 2) SIGINT 3) SIGQUIT 4) SIGILL 5) SIGTRAP\n 6) SIGABRT 7) SIGBUS 8) SIGFPE 9) SIGKILL 10) SIGUSR1\n11) SIGSEGV 12) SIGUSR2 13) SIGPIPE 14) SIGALRM 15) SIGTERM\n16) SIGSTKFLT 17) SIGCHLD 18) SIGCONT 19) SIGSTOP 20) SIGTSTP\n21) SIGTTIN 22) SIGTTOU 23) SIGURG 24) SIGXCPU 25) SIGXFSZ\n26) SIGVTALRM 27) SIGPROF 28) SIGWINCH 29) SIGIO 30) SIGPWR\n31) SIGSYS 34) SIGRTMIN 35) SIGRTMIN+1 36) SIGRTMIN+2 37) SIGRTMIN+3\n38) SIGRTMIN+4 39) SIGRTMIN+5 40) SIGRTMIN+",
     "mainEntityOfPage": {
         "@type": "WebPage",
         "@id": "https://www.flamingbytes.com/"
@@ -189,7 +193,7 @@ Dstat allows you to view all of your system resources instantly, you can eg. com
             <header class="gh-article-header gh-canvas">
                     <a class="gh-article-tag" href="https://www.flamingbytes.com/blog/tag/linux/">Linux</a>
 
-                <h1 class="gh-article-title">dstat - A replacement for vmstat, iostat and ifstat</h1>
+                <h1 class="gh-article-title">Using signals with kill command in Linux</h1>
 
                     <aside class="gh-article-sidebar">
 
@@ -208,9 +212,9 @@ Dstat allows you to view all of your system resources instantly, you can eg. com
 
         <div class="gh-article-meta">
             <div class="gh-article-meta-inner">
-                <time class="gh-article-date" datetime="2022-03-04">Mar 4, 2022</time>
+                <time class="gh-article-date" datetime="2023-01-04">Jan 4, 2023</time>
                     <span class="gh-article-meta-sep"></span>
-                    <span class="gh-article-length">3 min</span>
+                    <span class="gh-article-length">1 min</span>
             </div>
         </div>
 
@@ -219,72 +223,55 @@ Dstat allows you to view all of your system resources instantly, you can eg. com
 
                     <figure class="gh-article-image">
         <img
-            srcset="https://images.unsplash.com/flagged/photo-1553267252-d100936057c1?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDV8fHN0YXRpc3RpY3N8ZW58MHx8fHwxNjcyNzg1NzQz&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;300 300w,
-                    https://images.unsplash.com/flagged/photo-1553267252-d100936057c1?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDV8fHN0YXRpc3RpY3N8ZW58MHx8fHwxNjcyNzg1NzQz&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720 720w,
-                    https://images.unsplash.com/flagged/photo-1553267252-d100936057c1?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDV8fHN0YXRpc3RpY3N8ZW58MHx8fHwxNjcyNzg1NzQz&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;960 960w,
-                    https://images.unsplash.com/flagged/photo-1553267252-d100936057c1?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDV8fHN0YXRpc3RpY3N8ZW58MHx8fHwxNjcyNzg1NzQz&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1200 1200w,
-                    https://images.unsplash.com/flagged/photo-1553267252-d100936057c1?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDV8fHN0YXRpc3RpY3N8ZW58MHx8fHwxNjcyNzg1NzQz&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000 2000w"
+            srcset="https://images.unsplash.com/photo-1530635481267-00edc014d006?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDY3fHxzaWduYWx8ZW58MHx8fHwxNjczNzU2MTMy&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;300 300w,
+                    https://images.unsplash.com/photo-1530635481267-00edc014d006?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDY3fHxzaWduYWx8ZW58MHx8fHwxNjczNzU2MTMy&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720 720w,
+                    https://images.unsplash.com/photo-1530635481267-00edc014d006?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDY3fHxzaWduYWx8ZW58MHx8fHwxNjczNzU2MTMy&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;960 960w,
+                    https://images.unsplash.com/photo-1530635481267-00edc014d006?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDY3fHxzaWduYWx8ZW58MHx8fHwxNjczNzU2MTMy&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1200 1200w,
+                    https://images.unsplash.com/photo-1530635481267-00edc014d006?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDY3fHxzaWduYWx8ZW58MHx8fHwxNjczNzU2MTMy&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000 2000w"
             sizes="(max-width: 1200px) 100vw, 1200px"
-            src="https://images.unsplash.com/flagged/photo-1553267252-d100936057c1?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDV8fHN0YXRpc3RpY3N8ZW58MHx8fHwxNjcyNzg1NzQz&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1200"
-            alt="dstat - A replacement for vmstat, iostat and ifstat"
+            src="https://images.unsplash.com/photo-1530635481267-00edc014d006?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDY3fHxzaWduYWx8ZW58MHx8fHwxNjczNzU2MTMy&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1200"
+            alt="Using signals with kill command in Linux"
         >
-            <figcaption>Photo by <a href="https://unsplash.com/@ruthson_zimmerman?utm_source=ghost&utm_medium=referral&utm_campaign=api-credit">Ruthson Zimmerman</a> / <a href="https://unsplash.com/?utm_source=ghost&utm_medium=referral&utm_campaign=api-credit">Unsplash</a></figcaption>
+            <figcaption>Photo by <a href="https://unsplash.com/@roonz_nl?utm_source=ghost&utm_medium=referral&utm_campaign=api-credit">RoonZ nl</a> / <a href="https://unsplash.com/?utm_source=ghost&utm_medium=referral&utm_campaign=api-credit">Unsplash</a></figcaption>
     </figure>
             </header>
 
             <section class="gh-content gh-canvas">
                 <aside class="gh-sidebar"><div class="gh-toc"></div></aside> 
 
-                <!--kg-card-begin: markdown--><h2 id="introduction">Introduction</h2>
-<p>dstat is a versatile tool for generating system resource statistics. It can be a replacement for vmstat, iostat and ifstat. It overcomes some of the limitations and adds some extra features.</p>
-<p>Dstat allows you to view all of your system resources instantly, you can eg. compare disk usage in combination with interrupts from your IDE controller, or compare the network bandwidth numbers directly with the disk throughput (in the same interval).</p>
-<h2 id="usage-examples">Usage examples</h2>
-<p>Display statistics of major OS components:</p>
-<p><img src="https://www.flamingbytes.com/content/images/posts/dstat-1.png" alt="Image" loading="lazy"></p>
-<p>Relate disk-throughput with network-usage (eth0), total CPU-usage and system counters:</p>
-<p><img src="https://www.flamingbytes.com/content/images/posts/dstat-1.png" alt="Image" loading="lazy"></p>
-<p>Check dstat's behaviour and the system impact of dstat:</p>
-<p><img src="https://www.flamingbytes.com/content/images/posts/dstat-2.png" alt="Image" loading="lazy"></p>
-<p>Use the time plugin together with cpu, net, disk, system, load, proc and top_cpu plugins:</p>
-<p><img src="https://www.flamingbytes.com/content/images/posts/dstat-3.png" alt="Image" loading="lazy"></p>
-<p>Display stats of process using most of the CPU or memory:</p>
-<p><img src="https://www.flamingbytes.com/content/images/posts/dstat-top-cpu-mem.png" alt="Image" loading="lazy"></p>
-<p>Display stats of process using most of the CPU and memory:</p>
-<p><img src="https://www.flamingbytes.com/content/images/posts/dstat-top-cpu-and-mem.png" alt="Image" loading="lazy"></p>
-<p>Relate cpu stats with interrupts per device:</p>
-<p><img src="https://www.flamingbytes.com/content/images/posts/dstat-4.png" alt="Image" loading="lazy"></p>
-<p>Display information that was to be displayed by vmstat tool:</p>
-<p><img src="https://www.flamingbytes.com/content/images/posts/dstat-vmstat.png" alt="Image" loading="lazy"></p>
-<p>Display the list of all plugins:</p>
-<pre><code class="language-shell">root ~$ dstat --list
-internal:
-	aio, cpu, cpu24, disk, disk24, disk24old, epoch, fs, int, int24, io, ipc, load, lock, mem, net, page, page24, proc, raw, socket, swap, swapold, sys, tcp, time, udp, unix, vm
-/usr/share/dstat:
-	battery, battery-remain, cpufreq, dbus, disk-tps, disk-util, dstat, dstat-cpu, dstat-ctxt, dstat-mem, fan, freespace, gpfs, gpfs-ops, helloworld, innodb-buffer, innodb-io, innodb-ops, lustre, memcache-hits, mysql-io, mysql-keys, mysql5-cmds, mysql5-conn,
-	mysql5-io, mysql5-keys, net-packets, nfs3, nfs3-ops, nfsd3, nfsd3-ops, ntp, postfix, power, proc-count, qmail, rpc, rpcd, sendmail, snooze, squid, test, thermal, top-bio, top-bio-adv, top-childwait, top-cpu, top-cpu-adv, top-cputime, top-cputime-avg, top-int,
-	top-io, top-io-adv, top-latency, top-latency-avg, top-mem, top-oom, utmp, vm-memctl, vmk-hba, vmk-int, vmk-nic, vz-cpu, vz-io, vz-ubc, wifi
+                <!--kg-card-begin: markdown--><h2 id="usage-of-signals-with-kill">Usage of signals with kill</h2>
+<pre><code>$ kill -l
+ 1) SIGHUP 2) SIGINT 3) SIGQUIT 4) SIGILL 5) SIGTRAP
+ 6) SIGABRT 7) SIGBUS 8) SIGFPE 9) SIGKILL 10) SIGUSR1
+11) SIGSEGV 12) SIGUSR2 13) SIGPIPE 14) SIGALRM 15) SIGTERM
+16) SIGSTKFLT 17) SIGCHLD 18) SIGCONT 19) SIGSTOP 20) SIGTSTP
+21) SIGTTIN 22) SIGTTOU 23) SIGURG 24) SIGXCPU 25) SIGXFSZ
+26) SIGVTALRM 27) SIGPROF 28) SIGWINCH 29) SIGIO 30) SIGPWR
+31) SIGSYS 34) SIGRTMIN 35) SIGRTMIN+1 36) SIGRTMIN+2 37) SIGRTMIN+3
+38) SIGRTMIN+4 39) SIGRTMIN+5 40) SIGRTMIN+6 41) SIGRTMIN+7 42) SIGRTMIN+8
+43) SIGRTMIN+9 44) SIGRTMIN+10 45) SIGRTMIN+11 46) SIGRTMIN+12 47) SIGRTMIN+13
+48) SIGRTMIN+14 49) SIGRTMIN+15 50) SIGRTMAX-14 51) SIGRTMAX-13 52) SIGRTMAX-12
+53) SIGRTMAX-11 54) SIGRTMAX-10 55) SIGRTMAX-9 56) SIGRTMAX-8 57) SIGRTMAX-7
+58) SIGRTMAX-6 59) SIGRTMAX-5 60) SIGRTMAX-4 61) SIGRTMAX-3 62) SIGRTMAX-2
+63) SIGRTMAX-1 64) SIGRTMAX
 </code></pre>
-<p>Force float values to be printed:</p>
-<pre><code class="language-shell">root ~$ dstat --float 2
-You did not select any stats, using -cdngy by default.
-----total-cpu-usage---- -dsk/total- -net/total- ---paging-- ---system--
-usr sys idl wai hiq siq| read  writ| recv  send|  in   out | int   csw
-4.5 1.8  94 0.1   0 0.1| 251B 76.1k|   0     0 |   0     0 |4619  8021
-2.3 1.1  96 0.1   0 0.1|   0  54.0k|15.9k 7215B|   0     0 |3497  6381
-5.3 2.4  92 0.1   0 0.1|   0   112k|18.1k 17.4k|   0     0 |5323  9184
-9.4 2.3  88 0.1   0 0.3|   0   116k|24.5k  193k|   0     0 |5370  9091
-2.3 1.3  96 0.1   0   0|   0  82.0k|18.0k 10.6k|   0     0 |3448  6127 ^C
+<!--kg-card-end: markdown--><!--kg-card-begin: markdown--><h2 id="an-example-to-send-sigint-signal-in-shell">An example to send SIGINT signal in shell</h2>
+<p>In the following example, we start strace for a given process for given amounts of seconds. Once the time is up, we send SIGINT(Ctrl+C) signal to stop the tracing process. And a trace report will be generated to the output file strace.c.out.</p>
+<pre><code>$ cat strace_summary.sh
+processname=$1
+duration=$2
+while true
+do
+    strace -p `pidof $processname` -c &gt; strace.c.out 2&gt;&amp;1 &amp;
+    sleep $duration
+    break
+done
+
+kill -2 `pidof strace`
 </code></pre>
-<p>Display the time, cpu, mem, network, disk, system load, process stats with 2 seconds delay between 5 updates, and save output to a csv file:</p>
-<p><img src="https://www.flamingbytes.com/content/images/posts/dstat-output-csv.png" alt="Image" loading="lazy"></p>
-<p>Learn more about how the dstat is implemented:</p>
-<p>Check out the source code <a href="https://github.com/dstat-real/dstat">here</a>. Credit to <em>Dag Wieers</em>.</p>
-<h2 id="reference">Reference</h2>
+<!--kg-card-end: markdown--><!--kg-card-begin: markdown--><h2 id="reference">Reference</h2>
 <ul>
-<li><a href="https://linux.die.net/man/1/dstat">https://linux.die.net/man/1/dstat</a></li>
-<li><a href="https://www.geeksforgeeks.org/dstat-command-in-linux-with-examples/">https://www.geeksforgeeks.org/dstat-command-in-linux-with-examples/</a></li>
-<li><a href="https://github.com/dstat-real/dstat">https://github.com/dstat-real/dstat</a></li>
-<li><a href="https://github.com/scottchiefbaker/dool">https://github.com/scottchiefbaker/dool</a></li>
+<li><a href="https://linux.die.net/Bash-Beginners-Guide/sect_12_01.html#:~:text=The%20interrupt%20signal%2C%20sends%20SIGINT,job%20running%20in%20the%20foreground.&amp;text=The%20delayed%20suspend%20character.,background%20or%20kill%20the%20process.">Signals in Linux</a></li>
 </ul>
 <!--kg-card-end: markdown-->
 
@@ -369,52 +356,6 @@ $ reboot</div>
             </footer>
         </div>
     </a>
-</article>                            <article class="gh-card post">
-    <a class="gh-card-link" href="/blog/using-signals-with-kill-in-linux/">
-            <figure class="gh-card-image">
-                <img
-                    srcset="https://images.unsplash.com/photo-1530635481267-00edc014d006?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDY3fHxzaWduYWx8ZW58MHx8fHwxNjczNzU2MTMy&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;300 300w,
-                            https://images.unsplash.com/photo-1530635481267-00edc014d006?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDY3fHxzaWduYWx8ZW58MHx8fHwxNjczNzU2MTMy&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720 720w,
-                            https://images.unsplash.com/photo-1530635481267-00edc014d006?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDY3fHxzaWduYWx8ZW58MHx8fHwxNjczNzU2MTMy&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;960 960w,
-                            https://images.unsplash.com/photo-1530635481267-00edc014d006?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDY3fHxzaWduYWx8ZW58MHx8fHwxNjczNzU2MTMy&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1200 1200w,
-                            https://images.unsplash.com/photo-1530635481267-00edc014d006?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDY3fHxzaWduYWx8ZW58MHx8fHwxNjczNzU2MTMy&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000 2000w"
-                    sizes="(max-width: 1200px) 100vw, 1200px"
-                    src="https://images.unsplash.com/photo-1530635481267-00edc014d006?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDY3fHxzaWduYWx8ZW58MHx8fHwxNjczNzU2MTMy&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720"
-                    alt="Using signals with kill command in Linux"
-                >
-            </figure>
-
-        <div class="gh-card-wrapper">
-            <header class="gh-card-header">
-                <h3 class="gh-card-title">Using signals with kill command in Linux</h3>
-            </header>
-
-                    <div class="gh-card-excerpt">Usage of signals with kill
-
-
-$ kill -l
- 1) SIGHUP 2) SIGINT 3) SIGQUIT 4) SIGILL 5) SIGTRAP
- 6) SIGABRT 7) SIGBUS 8) SIGFPE 9) SIGKILL 10) SIGUSR1
-11) SIGSEGV 12) SIGUSR2 13) SIGPIPE 14) SIGALRM 15) SIGTERM
-16) SIGSTKFLT 17) SIGCHLD 18) SIGCONT 19) SIGSTOP 20) SIGTSTP
-21) SIGTTIN 22)</div>
-
-            <footer class="gh-card-footer">
-                <span class="gh-card-author">relentlesstorm</span>
-                <time class="gh-card-date" datetime="2023-01-04">Jan 4, 2023</time>
-                    <script
-    data-ghost-comment-count="63c37c5215cd8c0d7b6ee906"
-    data-ghost-comment-count-empty=""
-    data-ghost-comment-count-singular="comment"
-    data-ghost-comment-count-plural="comments"
-    data-ghost-comment-count-tag="span"
-    data-ghost-comment-count-class-name="gh-card-comments"
-    data-ghost-comment-count-autowrap="true"
->
-</script>
-            </footer>
-        </div>
-    </a>
 </article>                            <article class="gh-card post featured">
     <a class="gh-card-link" href="/blog/cgroups-limit-io/">
             <figure class="gh-card-image">
@@ -465,6 +406,51 @@ In this post,</div>
             </footer>
         </div>
     </a>
+</article>                            <article class="gh-card post">
+    <a class="gh-card-link" href="/blog/cgroups-limit-memory/">
+            <figure class="gh-card-image">
+                <img
+                    srcset="https://images.unsplash.com/photo-1589532768434-a92c95dad7cb?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDE5fHxkYXRhYmFzZXxlbnwwfHx8fDE2NzI0NjI4NzI&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;300 300w,
+                            https://images.unsplash.com/photo-1589532768434-a92c95dad7cb?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDE5fHxkYXRhYmFzZXxlbnwwfHx8fDE2NzI0NjI4NzI&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720 720w,
+                            https://images.unsplash.com/photo-1589532768434-a92c95dad7cb?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDE5fHxkYXRhYmFzZXxlbnwwfHx8fDE2NzI0NjI4NzI&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;960 960w,
+                            https://images.unsplash.com/photo-1589532768434-a92c95dad7cb?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDE5fHxkYXRhYmFzZXxlbnwwfHx8fDE2NzI0NjI4NzI&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1200 1200w,
+                            https://images.unsplash.com/photo-1589532768434-a92c95dad7cb?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDE5fHxkYXRhYmFzZXxlbnwwfHx8fDE2NzI0NjI4NzI&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000 2000w"
+                    sizes="(max-width: 1200px) 100vw, 1200px"
+                    src="https://images.unsplash.com/photo-1589532768434-a92c95dad7cb?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDE5fHxkYXRhYmFzZXxlbnwwfHx8fDE2NzI0NjI4NzI&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720"
+                    alt="Using cgroups to limit Memory usage"
+                >
+            </figure>
+
+        <div class="gh-card-wrapper">
+            <header class="gh-card-header">
+                <h3 class="gh-card-title">Using cgroups to limit Memory usage</h3>
+            </header>
+
+                    <div class="gh-card-excerpt">The memory controller isolates the memory behaviour of a group of tasks from the rest of the system.
+
+
+$ mount | egrep "/cgroup |/memory"
+tmpfs on /sys/fs/cgroup type tmpfs (ro,nosuid,nodev,noexec,mode=755)
+cgroup on /sys/fs/cgroup/memory type cgroup (rw,nosuid,nodev,noexec,relatime,memory)
+
+$ lssubsys</div>
+
+            <footer class="gh-card-footer">
+                <span class="gh-card-author">relentlesstorm</span>
+                <time class="gh-card-date" datetime="2022-12-04">Dec 4, 2022</time>
+                    <script
+    data-ghost-comment-count="63afc3ca96dbf412f1f80342"
+    data-ghost-comment-count-empty=""
+    data-ghost-comment-count-singular="comment"
+    data-ghost-comment-count-plural="comments"
+    data-ghost-comment-count-tag="span"
+    data-ghost-comment-count-class-name="gh-card-comments"
+    data-ghost-comment-count-autowrap="true"
+>
+</script>
+            </footer>
+        </div>
+    </a>
 </article>                    </div>
                 </div>
             </div>
@@ -474,7 +460,7 @@ In this post,</div>
                     <div class="gh-comments gh-read-next gh-canvas">
             <section class="gh-pagehead">
                 <h4 class="gh-pagehead-title">Comments (<script
-    data-ghost-comment-count="63b4af841527a00d97449ed5"
+    data-ghost-comment-count="63c37c5215cd8c0d7b6ee906"
     data-ghost-comment-count-empty="0"
     data-ghost-comment-count-singular=""
     data-ghost-comment-count-plural=""
@@ -485,7 +471,7 @@ In this post,</div>
 </script>)</h3>
             </section>
             
-        <script defer src="https://cdn.jsdelivr.net/ghost/comments-ui@~0.12/umd/comments-ui.min.js" data-ghost-comments="https://www.flamingbytes.com/" data-api="https://www.flamingbytes.com/ghost/api/content/" data-admin="https://www.flamingbytes.com/ghost/" data-key="321a1d1aea33fd468f6e61f563" data-styles="https://cdn.jsdelivr.net/ghost/comments-ui@~0.12/umd/main.css" data-title="" data-count="false" data-post-id="63b4af841527a00d97449ed5" data-sentry-dsn="" data-color-scheme="auto" data-avatar-saturation="60" data-accent-color="#6a13ec" data-app-version="0.12" data-comments-enabled="all" data-publication="Flamingbytes" crossorigin="anonymous"></script>
+        <script defer src="https://cdn.jsdelivr.net/ghost/comments-ui@~0.12/umd/comments-ui.min.js" data-ghost-comments="https://www.flamingbytes.com/" data-api="https://www.flamingbytes.com/ghost/api/content/" data-admin="https://www.flamingbytes.com/ghost/" data-key="321a1d1aea33fd468f6e61f563" data-styles="https://cdn.jsdelivr.net/ghost/comments-ui@~0.12/umd/main.css" data-title="" data-count="false" data-post-id="63c37c5215cd8c0d7b6ee906" data-sentry-dsn="" data-color-scheme="auto" data-avatar-saturation="60" data-accent-color="#6a13ec" data-app-version="0.12" data-comments-enabled="all" data-publication="Flamingbytes" crossorigin="anonymous"></script>
     
         </div>
         -->
@@ -494,8 +480,8 @@ In this post,</div>
         <div id="disqus_thread"></div>
 <script>
     var disqus_config = function () {
-        this.page.url = "https://www.flamingbytes.com/blog/dstat-a-replacement-for-vmstat-iostat-and-ifstat/";
-        this.page.identifier = "ghost-63b4af841527a00d97449ed5"
+        this.page.url = "https://www.flamingbytes.com/blog/using-signals-with-kill-in-linux/";
+        this.page.identifier = "ghost-63c37c5215cd8c0d7b6ee906"
     };
     (function() {
     var d = document, s = d.createElement('script');
