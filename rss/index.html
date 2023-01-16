@@ -1,4 +1,144 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:media="http://search.yahoo.com/mrss/"><channel><title><![CDATA[FlamingBytes]]></title><description><![CDATA[Stay hungry, Stay foolish.]]></description><link>https://www.flamingbytes.com/</link><image><url>https://www.flamingbytes.com/favicon.png</url><title>FlamingBytes</title><link>https://www.flamingbytes.com/</link></image><generator>Ghost 5.26</generator><lastBuildDate>Sun, 15 Jan 2023 05:25:59 GMT</lastBuildDate><atom:link href="https://www.flamingbytes.com/rss/" rel="self" type="application/rss+xml"/><ttl>60</ttl><item><title><![CDATA[Using R to analyze US COVID pandemic waves and peaks]]></title><description><![CDATA[<!--kg-card-begin: markdown--><h2 id="goal">Goal</h2>
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:media="http://search.yahoo.com/mrss/"><channel><title><![CDATA[FlamingBytes]]></title><description><![CDATA[Stay hungry, Stay foolish.]]></description><link>https://www.flamingbytes.com/</link><image><url>https://www.flamingbytes.com/favicon.png</url><title>FlamingBytes</title><link>https://www.flamingbytes.com/</link></image><generator>Ghost 5.26</generator><lastBuildDate>Mon, 16 Jan 2023 05:01:07 GMT</lastBuildDate><atom:link href="https://www.flamingbytes.com/rss/" rel="self" type="application/rss+xml"/><ttl>60</ttl><item><title><![CDATA[Using ANOVA in R to analyze US COVID data to understand age impact to death rate]]></title><description><![CDATA[<!--kg-card-begin: markdown--><h2 id="goal">Goal</h2>
+<p>We want to analysis the relationship between age and covid death rate in US.</p>
+<h2 id="download-the-data">Download the data</h2>
+<p>We will use NCHS(National Center for Health Statistics) as our data source.<br>
+Visit <a href="https://data.cdc.gov/browse?category=NCHS&amp;sortBy=last_modified">https://data.cdc.gov/browse?category=NCHS&amp;sortBy=last_modified</a>, and search <code>VSRR Quarterly</code>, we will find</p>]]></description><link>https://www.flamingbytes.com/blog/using-anova-in-r-to-analyze-us-covid-data/</link><guid isPermaLink="false">63c4d8dafc850b0e49cce665</guid><category><![CDATA[Big Data]]></category><dc:creator><![CDATA[relentlesstorm]]></dc:creator><pubDate>Thu, 12 Jan 2023 04:57:00 GMT</pubDate><media:content url="https://images.unsplash.com/photo-1583946099379-f9c9cb8bc030?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=MnwxMTc3M3wwfDF8c2VhcmNofDIwfHxjb3ZpZCUyMDE5fGVufDB8fHx8MTY3Mzg0NTEyMA&amp;ixlib=rb-4.0.3&amp;q=80&amp;w=2000" medium="image"/><content:encoded><![CDATA[<!--kg-card-begin: markdown--><h2 id="goal">Goal</h2>
+<img src="https://images.unsplash.com/photo-1583946099379-f9c9cb8bc030?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=MnwxMTc3M3wwfDF8c2VhcmNofDIwfHxjb3ZpZCUyMDE5fGVufDB8fHx8MTY3Mzg0NTEyMA&amp;ixlib=rb-4.0.3&amp;q=80&amp;w=2000" alt="Using ANOVA in R to analyze US COVID data to understand age impact to death rate"><p>We want to analysis the relationship between age and covid death rate in US.</p>
+<h2 id="download-the-data">Download the data</h2>
+<p>We will use NCHS(National Center for Health Statistics) as our data source.<br>
+Visit <a href="https://data.cdc.gov/browse?category=NCHS&amp;sortBy=last_modified">https://data.cdc.gov/browse?category=NCHS&amp;sortBy=last_modified</a>, and search <code>VSRR Quarterly</code>, we will find the data we are intrest.</p>
+<p><a href="https://data.cdc.gov/NCHS/NCHS-VSRR-Quarterly-provisional-estimates-for-sele/489q-934x">https://data.cdc.gov/NCHS/NCHS-VSRR-Quarterly-provisional-estimates-for-sele/489q-934x</a>, in this page, we can export data into csv file.</p>
+<p>With that, we may can download data source csv, <code>NCHS_-_VSRR_Quarterly_provisional_estimates_for_selected_indicators_of_mortality.csv</code></p>
+<h2 id="load-the-data">Load the data</h2>
+<pre><code>library(&quot;dplyr&quot;)
+library(&quot;ggplot2&quot;)
+library(&quot;janitor&quot;)
+library(&quot;tidyr&quot;)
+library(&quot;readr&quot;)
+library(&quot;sjPlot&quot;)
+df &lt;- readr::read_csv(file.path(getwd(), &quot;NCHS_-_VSRR_Quarterly_provisional_estimates_for_selected_indicators_of_mortality.csv&quot;), col_names = TRUE)
+df &lt;- clean_names(df)
+# To fix the colname format from origin csv file
+df &lt;- df %&gt;% rename(&quot;rate_age_65_74&quot; = &quot;rate_65_74&quot;)
+</code></pre>
+<h2 id="filter-and-select">Filter and Select</h2>
+<pre><code>df1 &lt;- df %&gt;%
+    filter(time_period == &quot;3-month period&quot; &amp; rate_type == &quot;Crude&quot; &amp; cause_of_death %in% c(&quot;COVID-19&quot;)) %&gt;%
+    select(year_and_quarter, rate_age_1_4, rate_age_5_14,rate_age_15_24, rate_age_25_34,rate_age_35_44, rate_age_45_54,rate_age_55_64,rate_age_65_74,rate_age_75_84,rate_age_85_plus)
+  # take a quick look from column&apos;s point of view
+!&gt; glimpse(df1)
+ Rows: 14
+ Columns: 11
+ $ year_and_quarter &lt;chr&gt; &quot;2019 Q1&quot;, &quot;2019 Q2&quot;, &quot;2019 Q3&quot;, &quot;2019 Q4&quot;, &quot;2020 Q1&quot;&#x2026;
+ $ rate_age_1_4     &lt;dbl&gt; NA, NA, NA, NA, NA, 0.2, NA, 0.2, 0.2, 0.2, 0.6, 0.4,&#x2026;
+ $ rate_age_5_14    &lt;dbl&gt; NA, NA, NA, NA, NA, 0.1, 0.2, 0.2, 0.2, 0.1, 0.6, 0.5&#x2026;
+ $ rate_age_15_24   &lt;dbl&gt; NA, NA, NA, NA, 0.1, 1.4, 1.5, 1.6, 1.9, 1.0, 5.9, 4.&#x2026;
+ $ rate_age_25_34   &lt;dbl&gt; NA, NA, NA, NA, 0.8, 6.6, 5.4, 6.7, 8.9, 4.6, 23.8, 1&#x2026;
+ $ rate_age_35_44   &lt;dbl&gt; NA, NA, NA, NA, 2.1, 18.8, 16.1, 20.6, 25.1, 11.9, 65&#x2026;
+ $ rate_age_45_54   &lt;dbl&gt; NA, NA, NA, NA, 4.9, 56.1, 42.8, 64.4, 79.9, 33.9, 14&#x2026;
+ $ rate_age_55_64   &lt;dbl&gt; NA, NA, NA, NA, 9.3, 129.8, 96.0, 162.0, 201.9, 67.4,&#x2026;
+ $ rate_age_65_74   &lt;dbl&gt; NA, NA, NA, NA, 19.0, 293.6, 206.7, 413.6, 464.8, 109&#x2026;
+ $ rate_age_75_84   &lt;dbl&gt; NA, NA, NA, NA, 43.9, 725.6, 465.8, 1112.4, 1110.7, 1&#x2026;
+ $ rate_age_85_plus &lt;dbl&gt; NA, NA, NA, NA, 97.7, 2210.8, 1127.2, 3101.9, 2783.8,&#x2026;
+</code></pre>
+<h2 id="pivotlonger-to-reorg-the-data-for-grouping"><code>pivot_longer</code> to reorg the data for grouping</h2>
+<pre><code>df2 = df1 %&gt;% pivot_longer(names_to = &quot;rate_type&quot;, values_to = &quot;rate_of_10k&quot;,cols = -c(year_and_quarter))
+# convert NA to 0
+df2 &lt;- df2 %&gt;%
+    mutate_at(c(&quot;rate_of_10k&quot;), ~coalesce(.,0))
+!&gt; df2
+ # A tibble: 140 &#xD7; 3
+    year_and_quarter rate_type        rate_of_10k
+    &lt;chr&gt;            &lt;chr&gt;                  &lt;dbl&gt;
+  1 2019 Q1          rate_age_1_4               0
+  2 2019 Q1          rate_age_5_14              0
+  3 2019 Q1          rate_age_15_24             0
+  4 2019 Q1          rate_age_25_34             0
+  5 2019 Q1          rate_age_35_44             0
+  6 2019 Q1          rate_age_45_54             0
+  7 2019 Q1          rate_age_55_64             0
+  8 2019 Q1          rate_age_65_74             0
+  9 2019 Q1          rate_age_75_84             0
+ 10 2019 Q1          rate_age_85_plus           0	
+</code></pre>
+<h2 id="draw-diagram-for-each-group">Draw diagram for each group</h2>
+<pre><code>plotdata &lt;- df2 %&gt;%
+    group_by(rate_type) %&gt;%
+    summarize(n = n(),
+            mean = mean(rate_of_10k),
+            sd = sd(rate_of_10k),
+            ci = qt(0.975, df = n - 1) * sd / sqrt(n))
+p = ggplot(plotdata,
+       aes(x = factor(rate_type, level = c(&apos;rate_age_1_4&apos;,&apos;rate_age_5_14&apos;,&apos;rate_age_15_24&apos;,&apos;rate_age_25_34&apos;,&apos;rate_age_35_44&apos;,&apos;rate_age_45_54&apos;,&apos;rate_age_55_64&apos;,&apos;rate_age_65_74&apos;,&apos;rate_age_75_84&apos;,&apos;rate_age_85_plus&apos;))
+         , y = mean, group = 1)) +
+    geom_line(linetype=&quot;dashed&quot;, color=&quot;darkgrey&quot;) +
+    geom_errorbar(aes(ymin = mean - ci,
+                      ymax = mean + ci),
+                  width = .2) +
+    geom_point(size = 3, color=&quot;red&quot;) +
+    scale_y_continuous(breaks=seq(0,1800,100)) +
+    theme_bw() +
+    labs(x=&quot;rate_type&quot;,
+         y=&quot;rate_of_10k&quot;,
+         title=&quot;Mean Plot with 95% Confidence Interval&quot;)
+save_plot(&quot;covid_plot_age_impact1.svg&quot;, fig = p, width=30, height=20)
+</code></pre>
+<p><img src="https://www.flamingbytes.com/content/images/posts/covid_plot_age_impact1.svg" alt="Using ANOVA in R to analyze US COVID data to understand age impact to death rate" loading="lazy"></p>
+<h2 id="anova-analysis">ANOVA analysis</h2>
+<p>Analysis of variance (ANOVA) is a collection of statistical models and their associated estimation procedures (such as the &quot;variation&quot; among and between groups) used to analyze the differences among means.<br>
+It&apos;s very useful in our case, <code>aov</code> from R make it very easy to use, see <a href="https://www.rdocumentation.org/packages/stats/versions/3.6.2/topics/aov">https://www.rdocumentation.org/packages/stats/versions/3.6.2/topics/aov</a> for more detail.</p>
+<pre><code>fit &lt;- aov(rate_of_10k ~ rate_type, data=df2)
+summary(fit)
+!&gt; summary(fit)
+              Df   Sum Sq Mean Sq F value   Pr(&gt;F)
+ rate_type     9 12988087 1443121   10.21 8.49e-12 ***
+ Residuals   130 18370513  141312
+ ---
+ Signif. codes:  0 &#x2018;***&#x2019; 0.001 &#x2018;**&#x2019; 0.01 &#x2018;*&#x2019; 0.05 &#x2018;.&#x2019; 0.1 &#x2018; &#x2019; 1
+</code></pre>
+<p>we saw <code>8.49e-12 ***</code>, which means age has big impact on covid death rate.</p>
+<h2 id="compare-diffrent-age-ranges">Compare diffrent age ranges</h2>
+<pre><code>pairwise &lt;- TukeyHSD(fit)
+pairwise
+
+ + pairwise
+ &gt;   Tukey multiple comparisons of means
+     95% family-wise confidence level
+
+ Fit: aov(formula = rate_of_10k ~ rate_type, data = df2)
+
+ $rate_type
+                                          diff        lwr       upr     p adj
+ rate_age_15_24-rate_age_1_4        1.25000000 -456.16974  458.6697 1.0000000
+ rate_age_25_34-rate_age_1_4        5.87857143 -451.54117  463.2983 1.0000000
+ rate_age_35_44-rate_age_1_4       16.50714286 -440.91259  473.9269 1.0000000
+ rate_age_45_54-rate_age_1_4       43.45714286 -413.96259  500.8769 0.9999996
+ rate_age_5_14-rate_age_1_4        -0.02857143 -457.44831  457.3912 1.0000000
+ ....
+</code></pre>
+<p>if <code>p adj</code> is close to 1, it means <code>no big difference</code> for this pair<br>
+if <code>p adj</code> is close to 0, it means <code>big difference</code> for this pair</p>
+<h2 id="draw-diagram-for-pairs-comparisons">Draw diagram for pairs comparisons</h2>
+<pre><code>plotdata &lt;- as.data.frame(pairwise[[1]])
+plotdata$conditions &lt;- row.names(plotdata)
+p = ggplot(data=plotdata, aes(x=conditions, y=diff)) +
+  geom_errorbar(aes(ymin=lwr, ymax=upr, width=.2)) +
+  geom_hline(yintercept=0, color=&quot;red&quot;, linetype=&quot;dashed&quot;) +
+  geom_point(size=3, color=&quot;red&quot;) +
+  theme_bw() +
+  labs(y=&quot;Difference in mean levels&quot;, x=&quot;&quot;,
+       title=&quot;95% family-wise confidence level&quot;) +
+   coord_flip()
+save_plot(&quot;covid_plot_age_impact2.svg&quot;, fig = p, width=30, height=20)
+</code></pre>
+<p><img src="https://www.flamingbytes.com/content/images/posts/covid_plot_age_impact2.svg" alt="Using ANOVA in R to analyze US COVID data to understand age impact to death rate" loading="lazy"></p>
+<h2 id="conclusion">Conclusion</h2>
+<ul>
+<li>Age does have big impact for covid death rate.</li>
+<li>85+ was impacted the most.</li>
+<li>For 35-,  the death rate is very low, and no big difference from age 0-35.</li>
+</ul>
+<!--kg-card-end: markdown-->]]></content:encoded></item><item><title><![CDATA[Using R to analyze US COVID pandemic waves and peaks]]></title><description><![CDATA[<!--kg-card-begin: markdown--><h2 id="goal">Goal</h2>
 <p>According to weekly data between 2020 to 2022, we want to get to know the waves and peaks of COVID pandemic in these years.</p>
 <h2 id="download-the-data">Download the data</h2>
 <p>We will continue to use NCHS(National Center for Health Statistics) as our data source.<br>
@@ -1131,48 +1271,4 @@ host1   Ready    &lt;none&gt;   135d   v1.19.2
 host2   Ready    &lt;none&gt;   135d   v1.19.2
 host3   Ready    master   135d   v1.19.2
 </code></pre>
-<!--kg-card-end: markdown-->]]></content:encoded></item><item><title><![CDATA[Lambda architecture in big data system]]></title><description><![CDATA[<!--kg-card-begin: markdown--><h2 id="what-is-lambda-architecture">What is Lambda Architecture</h2>
-<p>When working with very large data sets, it can take a long time to run the sort of queries that clients need. These queries can&apos;t be performed in real time, and often require algorithms such as MapReduce that operate in parallel across the entire</p>]]></description><link>https://www.flamingbytes.com/blog/lambda-architecture-in-big-data-system/</link><guid isPermaLink="false">63b497f11527a00d97449dea</guid><category><![CDATA[Big Data]]></category><dc:creator><![CDATA[relentlesstorm]]></dc:creator><pubDate>Sun, 25 Dec 2022 00:00:00 GMT</pubDate><media:content url="https://images.unsplash.com/photo-1609788063095-d71bf3c1f01f?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=MnwxMTc3M3wwfDF8c2VhcmNofDYzfHxiaWclMjBkYXRhfGVufDB8fHx8MTY3Mjc3OTg0Mg&amp;ixlib=rb-4.0.3&amp;q=80&amp;w=2000" medium="image"/><content:encoded><![CDATA[<!--kg-card-begin: markdown--><h2 id="what-is-lambda-architecture">What is Lambda Architecture</h2>
-<img src="https://images.unsplash.com/photo-1609788063095-d71bf3c1f01f?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=MnwxMTc3M3wwfDF8c2VhcmNofDYzfHxiaWclMjBkYXRhfGVufDB8fHx8MTY3Mjc3OTg0Mg&amp;ixlib=rb-4.0.3&amp;q=80&amp;w=2000" alt="Lambda architecture in big data system"><p>When working with very large data sets, it can take a long time to run the sort of queries that clients need. These queries can&apos;t be performed in real time, and often require algorithms such as MapReduce that operate in parallel across the entire data set. The results are then stored separately from the raw data and used for querying.</p>
-<p>One drawback to this approach is that it introduces latency &#x2014; if processing takes a few hours, a query may return results that are several hours old. Ideally, you would like to get some results in real time (perhaps with some loss of accuracy), and combine these results with the results from the batch analytics.</p>
-<p>The lambda architecture, first proposed by Nathan Marz, addresses this problem by creating two paths for data flow. All data coming into the system goes through these two paths:</p>
-<ul>
-<li>A batch layer (cold path) stores all of the incoming data in its raw form and performs batch processing on the data. The result of this processing is stored as a batch view.</li>
-<li>A speed layer (hot path) analyzes data in real time. This layer is designed for low latency, at the expense of accuracy.</li>
-</ul>
-<p>The batch layer feeds into a serving layer that indexes the batch view for efficient querying. The speed layer updates the serving layer with incremental updates based on the most recent data.</p>
-<p><img src="https://www.flamingbytes.com/content/images/posts/lambda.png" alt="Lambda architecture in big data system" loading="lazy">{:.shadow}</p>
-<p><a href="https://docs.microsoft.com/en-us/azure/architecture/data-guide/big-data/">Source</a></p>
-<p>Data that flows into the hot path is constrained by latency requirements imposed by the speed layer, so that it can be processed as quickly as possible. Often, this requires a tradeoff of some level of accuracy in favor of data that is ready as quickly as possible. For example, consider an IoT scenario where a large number of temperature sensors are sending telemetry data. The speed layer may be used to process a sliding time window of the incoming data.</p>
-<p>Data flowing into the cold path, on the other hand, is not subject to the same low latency requirements. This allows for high accuracy computation across large data sets, which can be very time intensive.</p>
-<p>Eventually, the hot and cold paths converge at the analytics client application. If the client needs to display timely, yet potentially less accurate data in real time, it will acquire its result from the hot path. Otherwise, it will select results from the cold path to display less timely but more accurate data. In other words, the hot path has data for a relatively small window of time, after which the results can be updated with more accurate data from the cold path.</p>
-<p>The raw data stored at the batch layer is immutable. Incoming data is always appended to the existing data, and the previous data is never overwritten. Any changes to the value of a particular datum are stored as a new timestamped event record. This allows for recomputation at any point in time across the history of the data collected. The ability to recompute the batch view from the original raw data is important, because it allows for new views to be created as the system evolves.</p>
-<h2 id="batch-layer">Batch Layer</h2>
-<p>New data comes continuously, as a feed to the data system. It gets fed to the batch layer and the speed layer simultaneously. It looks at all the data at once and eventually corrects the data in the stream layer.  Here we can find lots of ETL and a traditional data warehouse. This layer is built using a predefined schedule, usually once or twice a day. The batch layer has two very important functions:</p>
-<ul>
-<li>To manage the master dataset</li>
-<li>To pre-compute the batch views.</li>
-</ul>
-<h2 id="serving-layer">Serving Layer</h2>
-<p>The outputs from the batch layer in the form of batch views and those coming from the speed layer in the form of near real-time views get forwarded to the serving.  This layer indexes the batch views so that they can be queried in low-latency on an ad-hoc basis.</p>
-<h2 id="speed-layer-stream-layer">Speed Layer (Stream Layer)</h2>
-<p>This layer handles the data that are not already delivered in the batch view due to the latency of the batch layer. In addition, it only deals with recent data in order to provide a complete view of the data to the user by creating real-time views.</p>
-<h2 id="benefits-of-lambda-architectures">Benefits of lambda architectures</h2>
-<p>Here are the main benefits of lambda architectures:</p>
-<ul>
-<li>No Server Management &#x2013; you do not have to install, maintain, or administer any software.</li>
-<li>Flexible Scaling &#x2013; your application can be either automatically scaled or scaled by the adjustment of its capacity</li>
-<li>Automated High Availability &#x2013; refers to the fact that serverless applications have already built-in availability and faults tolerance. It represents a guarantee that all requests will get a response about whether they were successful or not.</li>
-<li>Business Agility &#x2013; React in real-time to changing business/market scenarios</li>
-</ul>
-<h2 id="challenges-with-lambda-architectures">Challenges with lambda architectures</h2>
-<ul>
-<li>Complexity &#x2013; lambda architectures can be highly complex. Administrators must typically maintain two separate code bases for batch and streaming layers, which can make debugging difficult.</li>
-</ul>
-<h2 id="reference">Reference</h2>
-<ul>
-<li>&lt;Big Data - Priciples and best practices of scalable real-time data systems&gt;</li>
-<li><a href="https://databricks.com/glossary/lambda-architecture">https://databricks.com/glossary/lambda-architecture</a></li>
-<li><a href="https://docs.microsoft.com/en-us/azure/architecture/data-guide/big-data/">https://docs.microsoft.com/en-us/azure/architecture/data-guide/big-data/</a></li>
-</ul>
 <!--kg-card-end: markdown-->]]></content:encoded></item></channel></rss>

@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>FlamingBytes</title>
+    <link rel="stylesheet" href="/assets/built/screen.css?v=a80ad6b9f3">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.12.3/tocbot.css">
+    
+    <style>
+    .gh-content {
+        position: relative;
+    }
+
+    .gh-toc > .toc-list {
+        position: relative;
+    }
+
+    .toc-list {
+        overflow: hidden;
+        list-style: none;
+    }
+
+    @media (min-width: 1300px) {
+        .gh-sidebar {
+            position: absolute; 
+            top: 0;
+            bottom: 0;
+            margin-top: 4vmin;
+            margin-left: 2vmin;
+            /*grid-column: wide-start / main-start; *//* Place the TOC to the left of the content */
+            grid-column: wide-end / main-end; /* Place the TOC to the right of the content */
+        }
+    
+        .gh-toc {
+            position: sticky; /* On larger screens, TOC will stay in the same spot on the page */
+            top: 4vmin;
+        }
+    }
+
+    .gh-toc .is-active-link::before {
+        background-color: var(--ghost-accent-color); /* Defines TOC accent color based on Accent color set in Ghost Admin */
+    } 
+    </style>
+
+    <link rel="icon" href="https://www.flamingbytes.com/content/images/size/w256h256/2023/01/FlamingBytes-icon-64x64.png" type="image/png" />
+    <link rel="canonical" href="https://www.flamingbytes.com/blog/using-anova-in-r-to-analyze-us-covid-data/" />
+    <meta name="referrer" content="no-referrer-when-downgrade" />
+    
+    <meta property="og:site_name" content="FlamingBytes" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="Using ANOVA in R to analyze US COVID data to understand age impact to death rate" />
+    <meta property="og:description" content="Goal
+
+
+We want to analysis the relationship between age and covid death rate in US.
+
+
+
+Download the data
+
+
+We will use NCHS(National Center for Health Statistics) as our data source.
+
+Visit https://data.cdc.gov/browse?category&#x3D;NCHS&amp;sortBy&#x3D;last_modified, and search VSRR Quarterly, we will find the" />
+    <meta property="og:url" content="https://www.flamingbytes.com/blog/using-anova-in-r-to-analyze-us-covid-data/" />
+    <meta property="og:image" content="https://images.unsplash.com/photo-1583946099379-f9c9cb8bc030?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDIwfHxjb3ZpZCUyMDE5fGVufDB8fHx8MTY3Mzg0NTEyMA&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000" />
+    <meta property="article:published_time" content="2023-01-12T04:57:00.000Z" />
+    <meta property="article:modified_time" content="2023-01-16T05:00:39.000Z" />
+    <meta property="article:tag" content="Big Data" />
+    
+    <meta property="article:publisher" content="https://www.facebook.com/ghost" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Using ANOVA in R to analyze US COVID data to understand age impact to death rate" />
+    <meta name="twitter:description" content="Goal
+
+
+We want to analysis the relationship between age and covid death rate in US.
+
+
+
+Download the data
+
+
+We will use NCHS(National Center for Health Statistics) as our data source.
+
+Visit https://data.cdc.gov/browse?category&#x3D;NCHS&amp;sortBy&#x3D;last_modified, and search VSRR Quarterly, we will find the" />
+    <meta name="twitter:url" content="https://www.flamingbytes.com/blog/using-anova-in-r-to-analyze-us-covid-data/" />
+    <meta name="twitter:image" content="https://images.unsplash.com/photo-1583946099379-f9c9cb8bc030?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDIwfHxjb3ZpZCUyMDE5fGVufDB8fHx8MTY3Mzg0NTEyMA&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000" />
+    <meta name="twitter:label1" content="Written by" />
+    <meta name="twitter:data1" content="relentlesstorm" />
+    <meta name="twitter:label2" content="Filed under" />
+    <meta name="twitter:data2" content="Big Data" />
+    <meta name="twitter:site" content="@ghost" />
+    <meta property="og:image:width" content="2000" />
+    <meta property="og:image:height" content="1333" />
+    
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "publisher": {
+        "@type": "Organization",
+        "name": "FlamingBytes",
+        "url": "https://www.flamingbytes.com/",
+        "logo": {
+            "@type": "ImageObject",
+            "url": "https://www.flamingbytes.com/content/images/size/w256h256/2023/01/FlamingBytes-icon-64x64.png",
+            "width": 60,
+            "height": 60
+        }
+    },
+    "author": {
+        "@type": "Person",
+        "name": "relentlesstorm",
+        "image": {
+            "@type": "ImageObject",
+            "url": "https://www.flamingbytes.com/content/images/2023/01/FlamingBytes-icon-64x64-1.png",
+            "width": 64,
+            "height": 64
+        },
+        "url": "https://www.flamingbytes.com/author/relentlesstorm/",
+        "sameAs": []
+    },
+    "headline": "Using ANOVA in R to analyze US COVID data to understand age impact to death rate",
+    "url": "https://www.flamingbytes.com/blog/using-anova-in-r-to-analyze-us-covid-data/",
+    "datePublished": "2023-01-12T04:57:00.000Z",
+    "dateModified": "2023-01-16T05:00:39.000Z",
+    "image": {
+        "@type": "ImageObject",
+        "url": "https://images.unsplash.com/photo-1583946099379-f9c9cb8bc030?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxMTc3M3wwfDF8c2VhcmNofDIwfHxjb3ZpZCUyMDE5fGVufDB8fHx8MTY3Mzg0NTEyMA&ixlib=rb-4.0.3&q=80&w=2000",
+        "width": 2000,
+        "height": 1333
+    },
+    "keywords": "Big Data",
+    "description": "Goal\n\n\nWe want to analysis the relationship between age and covid death rate in US.\n\n\n\nDownload the data\n\n\nWe will use NCHS(National Center for Health Statistics) as our data source.\n\nVisit https://data.cdc.gov/browse?category&#x3D;NCHS&amp;sortBy&#x3D;last_modified, and search VSRR Quarterly, we will find the data we are intrest.\n\n\nhttps://data.cdc.gov/NCHS/NCHS-VSRR-Quarterly-provisional-estimates-for-sele/489q-934x, in this page, we can export data into csv file.\n\n\nWith that, we may can download data sourc",
+    "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https://www.flamingbytes.com/"
+    }
+}
+    </script>
+
+    <meta name="generator" content="Ghost 5.26" />
+    <link rel="alternate" type="application/rss+xml" title="FlamingBytes" href="https://www.flamingbytes.com/rss/" />
+    
+    <script defer src="https://cdn.jsdelivr.net/ghost/sodo-search@~1.1/umd/sodo-search.min.js" data-key="321a1d1aea33fd468f6e61f563" data-styles="https://cdn.jsdelivr.net/ghost/sodo-search@~1.1/umd/main.css" data-sodo-search="https://www.flamingbytes.com/" crossorigin="anonymous"></script>
+    <script defer src="/public/cards.min.js?v=a80ad6b9f3"></script>
+    <link rel="stylesheet" type="text/css" href="/public/cards.min.css?v=a80ad6b9f3">
+    <script defer src="/public/comment-counts.min.js?v=a80ad6b9f3" data-ghost-comments-counts-api="https://www.flamingbytes.com/members/api/comments/counts/"></script>
+    <style>.gh-head-logo img{max-height:100px;height:100%;}</style>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-B8PQ47L2H0"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-B8PQ47L2H0');
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8578408127828851" crossorigin="anonymous"></script><style>:root {--ghost-accent-color: #6a13ec;}</style>
+</head>
+
+<body class="post-template tag-bigdata is-head-left-logo has-serif-body">
+<div class="gh-site">
+
+    <header id="gh-head" class="gh-head gh-outer">
+        <div class="gh-head-inner gh-inner">
+            <div class="gh-head-brand">
+                <div class="gh-head-brand-wrapper">
+                    <a class="gh-head-logo" href="https://www.flamingbytes.com">
+                            FlamingBytes
+                    </a>
+                </div>
+                <button class="gh-search gh-icon-btn" data-ghost-search><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" width="20" height="20"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg></button>
+                <button class="gh-burger"></button>
+            </div>
+
+            <nav class="gh-head-menu">
+                <ul class="nav">
+    <li class="nav-home"><a href="https://www.flamingbytes.com/">Home</a></li>
+    <li class="nav-tags"><a href="https://www.flamingbytes.com/blog/tags/">Tags</a></li>
+    <li class="nav-archive"><a href="https://www.flamingbytes.com/blog/archive/">Archive</a></li>
+    <li class="nav-about"><a href="https://www.flamingbytes.com/about/">About</a></li>
+</ul>
+
+            </nav>
+
+            <div class="gh-head-actions">
+                        <button class="gh-search gh-icon-btn" data-ghost-search><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" width="20" height="20"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg></button>
+            </div>
+        </div>
+    </header>
+
+    
+<main class="gh-main">
+        <article class="gh-article post tag-bigdata">
+
+            <header class="gh-article-header gh-canvas">
+                    <a class="gh-article-tag" href="https://www.flamingbytes.com/blog/tag/bigdata/">Big Data</a>
+
+                <h1 class="gh-article-title">Using ANOVA in R to analyze US COVID data to understand age impact to death rate</h1>
+
+                    <aside class="gh-article-sidebar">
+
+        <div class="gh-author-image-list">
+                <a class="gh-author-image" href="/author/relentlesstorm/">
+                        <img src="https://www.flamingbytes.com/content/images/2023/01/FlamingBytes-icon-64x64-1.png" alt="relentlesstorm">
+                </a>
+        </div>
+
+        <div class="gh-author-name-list">
+                <h4 class="gh-author-name">
+                    <a href="/author/relentlesstorm/">relentlesstorm</a>
+                </h4>
+                
+        </div>
+
+        <div class="gh-article-meta">
+            <div class="gh-article-meta-inner">
+                <time class="gh-article-date" datetime="2023-01-12">Jan 12, 2023</time>
+                    <span class="gh-article-meta-sep"></span>
+                    <span class="gh-article-length">4 min</span>
+            </div>
+        </div>
+
+    </aside>
+
+
+                    <figure class="gh-article-image">
+        <img
+            srcset="https://images.unsplash.com/photo-1583946099379-f9c9cb8bc030?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDIwfHxjb3ZpZCUyMDE5fGVufDB8fHx8MTY3Mzg0NTEyMA&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;300 300w,
+                    https://images.unsplash.com/photo-1583946099379-f9c9cb8bc030?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDIwfHxjb3ZpZCUyMDE5fGVufDB8fHx8MTY3Mzg0NTEyMA&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720 720w,
+                    https://images.unsplash.com/photo-1583946099379-f9c9cb8bc030?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDIwfHxjb3ZpZCUyMDE5fGVufDB8fHx8MTY3Mzg0NTEyMA&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;960 960w,
+                    https://images.unsplash.com/photo-1583946099379-f9c9cb8bc030?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDIwfHxjb3ZpZCUyMDE5fGVufDB8fHx8MTY3Mzg0NTEyMA&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1200 1200w,
+                    https://images.unsplash.com/photo-1583946099379-f9c9cb8bc030?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDIwfHxjb3ZpZCUyMDE5fGVufDB8fHx8MTY3Mzg0NTEyMA&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000 2000w"
+            sizes="(max-width: 1200px) 100vw, 1200px"
+            src="https://images.unsplash.com/photo-1583946099379-f9c9cb8bc030?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDIwfHxjb3ZpZCUyMDE5fGVufDB8fHx8MTY3Mzg0NTEyMA&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1200"
+            alt="Using ANOVA in R to analyze US COVID data to understand age impact to death rate"
+        >
+            <figcaption>Photo by <a href="https://unsplash.com/@visuals?utm_source=ghost&utm_medium=referral&utm_campaign=api-credit">visuals</a> / <a href="https://unsplash.com/?utm_source=ghost&utm_medium=referral&utm_campaign=api-credit">Unsplash</a></figcaption>
+    </figure>
+            </header>
+
+            <section class="gh-content gh-canvas">
+                <aside class="gh-sidebar"><div class="gh-toc"></div></aside> 
+
+                <!--kg-card-begin: markdown--><h2 id="goal">Goal</h2>
+<p>We want to analysis the relationship between age and covid death rate in US.</p>
+<h2 id="download-the-data">Download the data</h2>
+<p>We will use NCHS(National Center for Health Statistics) as our data source.<br>
+Visit <a href="https://data.cdc.gov/browse?category=NCHS&amp;sortBy=last_modified">https://data.cdc.gov/browse?category=NCHS&amp;sortBy=last_modified</a>, and search <code>VSRR Quarterly</code>, we will find the data we are intrest.</p>
+<p><a href="https://data.cdc.gov/NCHS/NCHS-VSRR-Quarterly-provisional-estimates-for-sele/489q-934x">https://data.cdc.gov/NCHS/NCHS-VSRR-Quarterly-provisional-estimates-for-sele/489q-934x</a>, in this page, we can export data into csv file.</p>
+<p>With that, we may can download data source csv, <code>NCHS_-_VSRR_Quarterly_provisional_estimates_for_selected_indicators_of_mortality.csv</code></p>
+<h2 id="load-the-data">Load the data</h2>
+<pre><code>library(&quot;dplyr&quot;)
+library(&quot;ggplot2&quot;)
+library(&quot;janitor&quot;)
+library(&quot;tidyr&quot;)
+library(&quot;readr&quot;)
+library(&quot;sjPlot&quot;)
+df &lt;- readr::read_csv(file.path(getwd(), &quot;NCHS_-_VSRR_Quarterly_provisional_estimates_for_selected_indicators_of_mortality.csv&quot;), col_names = TRUE)
+df &lt;- clean_names(df)
+# To fix the colname format from origin csv file
+df &lt;- df %&gt;% rename(&quot;rate_age_65_74&quot; = &quot;rate_65_74&quot;)
+</code></pre>
+<h2 id="filter-and-select">Filter and Select</h2>
+<pre><code>df1 &lt;- df %&gt;%
+    filter(time_period == &quot;3-month period&quot; &amp; rate_type == &quot;Crude&quot; &amp; cause_of_death %in% c(&quot;COVID-19&quot;)) %&gt;%
+    select(year_and_quarter, rate_age_1_4, rate_age_5_14,rate_age_15_24, rate_age_25_34,rate_age_35_44, rate_age_45_54,rate_age_55_64,rate_age_65_74,rate_age_75_84,rate_age_85_plus)
+  # take a quick look from column's point of view
+!&gt; glimpse(df1)
+ Rows: 14
+ Columns: 11
+ $ year_and_quarter &lt;chr&gt; &quot;2019 Q1&quot;, &quot;2019 Q2&quot;, &quot;2019 Q3&quot;, &quot;2019 Q4&quot;, &quot;2020 Q1&quot;…
+ $ rate_age_1_4     &lt;dbl&gt; NA, NA, NA, NA, NA, 0.2, NA, 0.2, 0.2, 0.2, 0.6, 0.4,…
+ $ rate_age_5_14    &lt;dbl&gt; NA, NA, NA, NA, NA, 0.1, 0.2, 0.2, 0.2, 0.1, 0.6, 0.5…
+ $ rate_age_15_24   &lt;dbl&gt; NA, NA, NA, NA, 0.1, 1.4, 1.5, 1.6, 1.9, 1.0, 5.9, 4.…
+ $ rate_age_25_34   &lt;dbl&gt; NA, NA, NA, NA, 0.8, 6.6, 5.4, 6.7, 8.9, 4.6, 23.8, 1…
+ $ rate_age_35_44   &lt;dbl&gt; NA, NA, NA, NA, 2.1, 18.8, 16.1, 20.6, 25.1, 11.9, 65…
+ $ rate_age_45_54   &lt;dbl&gt; NA, NA, NA, NA, 4.9, 56.1, 42.8, 64.4, 79.9, 33.9, 14…
+ $ rate_age_55_64   &lt;dbl&gt; NA, NA, NA, NA, 9.3, 129.8, 96.0, 162.0, 201.9, 67.4,…
+ $ rate_age_65_74   &lt;dbl&gt; NA, NA, NA, NA, 19.0, 293.6, 206.7, 413.6, 464.8, 109…
+ $ rate_age_75_84   &lt;dbl&gt; NA, NA, NA, NA, 43.9, 725.6, 465.8, 1112.4, 1110.7, 1…
+ $ rate_age_85_plus &lt;dbl&gt; NA, NA, NA, NA, 97.7, 2210.8, 1127.2, 3101.9, 2783.8,…
+</code></pre>
+<h2 id="pivotlonger-to-reorg-the-data-for-grouping"><code>pivot_longer</code> to reorg the data for grouping</h2>
+<pre><code>df2 = df1 %&gt;% pivot_longer(names_to = &quot;rate_type&quot;, values_to = &quot;rate_of_10k&quot;,cols = -c(year_and_quarter))
+# convert NA to 0
+df2 &lt;- df2 %&gt;%
+    mutate_at(c(&quot;rate_of_10k&quot;), ~coalesce(.,0))
+!&gt; df2
+ # A tibble: 140 × 3
+    year_and_quarter rate_type        rate_of_10k
+    &lt;chr&gt;            &lt;chr&gt;                  &lt;dbl&gt;
+  1 2019 Q1          rate_age_1_4               0
+  2 2019 Q1          rate_age_5_14              0
+  3 2019 Q1          rate_age_15_24             0
+  4 2019 Q1          rate_age_25_34             0
+  5 2019 Q1          rate_age_35_44             0
+  6 2019 Q1          rate_age_45_54             0
+  7 2019 Q1          rate_age_55_64             0
+  8 2019 Q1          rate_age_65_74             0
+  9 2019 Q1          rate_age_75_84             0
+ 10 2019 Q1          rate_age_85_plus           0	
+</code></pre>
+<h2 id="draw-diagram-for-each-group">Draw diagram for each group</h2>
+<pre><code>plotdata &lt;- df2 %&gt;%
+    group_by(rate_type) %&gt;%
+    summarize(n = n(),
+            mean = mean(rate_of_10k),
+            sd = sd(rate_of_10k),
+            ci = qt(0.975, df = n - 1) * sd / sqrt(n))
+p = ggplot(plotdata,
+       aes(x = factor(rate_type, level = c('rate_age_1_4','rate_age_5_14','rate_age_15_24','rate_age_25_34','rate_age_35_44','rate_age_45_54','rate_age_55_64','rate_age_65_74','rate_age_75_84','rate_age_85_plus'))
+         , y = mean, group = 1)) +
+    geom_line(linetype=&quot;dashed&quot;, color=&quot;darkgrey&quot;) +
+    geom_errorbar(aes(ymin = mean - ci,
+                      ymax = mean + ci),
+                  width = .2) +
+    geom_point(size = 3, color=&quot;red&quot;) +
+    scale_y_continuous(breaks=seq(0,1800,100)) +
+    theme_bw() +
+    labs(x=&quot;rate_type&quot;,
+         y=&quot;rate_of_10k&quot;,
+         title=&quot;Mean Plot with 95% Confidence Interval&quot;)
+save_plot(&quot;covid_plot_age_impact1.svg&quot;, fig = p, width=30, height=20)
+</code></pre>
+<p><img src="https://www.flamingbytes.com/content/images/posts/covid_plot_age_impact1.svg" alt="Image" loading="lazy"></p>
+<h2 id="anova-analysis">ANOVA analysis</h2>
+<p>Analysis of variance (ANOVA) is a collection of statistical models and their associated estimation procedures (such as the &quot;variation&quot; among and between groups) used to analyze the differences among means.<br>
+It's very useful in our case, <code>aov</code> from R make it very easy to use, see <a href="https://www.rdocumentation.org/packages/stats/versions/3.6.2/topics/aov">https://www.rdocumentation.org/packages/stats/versions/3.6.2/topics/aov</a> for more detail.</p>
+<pre><code>fit &lt;- aov(rate_of_10k ~ rate_type, data=df2)
+summary(fit)
+!&gt; summary(fit)
+              Df   Sum Sq Mean Sq F value   Pr(&gt;F)
+ rate_type     9 12988087 1443121   10.21 8.49e-12 ***
+ Residuals   130 18370513  141312
+ ---
+ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+</code></pre>
+<p>we saw <code>8.49e-12 ***</code>, which means age has big impact on covid death rate.</p>
+<h2 id="compare-diffrent-age-ranges">Compare diffrent age ranges</h2>
+<pre><code>pairwise &lt;- TukeyHSD(fit)
+pairwise
+
+ + pairwise
+ &gt;   Tukey multiple comparisons of means
+     95% family-wise confidence level
+
+ Fit: aov(formula = rate_of_10k ~ rate_type, data = df2)
+
+ $rate_type
+                                          diff        lwr       upr     p adj
+ rate_age_15_24-rate_age_1_4        1.25000000 -456.16974  458.6697 1.0000000
+ rate_age_25_34-rate_age_1_4        5.87857143 -451.54117  463.2983 1.0000000
+ rate_age_35_44-rate_age_1_4       16.50714286 -440.91259  473.9269 1.0000000
+ rate_age_45_54-rate_age_1_4       43.45714286 -413.96259  500.8769 0.9999996
+ rate_age_5_14-rate_age_1_4        -0.02857143 -457.44831  457.3912 1.0000000
+ ....
+</code></pre>
+<p>if <code>p adj</code> is close to 1, it means <code>no big difference</code> for this pair<br>
+if <code>p adj</code> is close to 0, it means <code>big difference</code> for this pair</p>
+<h2 id="draw-diagram-for-pairs-comparisons">Draw diagram for pairs comparisons</h2>
+<pre><code>plotdata &lt;- as.data.frame(pairwise[[1]])
+plotdata$conditions &lt;- row.names(plotdata)
+p = ggplot(data=plotdata, aes(x=conditions, y=diff)) +
+  geom_errorbar(aes(ymin=lwr, ymax=upr, width=.2)) +
+  geom_hline(yintercept=0, color=&quot;red&quot;, linetype=&quot;dashed&quot;) +
+  geom_point(size=3, color=&quot;red&quot;) +
+  theme_bw() +
+  labs(y=&quot;Difference in mean levels&quot;, x=&quot;&quot;,
+       title=&quot;95% family-wise confidence level&quot;) +
+   coord_flip()
+save_plot(&quot;covid_plot_age_impact2.svg&quot;, fig = p, width=30, height=20)
+</code></pre>
+<p><img src="https://www.flamingbytes.com/content/images/posts/covid_plot_age_impact2.svg" alt="Image" loading="lazy"></p>
+<h2 id="conclusion">Conclusion</h2>
+<ul>
+<li>Age does have big impact for covid death rate.</li>
+<li>85+ was impacted the most.</li>
+<li>For 35-,  the death rate is very low, and no big difference from age 0-35.</li>
+</ul>
+<!--kg-card-end: markdown-->
+
+                <!-- native ads start -->
+                <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8578408127828851" crossorigin="anonymous"></script>
+                <ins class="adsbygoogle" style="display:block; text-align:center;" data-ad-layout="in-article" data-ad-format="fluid" data-ad-client="ca-pub-8578408127828851" data-ad-slot="5596270594"></ins>
+                <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+                <!-- native ads end -->
+                
+            </section>
+
+        </article>
+
+                <div class="gh-read-next gh-canvas">
+                <section class="gh-pagehead">
+                    <h4 class="gh-pagehead-title">Read next</h4>
+                </section>
+
+                <div class="gh-topic gh-topic-grid">
+                    <div class="gh-topic-content">
+                            <article class="gh-card post">
+    <a class="gh-card-link" href="/blog/using-r-to-analyze-us-covid-waves-and-peaks/">
+            <figure class="gh-card-image">
+                <img
+                    srcset="https://images.unsplash.com/photo-1593007791459-4b05e1158229?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDh8fGNvdmlkfGVufDB8fHx8MTY3MzcyMTIyMw&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;300 300w,
+                            https://images.unsplash.com/photo-1593007791459-4b05e1158229?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDh8fGNvdmlkfGVufDB8fHx8MTY3MzcyMTIyMw&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720 720w,
+                            https://images.unsplash.com/photo-1593007791459-4b05e1158229?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDh8fGNvdmlkfGVufDB8fHx8MTY3MzcyMTIyMw&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;960 960w,
+                            https://images.unsplash.com/photo-1593007791459-4b05e1158229?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDh8fGNvdmlkfGVufDB8fHx8MTY3MzcyMTIyMw&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1200 1200w,
+                            https://images.unsplash.com/photo-1593007791459-4b05e1158229?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDh8fGNvdmlkfGVufDB8fHx8MTY3MzcyMTIyMw&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000 2000w"
+                    sizes="(max-width: 1200px) 100vw, 1200px"
+                    src="https://images.unsplash.com/photo-1593007791459-4b05e1158229?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDh8fGNvdmlkfGVufDB8fHx8MTY3MzcyMTIyMw&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720"
+                    alt="Using R to analyze US COVID pandemic waves and peaks"
+                >
+            </figure>
+
+        <div class="gh-card-wrapper">
+            <header class="gh-card-header">
+                <h3 class="gh-card-title">Using R to analyze US COVID pandemic waves and peaks</h3>
+            </header>
+
+                    <div class="gh-card-excerpt">Goal
+
+
+According to weekly data between 2020 to 2022, we want to get to know the waves and peaks of COVID pandemic in these years.
+
+
+
+Download the data
+
+
+We will continue to use NCHS(National Center for Health Statistics) as our data source.
+
+Visit https://data.cdc.gov/browse?category=</div>
+
+            <footer class="gh-card-footer">
+                <span class="gh-card-author">relentlesstorm</span>
+                <time class="gh-card-date" datetime="2023-01-11">Jan 11, 2023</time>
+                    <script
+    data-ghost-comment-count="63c2f4d2639c6f0d6ee203e3"
+    data-ghost-comment-count-empty=""
+    data-ghost-comment-count-singular="comment"
+    data-ghost-comment-count-plural="comments"
+    data-ghost-comment-count-tag="span"
+    data-ghost-comment-count-class-name="gh-card-comments"
+    data-ghost-comment-count-autowrap="true"
+>
+</script>
+            </footer>
+        </div>
+    </a>
+</article>                            <article class="gh-card post">
+    <a class="gh-card-link" href="/blog/analysis-us-quartely-covid-data-from-cdc/">
+            <figure class="gh-card-image">
+                <img
+                    srcset="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDE1fHxkYXRhJTIwbWluaW5nfGVufDB8fHx8MTY3MzMyNTgxNw&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;300 300w,
+                            https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDE1fHxkYXRhJTIwbWluaW5nfGVufDB8fHx8MTY3MzMyNTgxNw&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720 720w,
+                            https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDE1fHxkYXRhJTIwbWluaW5nfGVufDB8fHx8MTY3MzMyNTgxNw&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;960 960w,
+                            https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDE1fHxkYXRhJTIwbWluaW5nfGVufDB8fHx8MTY3MzMyNTgxNw&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1200 1200w,
+                            https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDE1fHxkYXRhJTIwbWluaW5nfGVufDB8fHx8MTY3MzMyNTgxNw&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000 2000w"
+                    sizes="(max-width: 1200px) 100vw, 1200px"
+                    src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDE1fHxkYXRhJTIwbWluaW5nfGVufDB8fHx8MTY3MzMyNTgxNw&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720"
+                    alt="Using R to analyze the quarterly US COVID data"
+                >
+            </figure>
+
+        <div class="gh-card-wrapper">
+            <header class="gh-card-header">
+                <h3 class="gh-card-title">Using R to analyze the quarterly US COVID data</h3>
+            </header>
+
+                    <div class="gh-card-excerpt">An R example to analyze big amount of data</div>
+
+            <footer class="gh-card-footer">
+                <span class="gh-card-author">relentlesstorm</span>
+                <time class="gh-card-date" datetime="2023-01-10">Jan 10, 2023</time>
+                    <script
+    data-ghost-comment-count="63bced3f16d5d70e3a76d7f2"
+    data-ghost-comment-count-empty=""
+    data-ghost-comment-count-singular="comment"
+    data-ghost-comment-count-plural="comments"
+    data-ghost-comment-count-tag="span"
+    data-ghost-comment-count-class-name="gh-card-comments"
+    data-ghost-comment-count-autowrap="true"
+>
+</script>
+            </footer>
+        </div>
+    </a>
+</article>                            <article class="gh-card post">
+    <a class="gh-card-link" href="/blog/getting-started-with-r/">
+            <figure class="gh-card-image">
+                <img
+                    srcset="https://images.unsplash.com/photo-1640158615573-cd28feb1bf4e?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDl8fGRhdGElMjBtaW58ZW58MHx8fHwxNjczMzI1ODE2&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;300 300w,
+                            https://images.unsplash.com/photo-1640158615573-cd28feb1bf4e?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDl8fGRhdGElMjBtaW58ZW58MHx8fHwxNjczMzI1ODE2&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720 720w,
+                            https://images.unsplash.com/photo-1640158615573-cd28feb1bf4e?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDl8fGRhdGElMjBtaW58ZW58MHx8fHwxNjczMzI1ODE2&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;960 960w,
+                            https://images.unsplash.com/photo-1640158615573-cd28feb1bf4e?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDl8fGRhdGElMjBtaW58ZW58MHx8fHwxNjczMzI1ODE2&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1200 1200w,
+                            https://images.unsplash.com/photo-1640158615573-cd28feb1bf4e?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDl8fGRhdGElMjBtaW58ZW58MHx8fHwxNjczMzI1ODE2&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000 2000w"
+                    sizes="(max-width: 1200px) 100vw, 1200px"
+                    src="https://images.unsplash.com/photo-1640158615573-cd28feb1bf4e?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDl8fGRhdGElMjBtaW58ZW58MHx8fHwxNjczMzI1ODE2&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720"
+                    alt="Getting started with R"
+                >
+            </figure>
+
+        <div class="gh-card-wrapper">
+            <header class="gh-card-header">
+                <h3 class="gh-card-title">Getting started with R</h3>
+            </header>
+
+                    <div class="gh-card-excerpt">Installation
+
+
+The simplest way is to use Homebrew:
+
+
+$ brew install r
+
+
+
+Another way is to download installation package from https://cloud.r-project.org/
+
+
+
+"Hello world" of R
+
+
+
+Run it from R console
+
+
+Command R will start a R console, and you can run R code inside R console.
+
+
+(base) ➜  benchling</div>
+
+            <footer class="gh-card-footer">
+                <span class="gh-card-author">relentlesstorm</span>
+                <time class="gh-card-date" datetime="2023-01-08">Jan 8, 2023</time>
+                    <script
+    data-ghost-comment-count="63bcea3316d5d70e3a76d7c5"
+    data-ghost-comment-count-empty=""
+    data-ghost-comment-count-singular="comment"
+    data-ghost-comment-count-plural="comments"
+    data-ghost-comment-count-tag="span"
+    data-ghost-comment-count-class-name="gh-card-comments"
+    data-ghost-comment-count-autowrap="true"
+>
+</script>
+            </footer>
+        </div>
+    </a>
+</article>                    </div>
+                </div>
+            </div>
+
+    
+        <!-- ghost native comments
+                    <div class="gh-comments gh-read-next gh-canvas">
+            <section class="gh-pagehead">
+                <h4 class="gh-pagehead-title">Comments (<script
+    data-ghost-comment-count="63c4d8dafc850b0e49cce665"
+    data-ghost-comment-count-empty="0"
+    data-ghost-comment-count-singular=""
+    data-ghost-comment-count-plural=""
+    data-ghost-comment-count-tag="span"
+    data-ghost-comment-count-class-name=""
+    data-ghost-comment-count-autowrap="true"
+>
+</script>)</h3>
+            </section>
+            
+        <script defer src="https://cdn.jsdelivr.net/ghost/comments-ui@~0.12/umd/comments-ui.min.js" data-ghost-comments="https://www.flamingbytes.com/" data-api="https://www.flamingbytes.com/ghost/api/content/" data-admin="https://www.flamingbytes.com/ghost/" data-key="321a1d1aea33fd468f6e61f563" data-styles="https://cdn.jsdelivr.net/ghost/comments-ui@~0.12/umd/main.css" data-title="" data-count="false" data-post-id="63c4d8dafc850b0e49cce665" data-sentry-dsn="" data-color-scheme="auto" data-avatar-saturation="60" data-accent-color="#6a13ec" data-app-version="0.12" data-comments-enabled="all" data-publication="FlamingBytes" crossorigin="anonymous"></script>
+    
+        </div>
+        -->
+
+        <!-- disqus comments 
+        <div id="disqus_thread"></div>
+<script>
+    var disqus_config = function () {
+        this.page.url = "https://www.flamingbytes.com/blog/using-anova-in-r-to-analyze-us-covid-data/";
+        this.page.identifier = "ghost-63c4d8dafc850b0e49cce665"
+    };
+    (function() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://www-flamingbytes-com.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+    })();
+</script>
+-->
+
+</main>
+
+    <footer class="gh-foot gh-outer">
+        <div class="gh-foot-inner gh-inner">
+
+            <!--<nav class="gh-foot-menu">
+                <<ul class="nav">
+    <li class="nav-sign-up"><a href="#/portal/">Sign up</a></li>
+</ul>
+
+            </nav>-->
+
+            <div class="gh-copyright">
+                    FlamingBytes © 2023. Powered by <a href="https://ghost.org/" target="_blank" rel="noopener">Ghost</a>
+            </div>
+        </div>
+    </footer>
+
+</div>
+
+    <div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="pswp__bg"></div>
+
+    <div class="pswp__scroll-wrap">
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)"></button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)"></button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="/assets/built/main.min.js?v=a80ad6b9f3"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.12.3/tocbot.min.js"></script>
+
+<script>
+    tocbot.init({
+        // Where to render the table of contents.
+        tocSelector: '.gh-toc',
+        // Where to grab the headings to build the table of contents.
+        contentSelector: '.gh-content',
+        // Which headings to grab inside of the contentSelector element.
+        headingSelector: 'h1, h2, h3, h4',
+        // Ensure correct positioning
+        hasInnerContainers: true,
+    });
+</script>
+
+
+
+</body>
+
+</html>
