@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>FlamingBytes</title>
-    <link rel="stylesheet" href="/assets/built/screen.css?v=a80ad6b9f3">
+    <link rel="stylesheet" href="/assets/built/screen.css?v=6f11eaabc6">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.12.3/tocbot.css">
     
@@ -45,6 +45,7 @@
     } 
     </style>
 
+    <meta name="description" content="A great example to use ANOVA in R to analyze complicated data." />
     <link rel="icon" href="https://www.flamingbytes.com/content/images/size/w256h256/2023/01/FlamingBytes-icon-64x64.png" type="image/png" />
     <link rel="canonical" href="https://www.flamingbytes.com/blog/using-anova-in-r-to-analyze-us-covid-data/" />
     <meta name="referrer" content="no-referrer-when-downgrade" />
@@ -52,41 +53,17 @@
     <meta property="og:site_name" content="FlamingBytes" />
     <meta property="og:type" content="article" />
     <meta property="og:title" content="Using ANOVA in R to analyze US COVID data to understand age impact to death rate" />
-    <meta property="og:description" content="Goal
-
-
-We want to analysis the relationship between age and covid death rate in US.
-
-
-
-Download the data
-
-
-We will use NCHS(National Center for Health Statistics) as our data source.
-
-Visit https://data.cdc.gov/browse?category&#x3D;NCHS&amp;sortBy&#x3D;last_modified, and search VSRR Quarterly, we will find the" />
+    <meta property="og:description" content="A great example to use ANOVA in R to analyze complicated data." />
     <meta property="og:url" content="https://www.flamingbytes.com/blog/using-anova-in-r-to-analyze-us-covid-data/" />
     <meta property="og:image" content="https://images.unsplash.com/photo-1583946099379-f9c9cb8bc030?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDIwfHxjb3ZpZCUyMDE5fGVufDB8fHx8MTY3Mzg0NTEyMA&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000" />
     <meta property="article:published_time" content="2023-01-12T04:57:00.000Z" />
-    <meta property="article:modified_time" content="2023-01-16T05:00:39.000Z" />
+    <meta property="article:modified_time" content="2023-01-16T19:57:07.000Z" />
     <meta property="article:tag" content="Big Data" />
     
     <meta property="article:publisher" content="https://www.facebook.com/ghost" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="Using ANOVA in R to analyze US COVID data to understand age impact to death rate" />
-    <meta name="twitter:description" content="Goal
-
-
-We want to analysis the relationship between age and covid death rate in US.
-
-
-
-Download the data
-
-
-We will use NCHS(National Center for Health Statistics) as our data source.
-
-Visit https://data.cdc.gov/browse?category&#x3D;NCHS&amp;sortBy&#x3D;last_modified, and search VSRR Quarterly, we will find the" />
+    <meta name="twitter:description" content="A great example to use ANOVA in R to analyze complicated data." />
     <meta name="twitter:url" content="https://www.flamingbytes.com/blog/using-anova-in-r-to-analyze-us-covid-data/" />
     <meta name="twitter:image" content="https://images.unsplash.com/photo-1583946099379-f9c9cb8bc030?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDIwfHxjb3ZpZCUyMDE5fGVufDB8fHx8MTY3Mzg0NTEyMA&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000" />
     <meta name="twitter:label1" content="Written by" />
@@ -127,7 +104,7 @@ Visit https://data.cdc.gov/browse?category&#x3D;NCHS&amp;sortBy&#x3D;last_modifi
     "headline": "Using ANOVA in R to analyze US COVID data to understand age impact to death rate",
     "url": "https://www.flamingbytes.com/blog/using-anova-in-r-to-analyze-us-covid-data/",
     "datePublished": "2023-01-12T04:57:00.000Z",
-    "dateModified": "2023-01-16T05:00:39.000Z",
+    "dateModified": "2023-01-16T19:57:07.000Z",
     "image": {
         "@type": "ImageObject",
         "url": "https://images.unsplash.com/photo-1583946099379-f9c9cb8bc030?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxMTc3M3wwfDF8c2VhcmNofDIwfHxjb3ZpZCUyMDE5fGVufDB8fHx8MTY3Mzg0NTEyMA&ixlib=rb-4.0.3&q=80&w=2000",
@@ -135,7 +112,7 @@ Visit https://data.cdc.gov/browse?category&#x3D;NCHS&amp;sortBy&#x3D;last_modifi
         "height": 1333
     },
     "keywords": "Big Data",
-    "description": "Goal\n\n\nWe want to analysis the relationship between age and covid death rate in US.\n\n\n\nDownload the data\n\n\nWe will use NCHS(National Center for Health Statistics) as our data source.\n\nVisit https://data.cdc.gov/browse?category&#x3D;NCHS&amp;sortBy&#x3D;last_modified, and search VSRR Quarterly, we will find the data we are intrest.\n\n\nhttps://data.cdc.gov/NCHS/NCHS-VSRR-Quarterly-provisional-estimates-for-sele/489q-934x, in this page, we can export data into csv file.\n\n\nWith that, we may can download data sourc",
+    "description": "A great example to use ANOVA in R to analyze complicated data.",
     "mainEntityOfPage": {
         "@type": "WebPage",
         "@id": "https://www.flamingbytes.com/"
@@ -147,9 +124,9 @@ Visit https://data.cdc.gov/browse?category&#x3D;NCHS&amp;sortBy&#x3D;last_modifi
     <link rel="alternate" type="application/rss+xml" title="FlamingBytes" href="https://www.flamingbytes.com/rss/" />
     
     <script defer src="https://cdn.jsdelivr.net/ghost/sodo-search@~1.1/umd/sodo-search.min.js" data-key="321a1d1aea33fd468f6e61f563" data-styles="https://cdn.jsdelivr.net/ghost/sodo-search@~1.1/umd/main.css" data-sodo-search="https://www.flamingbytes.com/" crossorigin="anonymous"></script>
-    <script defer src="/public/cards.min.js?v=a80ad6b9f3"></script>
-    <link rel="stylesheet" type="text/css" href="/public/cards.min.css?v=a80ad6b9f3">
-    <script defer src="/public/comment-counts.min.js?v=a80ad6b9f3" data-ghost-comments-counts-api="https://www.flamingbytes.com/members/api/comments/counts/"></script>
+    <script defer src="/public/cards.min.js?v=6f11eaabc6"></script>
+    <link rel="stylesheet" type="text/css" href="/public/cards.min.css?v=6f11eaabc6">
+    <script defer src="/public/comment-counts.min.js?v=6f11eaabc6" data-ghost-comments-counts-api="https://www.flamingbytes.com/members/api/comments/counts/"></script>
     <style>.gh-head-logo img{max-height:100px;height:100%;}</style>
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-B8PQ47L2H0"></script>
@@ -228,6 +205,7 @@ Visit https://data.cdc.gov/browse?category&#x3D;NCHS&amp;sortBy&#x3D;last_modifi
 
     </aside>
 
+                    <p class="gh-article-excerpt">A great example to use ANOVA in R to analyze complicated data.</p>
 
                     <figure class="gh-article-image">
         <img
@@ -654,7 +632,7 @@ Command R will start a R console, and you can run R code inside R console.
         </div>
     </div>
 </div>
-<script src="/assets/built/main.min.js?v=a80ad6b9f3"></script>
+<script src="/assets/built/main.min.js?v=6f11eaabc6"></script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.12.3/tocbot.min.js"></script>
 

@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>FlamingBytes</title>
-    <link rel="stylesheet" href="/assets/built/screen.css?v=a80ad6b9f3">
+    <link rel="stylesheet" href="/assets/built/screen.css?v=6f11eaabc6">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.12.3/tocbot.css">
     
@@ -45,6 +45,7 @@
     } 
     </style>
 
+    <meta name="description" content="Kubernetes cluster can use the Secret to authenticate with a container registry to pull a private image." />
     <link rel="icon" href="https://www.flamingbytes.com/content/images/size/w256h256/2023/01/FlamingBytes-icon-64x64.png" type="image/png" />
     <link rel="canonical" href="https://www.flamingbytes.com/blog/pull-an-image-from-a-private-docker-registry-in-kubernetes-pod/" />
     <meta name="referrer" content="no-referrer-when-downgrade" />
@@ -52,17 +53,7 @@
     <meta property="og:site_name" content="FlamingBytes" />
     <meta property="og:type" content="article" />
     <meta property="og:title" content="Pull an image from a private docker registry in Kubernetes Pod" />
-    <meta property="og:description" content="Log in to Docker Hub
-
-
-In order to pull a image from Docker Hub, you must authenticate with a registry. Use docker tool to log in to the Docker Hub as below. A username and password is needed to log in.
-
-
-$ docker login
-
-
-
-The login process creates or updates the" />
+    <meta property="og:description" content="Kubernetes cluster can use the Secret to authenticate with a container registry to pull a private image." />
     <meta property="og:url" content="https://www.flamingbytes.com/blog/pull-an-image-from-a-private-docker-registry-in-kubernetes-pod/" />
     <meta property="og:image" content="https://images.unsplash.com/photo-1667372459510-55b5e2087cd0?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDEyfHxrdWJlcm5ldGVzfGVufDB8fHx8MTY3Mjc3NzAxNg&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000" />
     <meta property="article:published_time" content="2022-12-27T00:00:00.000Z" />
@@ -72,17 +63,7 @@ The login process creates or updates the" />
     <meta property="article:publisher" content="https://www.facebook.com/ghost" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="Pull an image from a private docker registry in Kubernetes Pod" />
-    <meta name="twitter:description" content="Log in to Docker Hub
-
-
-In order to pull a image from Docker Hub, you must authenticate with a registry. Use docker tool to log in to the Docker Hub as below. A username and password is needed to log in.
-
-
-$ docker login
-
-
-
-The login process creates or updates the" />
+    <meta name="twitter:description" content="Kubernetes cluster can use the Secret to authenticate with a container registry to pull a private image." />
     <meta name="twitter:url" content="https://www.flamingbytes.com/blog/pull-an-image-from-a-private-docker-registry-in-kubernetes-pod/" />
     <meta name="twitter:image" content="https://images.unsplash.com/photo-1667372459510-55b5e2087cd0?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDEyfHxrdWJlcm5ldGVzfGVufDB8fHx8MTY3Mjc3NzAxNg&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000" />
     <meta name="twitter:label1" content="Written by" />
@@ -143,9 +124,9 @@ The login process creates or updates the" />
     <link rel="alternate" type="application/rss+xml" title="FlamingBytes" href="https://www.flamingbytes.com/rss/" />
     
     <script defer src="https://cdn.jsdelivr.net/ghost/sodo-search@~1.1/umd/sodo-search.min.js" data-key="321a1d1aea33fd468f6e61f563" data-styles="https://cdn.jsdelivr.net/ghost/sodo-search@~1.1/umd/main.css" data-sodo-search="https://www.flamingbytes.com/" crossorigin="anonymous"></script>
-    <script defer src="/public/cards.min.js?v=a80ad6b9f3"></script>
-    <link rel="stylesheet" type="text/css" href="/public/cards.min.css?v=a80ad6b9f3">
-    <script defer src="/public/comment-counts.min.js?v=a80ad6b9f3" data-ghost-comments-counts-api="https://www.flamingbytes.com/members/api/comments/counts/"></script>
+    <script defer src="/public/cards.min.js?v=6f11eaabc6"></script>
+    <link rel="stylesheet" type="text/css" href="/public/cards.min.css?v=6f11eaabc6">
+    <script defer src="/public/comment-counts.min.js?v=6f11eaabc6" data-ghost-comments-counts-api="https://www.flamingbytes.com/members/api/comments/counts/"></script>
     <style>.gh-head-logo img{max-height:100px;height:100%;}</style>
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-B8PQ47L2H0"></script>
@@ -359,19 +340,7 @@ $ kubectl get pod private-reg
                 <h3 class="gh-card-title">Using ANOVA in R to analyze US COVID data to understand age impact to death rate</h3>
             </header>
 
-                    <div class="gh-card-excerpt">Goal
-
-
-We want to analysis the relationship between age and covid death rate in US.
-
-
-
-Download the data
-
-
-We will use NCHS(National Center for Health Statistics) as our data source.
-
-Visit https://data.cdc.gov/browse?category=NCHS&sortBy=last_modified, and search VSRR Quarterly, we will find the</div>
+                    <div class="gh-card-excerpt">A great example to use ANOVA in R to analyze complicated data.</div>
 
             <footer class="gh-card-footer">
                 <span class="gh-card-author">relentlesstorm</span>
@@ -579,7 +548,7 @@ Visit https://data.cdc.gov/browse?category=</div>
         </div>
     </div>
 </div>
-<script src="/assets/built/main.min.js?v=a80ad6b9f3"></script>
+<script src="/assets/built/main.min.js?v=6f11eaabc6"></script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.12.3/tocbot.min.js"></script>
 
