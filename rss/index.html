@@ -1,4 +1,37 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:media="http://search.yahoo.com/mrss/"><channel><title><![CDATA[FlamingBytes]]></title><description><![CDATA[Stay hungry, Stay foolish.]]></description><link>https://www.flamingbytes.com/</link><image><url>https://www.flamingbytes.com/favicon.png</url><title>FlamingBytes</title><link>https://www.flamingbytes.com/</link></image><generator>Ghost 5.26</generator><lastBuildDate>Tue, 17 Jan 2023 05:38:43 GMT</lastBuildDate><atom:link href="https://www.flamingbytes.com/rss/" rel="self" type="application/rss+xml"/><ttl>60</ttl><item><title><![CDATA[Tracking stock financial metrics in tradingview]]></title><description><![CDATA[In this post, we learn how to use tradingview.com to track financial metrics of the interested stock. It helps understand how the financial metrics support the stock price under the hood.]]></description><link>https://www.flamingbytes.com/blog/tracking-stock-financial-metrics-in-tradingview/</link><guid isPermaLink="false">63c5f75c7f98ed0ceabaa24f</guid><category><![CDATA[Investment]]></category><dc:creator><![CDATA[relentlesstorm]]></dc:creator><pubDate>Tue, 17 Jan 2023 05:35:07 GMT</pubDate><media:content url="https://images.unsplash.com/photo-1560221328-12fe60f83ab8?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=MnwxMTc3M3wwfDF8c2VhcmNofDF8fHN0b2NrfGVufDB8fHx8MTY3MzkxOTM4NA&amp;ixlib=rb-4.0.3&amp;q=80&amp;w=2000" medium="image"/><content:encoded><![CDATA[<img src="https://images.unsplash.com/photo-1560221328-12fe60f83ab8?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=MnwxMTc3M3wwfDF8c2VhcmNofDF8fHN0b2NrfGVufDB8fHx8MTY3MzkxOTM4NA&amp;ixlib=rb-4.0.3&amp;q=80&amp;w=2000" alt="Tracking stock financial metrics in tradingview"><p></p><p>In this post, we learn how to use tradingview.com to track financial metrics of the interested stock. It helps understand how the financial metrics support the stock price under the hood.</p><!--kg-card-begin: markdown--><h2 id="display-the-stock-price-in-year-view">Display the stock price in year view</h2>
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:media="http://search.yahoo.com/mrss/"><channel><title><![CDATA[FlamingBytes]]></title><description><![CDATA[Stay hungry, Stay foolish.]]></description><link>https://www.flamingbytes.com/</link><image><url>https://www.flamingbytes.com/favicon.png</url><title>FlamingBytes</title><link>https://www.flamingbytes.com/</link></image><generator>Ghost 5.26</generator><lastBuildDate>Wed, 25 Jan 2023 07:19:21 GMT</lastBuildDate><atom:link href="https://www.flamingbytes.com/rss/" rel="self" type="application/rss+xml"/><ttl>60</ttl><item><title><![CDATA[Surprised! How can the write IOPS be 10x faster than the cloud native disk performance]]></title><description><![CDATA[<p>In a competitive fio write performance benchmark between 3rd party storage solution and cloud native disk, we noticed that the write performance for the 3rd party storage solution is 10x faster than the cloud native. This usually seems impossible since we would argue that no one can beat the raw</p>]]></description><link>https://www.flamingbytes.com/blog/surprised-how-can-the-write-throughput-be-10x-faster-than-the-cloud-native-disk-performance/</link><guid isPermaLink="false">63d0cefe2eaec20e4c700378</guid><category><![CDATA[Benchmarking]]></category><dc:creator><![CDATA[relentlesstorm]]></dc:creator><pubDate>Wed, 25 Jan 2023 07:18:00 GMT</pubDate><media:content url="https://images.unsplash.com/photo-1457969414820-5fdd86fc0b84?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=MnwxMTc3M3wwfDF8c2VhcmNofDR8fHJhY2V8ZW58MHx8fHwxNjc0NjMwNzE5&amp;ixlib=rb-4.0.3&amp;q=80&amp;w=2000" medium="image"/><content:encoded><![CDATA[<img src="https://images.unsplash.com/photo-1457969414820-5fdd86fc0b84?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=MnwxMTc3M3wwfDF8c2VhcmNofDR8fHJhY2V8ZW58MHx8fHwxNjc0NjMwNzE5&amp;ixlib=rb-4.0.3&amp;q=80&amp;w=2000" alt="Surprised! How can the write IOPS be 10x faster than the cloud native disk performance"><p>In a competitive fio write performance benchmark between 3rd party storage solution and cloud native disk, we noticed that the write performance for the 3rd party storage solution is 10x faster than the cloud native. This usually seems impossible since we would argue that no one can beat the raw disk performance. The following case shows an interesting write performance optimization from the storage solution under test.</p><!--kg-card-begin: markdown--><h2 id="cloud-native-raw-disk-performancefio4kwrite">Cloud native raw disk performance(fio,4k,write)</h2>
+<p>From the benchmark result, it shows the IOPS limit of the cloud drive is ~7500. This aligns with the cloud storage SPEC in use.</p>
+<p><img src="https://www.flamingbytes.com/content/images/posts/10xfast_1.jpg" alt="Surprised! How can the write IOPS be 10x faster than the cloud native disk performance" loading="lazy"><br>
+<img src="https://www.flamingbytes.com/content/images/posts/10xfast_2.jpg" alt="Surprised! How can the write IOPS be 10x faster than the cloud native disk performance" loading="lazy"><br>
+<img src="https://www.flamingbytes.com/content/images/posts/10xfast_3.jpg" alt="Surprised! How can the write IOPS be 10x faster than the cloud native disk performance" loading="lazy"></p>
+<!--kg-card-end: markdown--><p></p><!--kg-card-begin: markdown--><h2 id="10x-faster-iops-is-observed">10x faster IOPS is observed!!!</h2>
+<p>In the output of fio, the IOPS(&gt;75k) is 10x faster than the result from cloud native raw disk(~7500). This can be verified from the iostat output. The IOPS at logic volume layer is aligned with the fio output.</p>
+<p><img src="https://www.flamingbytes.com/content/images/posts/10xfast_4.jpg" alt="Surprised! How can the write IOPS be 10x faster than the cloud native disk performance" loading="lazy"><br>
+<img src="https://www.flamingbytes.com/content/images/posts/10xfast_5.jpg" alt="Surprised! How can the write IOPS be 10x faster than the cloud native disk performance" loading="lazy"><br>
+<img src="https://www.flamingbytes.com/content/images/posts/10xfast_6.jpg" alt="Surprised! How can the write IOPS be 10x faster than the cloud native disk performance" loading="lazy"></p>
+<!--kg-card-end: markdown--><!--kg-card-begin: markdown--><h2 id="iosize-matters">Iosize matters!!!</h2>
+<p>When the write request comes to the physical disk from logic volume, the I/O size is changed from 4k to 400k. It indicates the smaller writes got merged to larger writes.</p>
+<p><img src="https://www.flamingbytes.com/content/images/posts/10xfast_7.jpg" alt="Surprised! How can the write IOPS be 10x faster than the cloud native disk performance" loading="lazy"><br>
+<img src="https://www.flamingbytes.com/content/images/posts/10xfast_8.jpg" alt="Surprised! How can the write IOPS be 10x faster than the cloud native disk performance" loading="lazy"><br>
+<img src="https://www.flamingbytes.com/content/images/posts/10xfast_9.jpg" alt="Surprised! How can the write IOPS be 10x faster than the cloud native disk performance" loading="lazy"></p>
+<!--kg-card-end: markdown--><!--kg-card-begin: markdown--><h2 id="conclusion">Conclusion</h2>
+<p>With limited IOPS on the cloud drive, larger IO size really help improve the write performance by reducing the write requests to disk. With proper write performance optimization at logic volume layer, the write performance can be boosted 10x faster with no surprise!!!</p>
+<!--kg-card-end: markdown-->]]></content:encoded></item><item><title><![CDATA[fio direct I/O error with 1k blocksize]]></title><description><![CDATA[<p>When to run fio write with small blocksize(e.g. 1k), the following error is seen.</p><pre><code>$ fio --blocksize=1k --ioengine=libaio --readwrite=randwrite --filesize=2G --group_reporting --direct=1 --iodepth=128 --randrepeat=1 --end_fsync=1 --
+name=job1 --numjobs=1 --filename=/mnt/fiomnt/fio.dat
+job1: (g=0): rw=</code></pre>]]></description><link>https://www.flamingbytes.com/blog/fio-direct-i-o-error-with-1k-blocksize/</link><guid isPermaLink="false">63d0cadc2eaec20e4c700329</guid><category><![CDATA[Benchmarking]]></category><dc:creator><![CDATA[relentlesstorm]]></dc:creator><pubDate>Mon, 23 Jan 2023 06:39:00 GMT</pubDate><media:content url="https://images.unsplash.com/photo-1566633806501-349d557a616d?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=MnwxMTc3M3wwfDF8c2VhcmNofDJ8fGFsaWdufGVufDB8fHx8MTY3NDYyODcwMw&amp;ixlib=rb-4.0.3&amp;q=80&amp;w=2000" medium="image"/><content:encoded><![CDATA[<img src="https://images.unsplash.com/photo-1566633806501-349d557a616d?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=MnwxMTc3M3wwfDF8c2VhcmNofDJ8fGFsaWdufGVufDB8fHx8MTY3NDYyODcwMw&amp;ixlib=rb-4.0.3&amp;q=80&amp;w=2000" alt="fio direct I/O error with 1k blocksize"><p>When to run fio write with small blocksize(e.g. 1k), the following error is seen.</p><pre><code>$ fio --blocksize=1k --ioengine=libaio --readwrite=randwrite --filesize=2G --group_reporting --direct=1 --iodepth=128 --randrepeat=1 --end_fsync=1 --
+name=job1 --numjobs=1 --filename=/mnt/fiomnt/fio.dat
+job1: (g=0): rw=randwrite, bs=(R) 1024B-1024B, (W) 1024B-1024B, (T) 1024B-1024B, ioengine=libaio, iodepth=128
+fio-3.7
+Starting 1 process
+fio: io_u error on file /mnt/fiomnt/fio.dat: Invalid argument: write offset=129521664, buflen=1024
+fio: io_u error on file /mnt/fiomnt/fio.dat: Invalid argument: write offset=1589760000, buflen=1024
+fio: pid=93922, err=22/file:io_u.c:1747, func=io_u error, error=Invalid argument
+job1: (groupid=0, jobs=1): err=22 (file:io_u.c:1747, func=io_u error, error=Invalid argument): pid=93922: Wed Jan 25 00:42:00 2023
+cpu : usr=0.00%, sys=0.00%, ctx=1, majf=0, minf=14
+IO depths : 1=0.8%, 2=1.6%, 4=3.1%, 8=6.2%, 16=12.5%, 32=25.0%, &amp;gt;=64=50.8%
+submit : 0=0.0%, 4=100.0%, 8=0.0%, 16=0.0%, 32=0.0%, 64=0.0%, &amp;gt;=64=0.0%
+complete : 0=0.0%, 4=100.0%, 8=0.0%, 16=0.0%, 32=0.0%, 64=0.0%, &amp;gt;=64=0.0%
+issued rwts: total=0,128,0,0 short=0,0,0,0 dropped=0,0,0,0
+latency : target=0, window=0, percentile=100.00%, depth=128</code></pre><p><strong>Cause:</strong></p><p>For direct I/O, &#xA0;the I/O size has to be multiple of filesystem/block device blocksize. In this case, the filesystem blocksize is 4k which can not be well aligned with the requested I/O size(1k). To fix this, the filesystem blocksize should be less than or equal to 1k.</p>]]></content:encoded></item><item><title><![CDATA[Tracking stock financial metrics in tradingview]]></title><description><![CDATA[In this post, we learn how to use tradingview.com to track financial metrics of the interested stock. It helps understand how the financial metrics support the stock price under the hood.]]></description><link>https://www.flamingbytes.com/blog/tracking-stock-financial-metrics-in-tradingview/</link><guid isPermaLink="false">63c5f75c7f98ed0ceabaa24f</guid><category><![CDATA[Investment]]></category><dc:creator><![CDATA[relentlesstorm]]></dc:creator><pubDate>Tue, 17 Jan 2023 05:35:07 GMT</pubDate><media:content url="https://images.unsplash.com/photo-1560221328-12fe60f83ab8?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=MnwxMTc3M3wwfDF8c2VhcmNofDF8fHN0b2NrfGVufDB8fHx8MTY3MzkxOTM4NA&amp;ixlib=rb-4.0.3&amp;q=80&amp;w=2000" medium="image"/><content:encoded><![CDATA[<img src="https://images.unsplash.com/photo-1560221328-12fe60f83ab8?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=MnwxMTc3M3wwfDF8c2VhcmNofDF8fHN0b2NrfGVufDB8fHx8MTY3MzkxOTM4NA&amp;ixlib=rb-4.0.3&amp;q=80&amp;w=2000" alt="Tracking stock financial metrics in tradingview"><p></p><p>In this post, we learn how to use tradingview.com to track financial metrics of the interested stock. It helps understand how the financial metrics support the stock price under the hood.</p><!--kg-card-begin: markdown--><h2 id="display-the-stock-price-in-year-view">Display the stock price in year view</h2>
 <!--kg-card-end: markdown--><figure class="kg-card kg-image-card"><img src="https://www.flamingbytes.com/content/images/2023/01/12m_price.png" class="kg-image" alt="Tracking stock financial metrics in tradingview" loading="lazy" width="1547" height="881" srcset="https://www.flamingbytes.com/content/images/size/w600/2023/01/12m_price.png 600w, https://www.flamingbytes.com/content/images/size/w1000/2023/01/12m_price.png 1000w, https://www.flamingbytes.com/content/images/2023/01/12m_price.png 1547w" sizes="(min-width: 720px) 720px"></figure><!--kg-card-begin: markdown--><h2 id="add-the-revenue-metric">Add the revenue metric</h2>
 <!--kg-card-end: markdown--><figure class="kg-card kg-image-card"><img src="https://www.flamingbytes.com/content/images/2023/01/revenue.png" class="kg-image" alt="Tracking stock financial metrics in tradingview" loading="lazy" width="1543" height="881" srcset="https://www.flamingbytes.com/content/images/size/w600/2023/01/revenue.png 600w, https://www.flamingbytes.com/content/images/size/w1000/2023/01/revenue.png 1000w, https://www.flamingbytes.com/content/images/2023/01/revenue.png 1543w" sizes="(min-width: 720px) 720px"></figure><!--kg-card-begin: markdown--><h2 id="add-the-operating-income-metric">Add the operating income metric</h2>
 <!--kg-card-end: markdown--><figure class="kg-card kg-image-card"><img src="https://www.flamingbytes.com/content/images/2023/01/operating_income.png" class="kg-image" alt="Tracking stock financial metrics in tradingview" loading="lazy" width="1544" height="880" srcset="https://www.flamingbytes.com/content/images/size/w600/2023/01/operating_income.png 600w, https://www.flamingbytes.com/content/images/size/w1000/2023/01/operating_income.png 1000w, https://www.flamingbytes.com/content/images/2023/01/operating_income.png 1544w" sizes="(min-width: 720px) 720px"></figure><!--kg-card-begin: markdown--><h2 id="add-the-current-ratio-metric">Add the current ratio metric</h2>
@@ -1046,137 +1079,4 @@ $ git push -u origin main
 <li><a href="https://zzamboni.org/post/hosting-a-ghost-blog-in-github/#:~:text=Install%20and%20run%20Ghost%20locally,static%20website%20to%20GitHub%20Pages">https://zzamboni.org/post/hosting-a-ghost-blog-in-github/#:~:text=Install and run Ghost locally,static website to GitHub Pages</a></li>
 <li><a href="https://ghost.org/docs/reinstall/">https://ghost.org/docs/reinstall/</a></li>
 </ul>
-<!--kg-card-end: markdown-->]]></content:encoded></item><item><title><![CDATA[Pull an image from a private docker registry in Kubernetes Pod]]></title><description><![CDATA[Kubernetes cluster can use the Secret to authenticate with a container registry to pull a private image.]]></description><link>https://www.flamingbytes.com/blog/pull-an-image-from-a-private-docker-registry-in-kubernetes-pod/</link><guid isPermaLink="false">63b4afde1527a00d97449ee4</guid><category><![CDATA[Big Data]]></category><dc:creator><![CDATA[relentlesstorm]]></dc:creator><pubDate>Tue, 27 Dec 2022 00:00:00 GMT</pubDate><media:content url="https://images.unsplash.com/photo-1667372459510-55b5e2087cd0?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=MnwxMTc3M3wwfDF8c2VhcmNofDEyfHxrdWJlcm5ldGVzfGVufDB8fHx8MTY3Mjc3NzAxNg&amp;ixlib=rb-4.0.3&amp;q=80&amp;w=2000" medium="image"/><content:encoded><![CDATA[<!--kg-card-begin: markdown--><h2 id="log-in-to-docker-hub">Log in to Docker Hub</h2>
-<img src="https://images.unsplash.com/photo-1667372459510-55b5e2087cd0?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=MnwxMTc3M3wwfDF8c2VhcmNofDEyfHxrdWJlcm5ldGVzfGVufDB8fHx8MTY3Mjc3NzAxNg&amp;ixlib=rb-4.0.3&amp;q=80&amp;w=2000" alt="Pull an image from a private docker registry in Kubernetes Pod"><p>In order to pull a image from Docker Hub, you must authenticate with a registry. Use <strong>docker</strong> tool to log in to the Docker Hub as below. A username and password is needed to log in.</p>
-<pre><code class="language-shell">$ docker login
-</code></pre>
-<p>The login process creates or updates the config.json file which holds an authorization token.</p>
-<pre><code class="language-shell">$ cat /root/.docker/config.json
-{
-	&quot;auths&quot;: {
-		&quot;https://index.docker.io/v1/&quot;: {
-			&quot;auth&quot;: &quot;xxx=&quot;
-		}
-	}
-}
-</code></pre>
-<!--kg-card-end: markdown--><!--kg-card-begin: html--><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8578408127828851" crossorigin="anonymous"></script>
-<ins class="adsbygoogle" style="display:block; text-align:center;" data-ad-layout="in-article" data-ad-format="fluid" data-ad-client="ca-pub-8578408127828851" data-ad-slot="5596270594"></ins>
-<script>(adsbygoogle = window.adsbygoogle || []).push({});</script><!--kg-card-end: html--><!--kg-card-begin: markdown--><h2 id="create-a-secret-based-on-existing-credentials">Create a Secret based on existing credentials</h2>
-<p>A Kubernetes cluster uses the Secret of kubernetes.io/dockerconfigjson type to authenticate with a container registry to pull a private image.</p>
-<p>If you already ran docker login, you can copy that credential into Kubernetes:</p>
-<pre><code class="language-shell">$ kubectl create secret generic regcred --from-file=.dockerconfigjson=/root/.docker/config.json --type=kubernetes.io/dockerconfigjson
-</code></pre>
-<p>You can inspect the Secret as below.</p>
-<pre><code class="language-shell">$ kubectl get secret regcred --output=yaml
-
-apiVersion: v1
-data:
-  .dockerconfigjson: &lt;base64-formatted-docker-credentials&gt;
-kind: Secret
-metadata:
-  creationTimestamp: &quot;2022-02-28T22:25:43Z&quot;
-  name: regcred
-  namespace: default
-  resourceVersion: &quot;1503624&quot;
-  uid: yyy
-type: kubernetes.io/dockerconfigjson
-</code></pre>
-<p>The value of the .dockerconfigjson field is a base64 representation of your Docker credentials. To understand what is in the .dockerconfigjson field, convert the secret data to a readable format:</p>
-<pre><code class="language-shell">$ kubectl get secret regcred --output=&quot;jsonpath={.data.\.dockerconfigjson}&quot; | base64 --decode
-{
-	&quot;auths&quot;: {
-		&quot;https://index.docker.io/v1/&quot;: {
-			&quot;auth&quot;: &quot;xxx=&quot;
-		}
-	}
-}
-</code></pre>
-<!--kg-card-end: markdown--><!--kg-card-begin: html--><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8578408127828851" crossorigin="anonymous"></script>
-<ins class="adsbygoogle" style="display:block; text-align:center;" data-ad-layout="in-article" data-ad-format="fluid" data-ad-client="ca-pub-8578408127828851" data-ad-slot="5596270594"></ins>
-<script>(adsbygoogle = window.adsbygoogle || []).push({});</script><!--kg-card-end: html--><!--kg-card-begin: markdown--><h2 id="create-a-pod-that-uses-the-secret-to-pull-image">Create a Pod that uses the Secret to pull image</h2>
-<pre><code class="language-shell">$ vi my-private-reg-pod.yaml
-apiVersion: v1
-kind: Pod
-metadata:
-  name: private-reg
-spec:
-  containers:
-  - name: private-reg-container
-    image: &lt;your-private-image&gt;
-  imagePullSecrets:
-  - name: regcred
-
-$ kubectl apply -f my-private-reg-pod.yaml
-$ kubectl get pod private-reg  
-</code></pre>
-<p>Note that the <strong>imagePullSecrets</strong> field specifies that Kubernetes should get the credentials from a Secret named <em>regcred</em> in order to pull a container image from Docker Hub.</p>
-<!--kg-card-end: markdown-->]]></content:encoded></item><item><title><![CDATA[Deploy kubernetes statefulset with affinity]]></title><description><![CDATA[Using affinity to assign statefulset and pod to the target worker node.]]></description><link>https://www.flamingbytes.com/blog/deploy-kubernetes-statefulset-with-affinity/</link><guid isPermaLink="false">63b495a11527a00d97449da1</guid><category><![CDATA[Big Data]]></category><dc:creator><![CDATA[relentlesstorm]]></dc:creator><pubDate>Tue, 27 Dec 2022 00:00:00 GMT</pubDate><media:content url="https://images.unsplash.com/photo-1605745341075-1b7460b99df8?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=MnwxMTc3M3wwfDF8c2VhcmNofDN8fGRvY2tlcnxlbnwwfHx8fDE2NzI3NzcyNzc&amp;ixlib=rb-4.0.3&amp;q=80&amp;w=2000" medium="image"/><content:encoded><![CDATA[<!--kg-card-begin: markdown--><img src="https://images.unsplash.com/photo-1605745341075-1b7460b99df8?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=MnwxMTc3M3wwfDF8c2VhcmNofDN8fGRvY2tlcnxlbnwwfHx8fDE2NzI3NzcyNzc&amp;ixlib=rb-4.0.3&amp;q=80&amp;w=2000" alt="Deploy kubernetes statefulset with affinity"><p>Here is an example to demonstrate how to assign statefulset and pod to the target worker node.</p>
-<p><a href="https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/">affinity</a> helps define which node will be assigned for the pod by using the node labels.</p>
-<pre><code class="language-shell">$ kubectl get nodes -o wide --show-labels
-
-$ kubectl label nodes &lt;node-name&gt; portworx.io/fio=true
-
-$ cat statefulset-node-select.yaml
-apiVersion: apps/v1
-kind: StatefulSet
-metadata:
-  name: fiobench
-spec:
-  serviceName: fiobench
-  replicas: 1
-  selector:
-    matchLabels:
-      app: fiobench
-  template:
-    metadata:
-      labels:
-        app: fiobench
-    spec:
-      affinity:
-        nodeAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-            nodeSelectorTerms:
-            - matchExpressions:
-              - key: portworx.io/fio
-                operator: In
-                values:
-                - &quot;true&quot;
-      containers:
-      - name: fiobench
-        image: pwxbuild/perfbench:fio
-        imagePullPolicy: Always
-        volumeMounts:
-        - name: fiobench-data-1
-          mountPath: /fiodata1
-        - name: fiobench-data-2
-          mountPath: /fiodata2
-        securityContext:
-          privileged: true
-      imagePullSecrets:
-      - name: regcred
-  volumeClaimTemplates:
-  - metadata:
-      name: fiobench-data-1
-    spec:
-      storageClassName: fio-repl-node-select
-      accessModes:
-      - ReadWriteOnce
-      resources:
-        requests:
-          storage: 1400Gi
-  - metadata:
-      name: fiobench-data-2
-    spec:
-      storageClassName: fio-repl-node-select
-      accessModes:
-      - ReadWriteOnce
-      resources:
-        requests:
-          storage: 1400Gi
-
-$ kubectl apply -f statefulset-node-select.yaml
-$ kubectl get statefulset
-$ kubectl get pod -o wide
-</code></pre>
 <!--kg-card-end: markdown-->]]></content:encoded></item></channel></rss>
