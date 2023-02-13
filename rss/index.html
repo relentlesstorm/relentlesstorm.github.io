@@ -1,4 +1,62 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:media="http://search.yahoo.com/mrss/"><channel><title><![CDATA[FlamingBytes]]></title><description><![CDATA[Stay hungry, Stay foolish.]]></description><link>https://www.flamingbytes.com/</link><image><url>https://www.flamingbytes.com/favicon.png</url><title>FlamingBytes</title><link>https://www.flamingbytes.com/</link></image><generator>Ghost 5.26</generator><lastBuildDate>Wed, 25 Jan 2023 07:19:21 GMT</lastBuildDate><atom:link href="https://www.flamingbytes.com/rss/" rel="self" type="application/rss+xml"/><ttl>60</ttl><item><title><![CDATA[Surprised! How can the write IOPS be 10x faster than the cloud native disk performance]]></title><description><![CDATA[<p>In a competitive fio write performance benchmark between 3rd party storage solution and cloud native disk, we noticed that the write performance for the 3rd party storage solution is 10x faster than the cloud native. This usually seems impossible since we would argue that no one can beat the raw</p>]]></description><link>https://www.flamingbytes.com/blog/surprised-how-can-the-write-throughput-be-10x-faster-than-the-cloud-native-disk-performance/</link><guid isPermaLink="false">63d0cefe2eaec20e4c700378</guid><category><![CDATA[Benchmarking]]></category><dc:creator><![CDATA[relentlesstorm]]></dc:creator><pubDate>Wed, 25 Jan 2023 07:18:00 GMT</pubDate><media:content url="https://images.unsplash.com/photo-1457969414820-5fdd86fc0b84?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=MnwxMTc3M3wwfDF8c2VhcmNofDR8fHJhY2V8ZW58MHx8fHwxNjc0NjMwNzE5&amp;ixlib=rb-4.0.3&amp;q=80&amp;w=2000" medium="image"/><content:encoded><![CDATA[<img src="https://images.unsplash.com/photo-1457969414820-5fdd86fc0b84?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=MnwxMTc3M3wwfDF8c2VhcmNofDR8fHJhY2V8ZW58MHx8fHwxNjc0NjMwNzE5&amp;ixlib=rb-4.0.3&amp;q=80&amp;w=2000" alt="Surprised! How can the write IOPS be 10x faster than the cloud native disk performance"><p>In a competitive fio write performance benchmark between 3rd party storage solution and cloud native disk, we noticed that the write performance for the 3rd party storage solution is 10x faster than the cloud native. This usually seems impossible since we would argue that no one can beat the raw disk performance. The following case shows an interesting write performance optimization from the storage solution under test.</p><!--kg-card-begin: markdown--><h2 id="cloud-native-raw-disk-performancefio4kwrite">Cloud native raw disk performance(fio,4k,write)</h2>
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:media="http://search.yahoo.com/mrss/"><channel><title><![CDATA[FlamingBytes]]></title><description><![CDATA[Stay hungry, Stay foolish.]]></description><link>https://www.flamingbytes.com/</link><image><url>https://www.flamingbytes.com/favicon.png</url><title>FlamingBytes</title><link>https://www.flamingbytes.com/</link></image><generator>Ghost 5.26</generator><lastBuildDate>Mon, 13 Feb 2023 02:35:45 GMT</lastBuildDate><atom:link href="https://www.flamingbytes.com/rss/" rel="self" type="application/rss+xml"/><ttl>60</ttl><item><title><![CDATA[Install GCC from source]]></title><description><![CDATA[<!--kg-card-begin: markdown--><p>In this post, we will go through the steps to install <a href="https://gcc.gnu.org/">GCC</a> from source on CentOS 7.</p>
+<pre><code>$ cat /etc/centos-release
+CentOS Linux release 7.9.2009 (Core)
+
+$ uname -r
+5.7.12-1.el7.elrepo.x86_64
+</code></pre>
+<h2 id="download-gcc-source">Download GCC <a href="https://gcc.gnu.org/pub/gcc/releases/">source</a></h2>
+<pre><code>$ curl -LO https://gcc.gnu.org/pub/gcc/releases/gcc-12.2.</code></pre>]]></description><link>https://www.flamingbytes.com/blog/install-gcc-from-source/</link><guid isPermaLink="false">63e9a08bf19d570e66aae054</guid><category><![CDATA[Linux]]></category><dc:creator><![CDATA[relentlesstorm]]></dc:creator><pubDate>Mon, 13 Feb 2023 02:33:45 GMT</pubDate><media:content url="https://images.unsplash.com/photo-1675959449383-1c7a27684c3c?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=MnwxMTc3M3wwfDF8YWxsfDJ8fHx8fHwyfHwxNjc2MjU1NTg4&amp;ixlib=rb-4.0.3&amp;q=80&amp;w=2000" medium="image"/><content:encoded><![CDATA[<!--kg-card-begin: markdown--><img src="https://images.unsplash.com/photo-1675959449383-1c7a27684c3c?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=MnwxMTc3M3wwfDF8YWxsfDJ8fHx8fHwyfHwxNjc2MjU1NTg4&amp;ixlib=rb-4.0.3&amp;q=80&amp;w=2000" alt="Install GCC from source"><p>In this post, we will go through the steps to install <a href="https://gcc.gnu.org/">GCC</a> from source on CentOS 7.</p>
+<pre><code>$ cat /etc/centos-release
+CentOS Linux release 7.9.2009 (Core)
+
+$ uname -r
+5.7.12-1.el7.elrepo.x86_64
+</code></pre>
+<h2 id="download-gcc-source">Download GCC <a href="https://gcc.gnu.org/pub/gcc/releases/">source</a></h2>
+<pre><code>$ curl -LO https://gcc.gnu.org/pub/gcc/releases/gcc-12.2.0/gcc-12.2.0.tar.gz
+</code></pre>
+<p>Untar the source file:</p>
+<pre><code>$ tar zxf gcc-12.2.0.tar.gz
+</code></pre>
+<h2 id="download-the-dependent-libraries">Download the dependent libraries</h2>
+<pre><code>$ cd gcc-12.2.0/
+$ ./contrib/download_prerequisites
+2023-02-01 00:41:01 URL:http://gcc.gnu.org/pub/gcc/infrastructure/gmp-6.2.1.tar.bz2 [2493916/2493916] -&gt; &quot;gmp-6.2.1.tar.bz2&quot; [1]
+2023-02-01 00:41:02 URL:http://gcc.gnu.org/pub/gcc/infrastructure/mpfr-4.1.0.tar.bz2 [1747243/1747243] -&gt; &quot;mpfr-4.1.0.tar.bz2&quot; [1]
+2023-02-01 00:41:03 URL:http://gcc.gnu.org/pub/gcc/infrastructure/mpc-1.2.1.tar.gz [838731/838731] -&gt; &quot;mpc-1.2.1.tar.gz&quot; [1]
+2023-02-01 00:41:04 URL:http://gcc.gnu.org/pub/gcc/infrastructure/isl-0.24.tar.bz2 [2261594/2261594] -&gt; &quot;isl-0.24.tar.bz2&quot; [1]
+gmp-6.2.1.tar.bz2: OK
+mpfr-4.1.0.tar.bz2: OK
+mpc-1.2.1.tar.gz: OK
+isl-0.24.tar.bz2: OK
+All prerequisites downloaded successfully.
+</code></pre>
+<h2 id="configure-and-compile-the-source">Configure and compile the source</h2>
+<pre><code>$ ./configure --enable-languages=c,c++ --disable-multilib
+$ make -j$(nproc)
+</code></pre>
+<h2 id="install-gcc">Install GCC</h2>
+<pre><code>$ make install
+</code></pre>
+<h2 id="verify-gcc-version">Verify GCC version</h2>
+<pre><code>$ gcc --version
+gcc (GCC) 12.2.0
+</code></pre>
+<h2 id="write-a-hello-world-c-program">Write a  &quot;hello world&quot; C program</h2>
+<pre><code>$ vi hello.c
+#include &lt;stdio.h&gt;
+void main()
+{
+printf(&quot;Hello world!\n&quot;);
+}
+</code></pre>
+<h2 id="compile-and-run-the-program">Compile and run the program</h2>
+<pre><code>$ gcc -o hello hello.c
+$ ./hello
+Hello world!
+</code></pre>
+<!--kg-card-end: markdown-->]]></content:encoded></item><item><title><![CDATA[Surprised! How can the write IOPS be 10x faster than the cloud native disk performance]]></title><description><![CDATA[<p>In a competitive fio write performance benchmark between 3rd party storage solution and cloud native disk, we noticed that the write performance for the 3rd party storage solution is 10x faster than the cloud native. This usually seems impossible since we would argue that no one can beat the raw</p>]]></description><link>https://www.flamingbytes.com/blog/surprised-how-can-the-write-throughput-be-10x-faster-than-the-cloud-native-disk-performance/</link><guid isPermaLink="false">63d0cefe2eaec20e4c700378</guid><category><![CDATA[Benchmarking]]></category><dc:creator><![CDATA[relentlesstorm]]></dc:creator><pubDate>Wed, 25 Jan 2023 07:18:00 GMT</pubDate><media:content url="https://images.unsplash.com/photo-1457969414820-5fdd86fc0b84?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=MnwxMTc3M3wwfDF8c2VhcmNofDR8fHJhY2V8ZW58MHx8fHwxNjc0NjMwNzE5&amp;ixlib=rb-4.0.3&amp;q=80&amp;w=2000" medium="image"/><content:encoded><![CDATA[<img src="https://images.unsplash.com/photo-1457969414820-5fdd86fc0b84?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=MnwxMTc3M3wwfDF8c2VhcmNofDR8fHJhY2V8ZW58MHx8fHwxNjc0NjMwNzE5&amp;ixlib=rb-4.0.3&amp;q=80&amp;w=2000" alt="Surprised! How can the write IOPS be 10x faster than the cloud native disk performance"><p>In a competitive fio write performance benchmark between 3rd party storage solution and cloud native disk, we noticed that the write performance for the 3rd party storage solution is 10x faster than the cloud native. This usually seems impossible since we would argue that no one can beat the raw disk performance. The following case shows an interesting write performance optimization from the storage solution under test.</p><!--kg-card-begin: markdown--><h2 id="cloud-native-raw-disk-performancefio4kwrite">Cloud native raw disk performance(fio,4k,write)</h2>
 <p>From the benchmark result, it shows the IOPS limit of the cloud drive is ~7500. This aligns with the cloud storage SPEC in use.</p>
 <p><img src="https://www.flamingbytes.com/content/images/posts/10xfast_1.jpg" alt="Surprised! How can the write IOPS be 10x faster than the cloud native disk performance" loading="lazy"><br>
 <img src="https://www.flamingbytes.com/content/images/posts/10xfast_2.jpg" alt="Surprised! How can the write IOPS be 10x faster than the cloud native disk performance" loading="lazy"><br>
@@ -1033,50 +1091,4 @@ spec:
 
 $ kubectl apply -f myapp.yaml          
 </code></pre>
-<!--kg-card-end: markdown-->]]></content:encoded></item><item><title><![CDATA[Hosting the Ghost blog on GitHub]]></title><description><![CDATA[GitHub Pages is a great solution for hosting static website. If you use the Ghost to manage your website, you can install Ghost locally and convert it to a static website in order to host it on Github.]]></description><link>https://www.flamingbytes.com/blog/ghost-github/</link><guid isPermaLink="false">63afb59696dbf412f1f80301</guid><category><![CDATA[Blog]]></category><dc:creator><![CDATA[relentlesstorm]]></dc:creator><pubDate>Tue, 27 Dec 2022 04:07:00 GMT</pubDate><media:content url="https://images.unsplash.com/photo-1543616991-75a2c125ff5b?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=MnwxMTc3M3wwfDF8c2VhcmNofDE1MXx8YmxvZ3xlbnwwfHx8fDE2NzI0NjIyOTE&amp;ixlib=rb-4.0.3&amp;q=80&amp;w=2000" medium="image"/><content:encoded><![CDATA[<!--kg-card-begin: markdown--><h1 id="install-ghost-locally">Install Ghost locally</h1>
-<img src="https://images.unsplash.com/photo-1543616991-75a2c125ff5b?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=MnwxMTc3M3wwfDF8c2VhcmNofDE1MXx8YmxvZ3xlbnwwfHx8fDE2NzI0NjIyOTE&amp;ixlib=rb-4.0.3&amp;q=80&amp;w=2000" alt="Hosting the Ghost blog on GitHub"><p><a href="https://pages.github.com/">GitHub Pages</a> is a great solution for hosting static website. If you use the Ghost to manage your website, you can <a href="https://ghost.org/docs/install/local/">install Ghost locally</a> and convert it to a static website in order to host it on Github.</p>
-<h2 id="install-ubuntu-virtual-machine-on-windowsoptional">Install Ubuntu virtual machine on Windows(optional)</h2>
-<h2 id="install-ghost-cli">Install Ghost-CLI</h2>
-<p>Ghost-CLI is a commandline tool to help you get Ghost installed and configured for use, quickly and easily.</p>
-<pre><code>$ npm install ghost-cli@latest -g
-</code></pre>
-<p>Ghost runs as background process and remains running until you stop or restart it. The following are some useful commands:</p>
-<pre><code>ghost help
-ghost ls
-ghost log
-ghost stop
-ghost start
-</code></pre>
-<h2 id="install-ghost">Install Ghost</h2>
-<pre><code>$ mkdir my-ghost-website
-$ cd my-ghost-website
-$ ghost install local
-</code></pre>
-<p>Once the Ghost is installed you can access the website on <a href="https://www.flamingbytes.com/">https://www.flamingbytes.com</a> and <a href="https://www.flamingbytes.com/ghost">https://www.flamingbytes.com/ghost</a> for Ghost Admin.</p>
-<h1 id="generate-the-static-website">Generate the static website</h1>
-<p>In order to generate the static website, we&apos;ll use the Ghost static site generator. For the Linux and macOS, this tool can be used directly.</p>
-<pre><code>$ sudo npm install -g ghost-static-site-generator
-</code></pre>
-<p>Now, we can push the generated static pages to the Github repository named <strong>username.github.io</strong>.</p>
-<p>To generate the static pages, we can run the following command. The static pages are generated in a folder called <em>static</em>.</p>
-<pre><code>$ gssg --url https://username.github.io
-</code></pre>
-<h1 id="push-the-static-pages-to-github">Push the static pages to Github</h1>
-<p>Before pushing the static pages to Github, a repository called <em>username.github.io</em> should be created on Github website.</p>
-<p>The static pages can be pushed to Github repository as below.</p>
-<pre><code>$ cd static
-$ git init .
-$ git remote add origin https://github.com/username/username.github.io.git
-$ git branch -M main
-$ git add .
-$ git commit -m &apos;Init my website&apos;
-$ git push -u origin main
-</code></pre>
-<p>After the push, Github will build and deploy the pages automatically. And the updated website will be available to access in a few minutes.</p>
-<h1 id="reference">Reference</h1>
-<ul>
-<li><a href="https://dev.to/bassel/hosting-your-ghost-blog-on-github-pages-for-free-53hl">https://dev.to/bassel/hosting-your-ghost-blog-on-github-pages-for-free-53hl</a></li>
-<li><a href="https://zzamboni.org/post/hosting-a-ghost-blog-in-github/#:~:text=Install%20and%20run%20Ghost%20locally,static%20website%20to%20GitHub%20Pages">https://zzamboni.org/post/hosting-a-ghost-blog-in-github/#:~:text=Install and run Ghost locally,static website to GitHub Pages</a></li>
-<li><a href="https://ghost.org/docs/reinstall/">https://ghost.org/docs/reinstall/</a></li>
-</ul>
 <!--kg-card-end: markdown-->]]></content:encoded></item></channel></rss>

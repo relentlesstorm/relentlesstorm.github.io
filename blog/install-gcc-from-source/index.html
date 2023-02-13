@@ -46,44 +46,62 @@
     </style>
 
     <link rel="icon" href="https://www.flamingbytes.com/content/images/size/w256h256/2023/01/FlamingBytes-icon-64x64.png" type="image/png" />
-    <link rel="canonical" href="https://www.flamingbytes.com/blog/dstat-a-replacement-for-vmstat-iostat-and-ifstat/" />
+    <link rel="canonical" href="https://www.flamingbytes.com/blog/install-gcc-from-source/" />
     <meta name="referrer" content="no-referrer-when-downgrade" />
     
     <meta property="og:site_name" content="FlamingBytes" />
     <meta property="og:type" content="article" />
-    <meta property="og:title" content="dstat - A replacement for vmstat, iostat and ifstat" />
-    <meta property="og:description" content="Introduction
+    <meta property="og:title" content="Install GCC from source" />
+    <meta property="og:description" content="In this post, we will go through the steps to install GCC from source on CentOS 7.
 
 
-dstat is a versatile tool for generating system resource statistics. It can be a replacement for vmstat, iostat and ifstat. It overcomes some of the limitations and adds some extra features.
+$ cat /etc/centos-release
+CentOS Linux release 7.9.2009 (Core)
+
+$ uname -r
+5.7.12-1.el7.elrepo.x86_64
 
 
-Dstat allows you to view all of your system resources instantly, you can eg. compare disk usage in" />
-    <meta property="og:url" content="https://www.flamingbytes.com/blog/dstat-a-replacement-for-vmstat-iostat-and-ifstat/" />
-    <meta property="og:image" content="https://images.unsplash.com/flagged/photo-1553267252-d100936057c1?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDV8fHN0YXRpc3RpY3N8ZW58MHx8fHwxNjcyNzg1NzQz&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000" />
-    <meta property="article:published_time" content="2022-03-04T00:00:00.000Z" />
-    <meta property="article:modified_time" content="2023-01-04T04:38:54.000Z" />
+
+
+Download GCC source
+
+
+$ curl -LO https://gcc.gnu.org/pub/gcc/releases/gcc-12.2." />
+    <meta property="og:url" content="https://www.flamingbytes.com/blog/install-gcc-from-source/" />
+    <meta property="og:image" content="https://images.unsplash.com/photo-1675959449383-1c7a27684c3c?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8YWxsfDJ8fHx8fHwyfHwxNjc2MjU1NTg4&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000" />
+    <meta property="article:published_time" content="2023-02-13T02:33:45.000Z" />
+    <meta property="article:modified_time" content="2023-02-13T02:33:45.000Z" />
     <meta property="article:tag" content="Linux" />
     
     <meta property="article:publisher" content="https://www.facebook.com/ghost" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="dstat - A replacement for vmstat, iostat and ifstat" />
-    <meta name="twitter:description" content="Introduction
+    <meta name="twitter:title" content="Install GCC from source" />
+    <meta name="twitter:description" content="In this post, we will go through the steps to install GCC from source on CentOS 7.
 
 
-dstat is a versatile tool for generating system resource statistics. It can be a replacement for vmstat, iostat and ifstat. It overcomes some of the limitations and adds some extra features.
+$ cat /etc/centos-release
+CentOS Linux release 7.9.2009 (Core)
+
+$ uname -r
+5.7.12-1.el7.elrepo.x86_64
 
 
-Dstat allows you to view all of your system resources instantly, you can eg. compare disk usage in" />
-    <meta name="twitter:url" content="https://www.flamingbytes.com/blog/dstat-a-replacement-for-vmstat-iostat-and-ifstat/" />
-    <meta name="twitter:image" content="https://images.unsplash.com/flagged/photo-1553267252-d100936057c1?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDV8fHN0YXRpc3RpY3N8ZW58MHx8fHwxNjcyNzg1NzQz&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000" />
+
+
+Download GCC source
+
+
+$ curl -LO https://gcc.gnu.org/pub/gcc/releases/gcc-12.2." />
+    <meta name="twitter:url" content="https://www.flamingbytes.com/blog/install-gcc-from-source/" />
+    <meta name="twitter:image" content="https://images.unsplash.com/photo-1675959449383-1c7a27684c3c?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8YWxsfDJ8fHx8fHwyfHwxNjc2MjU1NTg4&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000" />
     <meta name="twitter:label1" content="Written by" />
     <meta name="twitter:data1" content="relentlesstorm" />
     <meta name="twitter:label2" content="Filed under" />
     <meta name="twitter:data2" content="Linux" />
     <meta name="twitter:site" content="@ghost" />
     <meta property="og:image:width" content="2000" />
-    <meta property="og:image:height" content="1333" />
+    <meta property="og:image:height" content="1125" />
     
     <script type="application/ld+json">
 {
@@ -112,18 +130,18 @@ Dstat allows you to view all of your system resources instantly, you can eg. com
         "url": "https://www.flamingbytes.com/author/relentlesstorm/",
         "sameAs": []
     },
-    "headline": "dstat - A replacement for vmstat, iostat and ifstat",
-    "url": "https://www.flamingbytes.com/blog/dstat-a-replacement-for-vmstat-iostat-and-ifstat/",
-    "datePublished": "2022-03-04T00:00:00.000Z",
-    "dateModified": "2023-01-04T04:38:54.000Z",
+    "headline": "Install GCC from source",
+    "url": "https://www.flamingbytes.com/blog/install-gcc-from-source/",
+    "datePublished": "2023-02-13T02:33:45.000Z",
+    "dateModified": "2023-02-13T02:33:45.000Z",
     "image": {
         "@type": "ImageObject",
-        "url": "https://images.unsplash.com/flagged/photo-1553267252-d100936057c1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxMTc3M3wwfDF8c2VhcmNofDV8fHN0YXRpc3RpY3N8ZW58MHx8fHwxNjcyNzg1NzQz&ixlib=rb-4.0.3&q=80&w=2000",
+        "url": "https://images.unsplash.com/photo-1675959449383-1c7a27684c3c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxMTc3M3wwfDF8YWxsfDJ8fHx8fHwyfHwxNjc2MjU1NTg4&ixlib=rb-4.0.3&q=80&w=2000",
         "width": 2000,
-        "height": 1333
+        "height": 1125
     },
     "keywords": "Linux",
-    "description": "Introduction\n\n\ndstat is a versatile tool for generating system resource statistics. It can be a replacement for vmstat, iostat and ifstat. It overcomes some of the limitations and adds some extra features.\n\n\nDstat allows you to view all of your system resources instantly, you can eg. compare disk usage in combination with interrupts from your IDE controller, or compare the network bandwidth numbers directly with the disk throughput (in the same interval).\n\n\n\nUsage examples\n\n\nDisplay statistics o",
+    "description": "In this post, we will go through the steps to install GCC from source on CentOS 7.\n\n\n$ cat /etc/centos-release\nCentOS Linux release 7.9.2009 (Core)\n\n$ uname -r\n5.7.12-1.el7.elrepo.x86_64\n\n\n\n\nDownload GCC source\n\n\n$ curl -LO https://gcc.gnu.org/pub/gcc/releases/gcc-12.2.0/gcc-12.2.0.tar.gz\n\n\n\nUntar the source file:\n\n\n$ tar zxf gcc-12.2.0.tar.gz\n\n\n\n\nDownload the dependent libraries\n\n\n$ cd gcc-12.2.0/\n$ ./contrib/download_prerequisites\n2023-02-01 00:41:01 URL:http://gcc.gnu.org/pub/gcc/infrastructu",
     "mainEntityOfPage": {
         "@type": "WebPage",
         "@id": "https://www.flamingbytes.com/"
@@ -189,7 +207,7 @@ Dstat allows you to view all of your system resources instantly, you can eg. com
             <header class="gh-article-header gh-canvas">
                     <a class="gh-article-tag" href="https://www.flamingbytes.com/blog/tag/linux/">Linux</a>
 
-                <h1 class="gh-article-title">dstat - A replacement for vmstat, iostat and ifstat</h1>
+                <h1 class="gh-article-title">Install GCC from source</h1>
 
                     <aside class="gh-article-sidebar">
 
@@ -208,9 +226,9 @@ Dstat allows you to view all of your system resources instantly, you can eg. com
 
         <div class="gh-article-meta">
             <div class="gh-article-meta-inner">
-                <time class="gh-article-date" datetime="2022-03-04">Mar 4, 2022</time>
+                <time class="gh-article-date" datetime="2023-02-13">Feb 13, 2023</time>
                     <span class="gh-article-meta-sep"></span>
-                    <span class="gh-article-length">3 min</span>
+                    <span class="gh-article-length">1 min</span>
             </div>
         </div>
 
@@ -219,73 +237,72 @@ Dstat allows you to view all of your system resources instantly, you can eg. com
 
                     <figure class="gh-article-image">
         <img
-            srcset="https://images.unsplash.com/flagged/photo-1553267252-d100936057c1?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDV8fHN0YXRpc3RpY3N8ZW58MHx8fHwxNjcyNzg1NzQz&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;300 300w,
-                    https://images.unsplash.com/flagged/photo-1553267252-d100936057c1?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDV8fHN0YXRpc3RpY3N8ZW58MHx8fHwxNjcyNzg1NzQz&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720 720w,
-                    https://images.unsplash.com/flagged/photo-1553267252-d100936057c1?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDV8fHN0YXRpc3RpY3N8ZW58MHx8fHwxNjcyNzg1NzQz&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;960 960w,
-                    https://images.unsplash.com/flagged/photo-1553267252-d100936057c1?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDV8fHN0YXRpc3RpY3N8ZW58MHx8fHwxNjcyNzg1NzQz&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1200 1200w,
-                    https://images.unsplash.com/flagged/photo-1553267252-d100936057c1?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDV8fHN0YXRpc3RpY3N8ZW58MHx8fHwxNjcyNzg1NzQz&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000 2000w"
+            srcset="https://images.unsplash.com/photo-1675959449383-1c7a27684c3c?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8YWxsfDJ8fHx8fHwyfHwxNjc2MjU1NTg4&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;300 300w,
+                    https://images.unsplash.com/photo-1675959449383-1c7a27684c3c?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8YWxsfDJ8fHx8fHwyfHwxNjc2MjU1NTg4&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720 720w,
+                    https://images.unsplash.com/photo-1675959449383-1c7a27684c3c?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8YWxsfDJ8fHx8fHwyfHwxNjc2MjU1NTg4&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;960 960w,
+                    https://images.unsplash.com/photo-1675959449383-1c7a27684c3c?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8YWxsfDJ8fHx8fHwyfHwxNjc2MjU1NTg4&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1200 1200w,
+                    https://images.unsplash.com/photo-1675959449383-1c7a27684c3c?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8YWxsfDJ8fHx8fHwyfHwxNjc2MjU1NTg4&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000 2000w"
             sizes="(max-width: 1200px) 100vw, 1200px"
-            src="https://images.unsplash.com/flagged/photo-1553267252-d100936057c1?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDV8fHN0YXRpc3RpY3N8ZW58MHx8fHwxNjcyNzg1NzQz&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1200"
-            alt="dstat - A replacement for vmstat, iostat and ifstat"
+            src="https://images.unsplash.com/photo-1675959449383-1c7a27684c3c?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8YWxsfDJ8fHx8fHwyfHwxNjc2MjU1NTg4&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1200"
+            alt="Install GCC from source"
         >
-            <figcaption>Photo by <a href="https://unsplash.com/@ruthson_zimmerman?utm_source=ghost&utm_medium=referral&utm_campaign=api-credit">Ruthson Zimmerman</a> / <a href="https://unsplash.com/?utm_source=ghost&utm_medium=referral&utm_campaign=api-credit">Unsplash</a></figcaption>
+            <figcaption>Photo by <a href="https://unsplash.com/@muriel_1?utm_source=ghost&utm_medium=referral&utm_campaign=api-credit">Muriel Liu</a> / <a href="https://unsplash.com/?utm_source=ghost&utm_medium=referral&utm_campaign=api-credit">Unsplash</a></figcaption>
     </figure>
             </header>
 
             <section class="gh-content gh-canvas">
                 <aside class="gh-sidebar"><div class="gh-toc"></div></aside> 
 
-                <!--kg-card-begin: markdown--><h2 id="introduction">Introduction</h2>
-<p>dstat is a versatile tool for generating system resource statistics. It can be a replacement for vmstat, iostat and ifstat. It overcomes some of the limitations and adds some extra features.</p>
-<p>Dstat allows you to view all of your system resources instantly, you can eg. compare disk usage in combination with interrupts from your IDE controller, or compare the network bandwidth numbers directly with the disk throughput (in the same interval).</p>
-<h2 id="usage-examples">Usage examples</h2>
-<p>Display statistics of major OS components:</p>
-<p><img src="https://www.flamingbytes.com/content/images/posts/dstat-1.png" alt="Image" loading="lazy"></p>
-<p>Relate disk-throughput with network-usage (eth0), total CPU-usage and system counters:</p>
-<p><img src="https://www.flamingbytes.com/content/images/posts/dstat-1.png" alt="Image" loading="lazy"></p>
-<p>Check dstat's behaviour and the system impact of dstat:</p>
-<p><img src="https://www.flamingbytes.com/content/images/posts/dstat-2.png" alt="Image" loading="lazy"></p>
-<p>Use the time plugin together with cpu, net, disk, system, load, proc and top_cpu plugins:</p>
-<p><img src="https://www.flamingbytes.com/content/images/posts/dstat-3.png" alt="Image" loading="lazy"></p>
-<p>Display stats of process using most of the CPU or memory:</p>
-<p><img src="https://www.flamingbytes.com/content/images/posts/dstat-top-cpu-mem.png" alt="Image" loading="lazy"></p>
-<p>Display stats of process using most of the CPU and memory:</p>
-<p><img src="https://www.flamingbytes.com/content/images/posts/dstat-top-cpu-and-mem.png" alt="Image" loading="lazy"></p>
-<p>Relate cpu stats with interrupts per device:</p>
-<p><img src="https://www.flamingbytes.com/content/images/posts/dstat-4.png" alt="Image" loading="lazy"></p>
-<p>Display information that was to be displayed by vmstat tool:</p>
-<p><img src="https://www.flamingbytes.com/content/images/posts/dstat-vmstat.png" alt="Image" loading="lazy"></p>
-<p>Display the list of all plugins:</p>
-<pre><code class="language-shell">root ~$ dstat --list
-internal:
-	aio, cpu, cpu24, disk, disk24, disk24old, epoch, fs, int, int24, io, ipc, load, lock, mem, net, page, page24, proc, raw, socket, swap, swapold, sys, tcp, time, udp, unix, vm
-/usr/share/dstat:
-	battery, battery-remain, cpufreq, dbus, disk-tps, disk-util, dstat, dstat-cpu, dstat-ctxt, dstat-mem, fan, freespace, gpfs, gpfs-ops, helloworld, innodb-buffer, innodb-io, innodb-ops, lustre, memcache-hits, mysql-io, mysql-keys, mysql5-cmds, mysql5-conn,
-	mysql5-io, mysql5-keys, net-packets, nfs3, nfs3-ops, nfsd3, nfsd3-ops, ntp, postfix, power, proc-count, qmail, rpc, rpcd, sendmail, snooze, squid, test, thermal, top-bio, top-bio-adv, top-childwait, top-cpu, top-cpu-adv, top-cputime, top-cputime-avg, top-int,
-	top-io, top-io-adv, top-latency, top-latency-avg, top-mem, top-oom, utmp, vm-memctl, vmk-hba, vmk-int, vmk-nic, vz-cpu, vz-io, vz-ubc, wifi
+                <!--kg-card-begin: markdown--><p>In this post, we will go through the steps to install <a href="https://gcc.gnu.org/">GCC</a> from source on CentOS 7.</p>
+<pre><code>$ cat /etc/centos-release
+CentOS Linux release 7.9.2009 (Core)
+
+$ uname -r
+5.7.12-1.el7.elrepo.x86_64
 </code></pre>
-<p>Force float values to be printed:</p>
-<pre><code class="language-shell">root ~$ dstat --float 2
-You did not select any stats, using -cdngy by default.
-----total-cpu-usage---- -dsk/total- -net/total- ---paging-- ---system--
-usr sys idl wai hiq siq| read  writ| recv  send|  in   out | int   csw
-4.5 1.8  94 0.1   0 0.1| 251B 76.1k|   0     0 |   0     0 |4619  8021
-2.3 1.1  96 0.1   0 0.1|   0  54.0k|15.9k 7215B|   0     0 |3497  6381
-5.3 2.4  92 0.1   0 0.1|   0   112k|18.1k 17.4k|   0     0 |5323  9184
-9.4 2.3  88 0.1   0 0.3|   0   116k|24.5k  193k|   0     0 |5370  9091
-2.3 1.3  96 0.1   0   0|   0  82.0k|18.0k 10.6k|   0     0 |3448  6127 ^C
+<h2 id="download-gcc-source">Download GCC <a href="https://gcc.gnu.org/pub/gcc/releases/">source</a></h2>
+<pre><code>$ curl -LO https://gcc.gnu.org/pub/gcc/releases/gcc-12.2.0/gcc-12.2.0.tar.gz
 </code></pre>
-<p>Display the time, cpu, mem, network, disk, system load, process stats with 2 seconds delay between 5 updates, and save output to a csv file:</p>
-<p><img src="https://www.flamingbytes.com/content/images/posts/dstat-output-csv.png" alt="Image" loading="lazy"></p>
-<p>Learn more about how the dstat is implemented:</p>
-<p>Check out the source code <a href="https://github.com/dstat-real/dstat">here</a>. Credit to <em>Dag Wieers</em>.</p>
-<h2 id="reference">Reference</h2>
-<ul>
-<li><a href="https://linux.die.net/man/1/dstat">https://linux.die.net/man/1/dstat</a></li>
-<li><a href="https://www.geeksforgeeks.org/dstat-command-in-linux-with-examples/">https://www.geeksforgeeks.org/dstat-command-in-linux-with-examples/</a></li>
-<li><a href="https://github.com/dstat-real/dstat">https://github.com/dstat-real/dstat</a></li>
-<li><a href="https://github.com/scottchiefbaker/dool">https://github.com/scottchiefbaker/dool</a></li>
-</ul>
+<p>Untar the source file:</p>
+<pre><code>$ tar zxf gcc-12.2.0.tar.gz
+</code></pre>
+<h2 id="download-the-dependent-libraries">Download the dependent libraries</h2>
+<pre><code>$ cd gcc-12.2.0/
+$ ./contrib/download_prerequisites
+2023-02-01 00:41:01 URL:http://gcc.gnu.org/pub/gcc/infrastructure/gmp-6.2.1.tar.bz2 [2493916/2493916] -&gt; &quot;gmp-6.2.1.tar.bz2&quot; [1]
+2023-02-01 00:41:02 URL:http://gcc.gnu.org/pub/gcc/infrastructure/mpfr-4.1.0.tar.bz2 [1747243/1747243] -&gt; &quot;mpfr-4.1.0.tar.bz2&quot; [1]
+2023-02-01 00:41:03 URL:http://gcc.gnu.org/pub/gcc/infrastructure/mpc-1.2.1.tar.gz [838731/838731] -&gt; &quot;mpc-1.2.1.tar.gz&quot; [1]
+2023-02-01 00:41:04 URL:http://gcc.gnu.org/pub/gcc/infrastructure/isl-0.24.tar.bz2 [2261594/2261594] -&gt; &quot;isl-0.24.tar.bz2&quot; [1]
+gmp-6.2.1.tar.bz2: OK
+mpfr-4.1.0.tar.bz2: OK
+mpc-1.2.1.tar.gz: OK
+isl-0.24.tar.bz2: OK
+All prerequisites downloaded successfully.
+</code></pre>
+<h2 id="configure-and-compile-the-source">Configure and compile the source</h2>
+<pre><code>$ ./configure --enable-languages=c,c++ --disable-multilib
+$ make -j$(nproc)
+</code></pre>
+<h2 id="install-gcc">Install GCC</h2>
+<pre><code>$ make install
+</code></pre>
+<h2 id="verify-gcc-version">Verify GCC version</h2>
+<pre><code>$ gcc --version
+gcc (GCC) 12.2.0
+</code></pre>
+<h2 id="write-a-hello-world-c-program">Write a  &quot;hello world&quot; C program</h2>
+<pre><code>$ vi hello.c
+#include &lt;stdio.h&gt;
+void main()
+{
+printf(&quot;Hello world!\n&quot;);
+}
+</code></pre>
+<h2 id="compile-and-run-the-program">Compile and run the program</h2>
+<pre><code>$ gcc -o hello hello.c
+$ ./hello
+Hello world!
+</code></pre>
 <!--kg-card-end: markdown-->
 
                 <!-- native ads start -->
@@ -306,59 +323,6 @@ usr sys idl wai hiq siq| read  writ| recv  send|  in   out | int   csw
                 <div class="gh-topic gh-topic-grid">
                     <div class="gh-topic-content">
                             <article class="gh-card post">
-    <a class="gh-card-link" href="/blog/install-gcc-from-source/">
-            <figure class="gh-card-image">
-                <img
-                    srcset="https://images.unsplash.com/photo-1675959449383-1c7a27684c3c?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8YWxsfDJ8fHx8fHwyfHwxNjc2MjU1NTg4&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;300 300w,
-                            https://images.unsplash.com/photo-1675959449383-1c7a27684c3c?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8YWxsfDJ8fHx8fHwyfHwxNjc2MjU1NTg4&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720 720w,
-                            https://images.unsplash.com/photo-1675959449383-1c7a27684c3c?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8YWxsfDJ8fHx8fHwyfHwxNjc2MjU1NTg4&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;960 960w,
-                            https://images.unsplash.com/photo-1675959449383-1c7a27684c3c?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8YWxsfDJ8fHx8fHwyfHwxNjc2MjU1NTg4&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1200 1200w,
-                            https://images.unsplash.com/photo-1675959449383-1c7a27684c3c?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8YWxsfDJ8fHx8fHwyfHwxNjc2MjU1NTg4&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000 2000w"
-                    sizes="(max-width: 1200px) 100vw, 1200px"
-                    src="https://images.unsplash.com/photo-1675959449383-1c7a27684c3c?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8YWxsfDJ8fHx8fHwyfHwxNjc2MjU1NTg4&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720"
-                    alt="Install GCC from source"
-                >
-            </figure>
-
-        <div class="gh-card-wrapper">
-            <header class="gh-card-header">
-                <h3 class="gh-card-title">Install GCC from source</h3>
-            </header>
-
-                    <div class="gh-card-excerpt">In this post, we will go through the steps to install GCC from source on CentOS 7.
-
-
-$ cat /etc/centos-release
-CentOS Linux release 7.9.2009 (Core)
-
-$ uname -r
-5.7.12-1.el7.elrepo.x86_64
-
-
-
-
-Download GCC source
-
-
-$ curl -LO https://gcc.gnu.org/pub/gcc/releases/gcc-12.2.</div>
-
-            <footer class="gh-card-footer">
-                <span class="gh-card-author">relentlesstorm</span>
-                <time class="gh-card-date" datetime="2023-02-13">Feb 13, 2023</time>
-                    <script
-    data-ghost-comment-count="63e9a08bf19d570e66aae054"
-    data-ghost-comment-count-empty=""
-    data-ghost-comment-count-singular="comment"
-    data-ghost-comment-count-plural="comments"
-    data-ghost-comment-count-tag="span"
-    data-ghost-comment-count-class-name="gh-card-comments"
-    data-ghost-comment-count-autowrap="true"
->
-</script>
-            </footer>
-        </div>
-    </a>
-</article>                            <article class="gh-card post">
     <a class="gh-card-link" href="/blog/how-to-install-gui-desktop-on-centos-7/">
             <figure class="gh-card-image">
                 <img
@@ -468,6 +432,56 @@ $ kill -l
             </footer>
         </div>
     </a>
+</article>                            <article class="gh-card post featured">
+    <a class="gh-card-link" href="/blog/cgroups-limit-io/">
+            <figure class="gh-card-image">
+                <img
+                    srcset="https://images.unsplash.com/photo-1646226343350-1ee5021e342a?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDN8fGhhcmRkaXNrfGVufDB8fHx8MTY3MjQ2MzUxOQ&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;300 300w,
+                            https://images.unsplash.com/photo-1646226343350-1ee5021e342a?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDN8fGhhcmRkaXNrfGVufDB8fHx8MTY3MjQ2MzUxOQ&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720 720w,
+                            https://images.unsplash.com/photo-1646226343350-1ee5021e342a?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDN8fGhhcmRkaXNrfGVufDB8fHx8MTY3MjQ2MzUxOQ&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;960 960w,
+                            https://images.unsplash.com/photo-1646226343350-1ee5021e342a?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDN8fGhhcmRkaXNrfGVufDB8fHx8MTY3MjQ2MzUxOQ&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1200 1200w,
+                            https://images.unsplash.com/photo-1646226343350-1ee5021e342a?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDN8fGhhcmRkaXNrfGVufDB8fHx8MTY3MjQ2MzUxOQ&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000 2000w"
+                    sizes="(max-width: 1200px) 100vw, 1200px"
+                    src="https://images.unsplash.com/photo-1646226343350-1ee5021e342a?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDN8fGhhcmRkaXNrfGVufDB8fHx8MTY3MjQ2MzUxOQ&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720"
+                    alt="Using cgroups to limit block device bandwidth"
+                >
+            </figure>
+
+        <div class="gh-card-wrapper">
+            <header class="gh-card-header">
+                <h3 class="gh-card-title">Using cgroups to limit block device bandwidth</h3>
+            </header>
+
+                    <div class="gh-card-excerpt">The block I/O controller specifies upper IO rate limits on devices.
+
+
+$ mount | egrep "/cgroup |/blkio"
+tmpfs on /sys/fs/cgroup type tmpfs (ro,nosuid,nodev,noexec,mode=755)
+cgroup on /sys/fs/cgroup/blkio type cgroup (rw,nosuid,nodev,noexec,relatime,blkio)
+
+$ lscgroup  | grep blkio
+blkio:/
+
+
+
+In this post,</div>
+
+            <footer class="gh-card-footer">
+                <span class="gh-card-author">relentlesstorm</span>
+                <time class="gh-card-date" datetime="2022-12-05">Dec 5, 2022</time>
+                    <script
+    data-ghost-comment-count="63afc44996dbf412f1f80353"
+    data-ghost-comment-count-empty=""
+    data-ghost-comment-count-singular="comment"
+    data-ghost-comment-count-plural="comments"
+    data-ghost-comment-count-tag="span"
+    data-ghost-comment-count-class-name="gh-card-comments"
+    data-ghost-comment-count-autowrap="true"
+>
+</script>
+            </footer>
+        </div>
+    </a>
 </article>                    </div>
                 </div>
             </div>
@@ -477,7 +491,7 @@ $ kill -l
                     <div class="gh-comments gh-read-next gh-canvas">
             <section class="gh-pagehead">
                 <h4 class="gh-pagehead-title">Comments (<script
-    data-ghost-comment-count="63b4af841527a00d97449ed5"
+    data-ghost-comment-count="63e9a08bf19d570e66aae054"
     data-ghost-comment-count-empty="0"
     data-ghost-comment-count-singular=""
     data-ghost-comment-count-plural=""
@@ -488,7 +502,7 @@ $ kill -l
 </script>)</h3>
             </section>
             
-        <script defer src="https://cdn.jsdelivr.net/ghost/comments-ui@~0.12/umd/comments-ui.min.js" data-ghost-comments="https://www.flamingbytes.com/" data-api="https://www.flamingbytes.com/ghost/api/content/" data-admin="https://www.flamingbytes.com/ghost/" data-key="321a1d1aea33fd468f6e61f563" data-styles="https://cdn.jsdelivr.net/ghost/comments-ui@~0.12/umd/main.css" data-title="" data-count="false" data-post-id="63b4af841527a00d97449ed5" data-sentry-dsn="" data-color-scheme="auto" data-avatar-saturation="60" data-accent-color="#6a13ec" data-app-version="0.12" data-comments-enabled="all" data-publication="FlamingBytes" crossorigin="anonymous"></script>
+        <script defer src="https://cdn.jsdelivr.net/ghost/comments-ui@~0.12/umd/comments-ui.min.js" data-ghost-comments="https://www.flamingbytes.com/" data-api="https://www.flamingbytes.com/ghost/api/content/" data-admin="https://www.flamingbytes.com/ghost/" data-key="321a1d1aea33fd468f6e61f563" data-styles="https://cdn.jsdelivr.net/ghost/comments-ui@~0.12/umd/main.css" data-title="" data-count="false" data-post-id="63e9a08bf19d570e66aae054" data-sentry-dsn="" data-color-scheme="auto" data-avatar-saturation="60" data-accent-color="#6a13ec" data-app-version="0.12" data-comments-enabled="all" data-publication="FlamingBytes" crossorigin="anonymous"></script>
     
         </div>
         -->
@@ -497,8 +511,8 @@ $ kill -l
         <div id="disqus_thread"></div>
 <script>
     var disqus_config = function () {
-        this.page.url = "https://www.flamingbytes.com/blog/dstat-a-replacement-for-vmstat-iostat-and-ifstat/";
-        this.page.identifier = "ghost-63b4af841527a00d97449ed5"
+        this.page.url = "https://www.flamingbytes.com/blog/install-gcc-from-source/";
+        this.page.identifier = "ghost-63e9a08bf19d570e66aae054"
     };
     (function() {
     var d = document, s = d.createElement('script');
