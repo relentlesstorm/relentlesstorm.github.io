@@ -1,12 +1,133 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:media="http://search.yahoo.com/mrss/"><channel><title><![CDATA[FlamingBytes]]></title><description><![CDATA[Stay hungry, Stay foolish.]]></description><link>https://www.flamingbytes.com/</link><image><url>https://www.flamingbytes.com/favicon.png</url><title>FlamingBytes</title><link>https://www.flamingbytes.com/</link></image><generator>Ghost 5.26</generator><lastBuildDate>Mon, 13 Feb 2023 02:35:45 GMT</lastBuildDate><atom:link href="https://www.flamingbytes.com/rss/" rel="self" type="application/rss+xml"/><ttl>60</ttl><item><title><![CDATA[Install GCC from source]]></title><description><![CDATA[<!--kg-card-begin: markdown--><p>In this post, we will go through the steps to install <a href="https://gcc.gnu.org/">GCC</a> from source on CentOS 7.</p>
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:media="http://search.yahoo.com/mrss/"><channel><title><![CDATA[FlamingBytes]]></title><description><![CDATA[Stay hungry, Stay foolish.]]></description><link>https://www.flamingbytes.com/</link><image><url>https://www.flamingbytes.com/favicon.png</url><title>FlamingBytes</title><link>https://www.flamingbytes.com/</link></image><generator>Ghost 5.26</generator><lastBuildDate>Mon, 13 Feb 2023 03:44:57 GMT</lastBuildDate><atom:link href="https://www.flamingbytes.com/rss/" rel="self" type="application/rss+xml"/><ttl>60</ttl><item><title><![CDATA[Getting started with BCC (BPF Compiler Collection)]]></title><description><![CDATA[BCC is a toolkit for creating efficient kernel tracing and manipulation programs, and includes several useful tools and examples. ]]></description><link>https://www.flamingbytes.com/blog/getting-started-with-bcc/</link><guid isPermaLink="false">63e9a9a1f19d570e66aae077</guid><category><![CDATA[Performance]]></category><dc:creator><![CDATA[relentlesstorm]]></dc:creator><pubDate>Sun, 12 Feb 2023 03:40:00 GMT</pubDate><media:content url="https://images.unsplash.com/photo-1661956602868-6ae368943878?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=MnwxMTc3M3wxfDF8YWxsfDE2fHx8fHx8Mnx8MTY3NjI1NTU4OA&amp;ixlib=rb-4.0.3&amp;q=80&amp;w=2000" medium="image"/><content:encoded><![CDATA[<!--kg-card-begin: markdown--><h2 id="intro-to-bcc">Intro to BCC</h2>
+<img src="https://images.unsplash.com/photo-1661956602868-6ae368943878?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=MnwxMTc3M3wxfDF8YWxsfDE2fHx8fHx8Mnx8MTY3NjI1NTU4OA&amp;ixlib=rb-4.0.3&amp;q=80&amp;w=2000" alt="Getting started with BCC (BPF Compiler Collection)"><p><a href="https://github.com/iovisor/bcc">BCC</a> is a toolkit for creating efficient kernel tracing and manipulation programs, and includes several useful tools and examples. It makes use of extended BPF (Berkeley Packet Filters), formally known as eBPF, a new feature that was first added to Linux 3.15. Much of what BCC uses requires Linux 4.1 and above.</p>
+<h2 id="install-bcc-from-packages">Install BCC from packages</h2>
+<p>In general, a Linux kernel version 4.1 or newer is required.</p>
 <pre><code>$ cat /etc/centos-release
 CentOS Linux release 7.9.2009 (Core)
 
 $ uname -r
 5.7.12-1.el7.elrepo.x86_64
 </code></pre>
-<h2 id="download-gcc-source">Download GCC <a href="https://gcc.gnu.org/pub/gcc/releases/">source</a></h2>
-<pre><code>$ curl -LO https://gcc.gnu.org/pub/gcc/releases/gcc-12.2.</code></pre>]]></description><link>https://www.flamingbytes.com/blog/install-gcc-from-source/</link><guid isPermaLink="false">63e9a08bf19d570e66aae054</guid><category><![CDATA[Linux]]></category><dc:creator><![CDATA[relentlesstorm]]></dc:creator><pubDate>Mon, 13 Feb 2023 02:33:45 GMT</pubDate><media:content url="https://images.unsplash.com/photo-1675959449383-1c7a27684c3c?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=MnwxMTc3M3wwfDF8YWxsfDJ8fHx8fHwyfHwxNjc2MjU1NTg4&amp;ixlib=rb-4.0.3&amp;q=80&amp;w=2000" medium="image"/><content:encoded><![CDATA[<!--kg-card-begin: markdown--><img src="https://images.unsplash.com/photo-1675959449383-1c7a27684c3c?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=MnwxMTc3M3wwfDF8YWxsfDJ8fHx8fHwyfHwxNjc2MjU1NTg4&amp;ixlib=rb-4.0.3&amp;q=80&amp;w=2000" alt="Install GCC from source"><p>In this post, we will go through the steps to install <a href="https://gcc.gnu.org/">GCC</a> from source on CentOS 7.</p>
+<p>In addition, the kernel should have been compiled with the following <a href="https://github.com/iovisor/bcc/blob/master/INSTALL.md">flags set</a>.</p>
+<pre><code>CONFIG_BPF=y
+CONFIG_BPF_SYSCALL=y
+# [optional, for tc filters]
+CONFIG_NET_CLS_BPF=m
+# [optional, for tc actions]
+CONFIG_NET_ACT_BPF=m
+CONFIG_BPF_JIT=y
+# [for Linux kernel versions 4.1 through 4.6]
+CONFIG_HAVE_BPF_JIT=y
+# [for Linux kernel versions 4.7 and later]
+CONFIG_HAVE_EBPF_JIT=y
+# [optional, for kprobes]
+CONFIG_BPF_EVENTS=y
+# Need kernel headers through /sys/kernel/kheaders.tar.xz
+CONFIG_IKHEADERS=y
+</code></pre>
+<p>There are a few optional kernel flags needed for running bcc networking examples on vanilla kernel:</p>
+<pre><code>CONFIG_NET_SCH_SFQ=m
+CONFIG_NET_ACT_POLICE=m
+CONFIG_NET_ACT_GACT=m
+CONFIG_DUMMY=m
+CONFIG_VXLAN=m
+</code></pre>
+<p>These kernel configuration might be set by default after the OS installation but you should double check as below.</p>
+<pre><code>$ cat /boot/config-$(uname -r)
+</code></pre>
+<p><strong>To install the BCC tools from the official yum repository:</strong></p>
+<pre><code>$ yum install bcc-tools
+Installed:
+  bcc-tools.x86_64 0:0.10.0-1.el7
+
+Dependency Installed:
+  bcc.x86_64 0:0.10.0-1.el7   python-bcc.x86_64 0:0.10.0-1.el7
+</code></pre>
+<p>The following BCC tools are pre-defined and available to use after installation.</p>
+<pre><code>$ cd /usr/share/bcc
+$ ls
+introspection  tools
+$ cd /usr/share/bcc/tools
+$ ls
+argdist bpflist cobjnew dcstat ext4dist funclatency javagc llcstat nfsslower opensnoop phpstat pythonstat rubystat sofdsnoop syncsnoop tcpaccept tcpsubnet vfscount bashreadline btrfsdist cpudist deadlock ext4slower funcslower javaobjnew mdflush nodegc perlcalls  pidpersec reset-trace runqlat softirqs syscount tcpconnect tcptop vfsstat biolatency btrfsslower cpuunclaimed deadlock.c filelife gethostlatency  javastat memleak nodestat perlflow profile rubycalls runqlen solisten tclcalls tcpconnlat tcptracer wakeuptime biosnoop cachestat dbslower doc fileslower hardirqs javathreads mountsnoop offcputime perlstat pythoncalls rubyflow runqslower sslsniff tclflow tcpdrop tplist xfsdist biotop cachetop dbstat drsnoop filetop javacalls killsnoop mysqld_qslower offwaketime phpcalls pythonflow rubygc shmsnoop stackcount tclobjnew tcplife trace xfsslower bitesize capable dcsnoop execsnoop funccount javaflow lib nfsdist oomkill phpflow pythongc rubyobjnew slabratetop statsnoop tclstat tcpretrans ttysnoop
+</code></pre>
+<p><strong>To add bcc directory to the $PATH:</strong></p>
+<pre><code>$ vim .bash_profile
+bcctools=/usr/share/bcc/tools
+PATH=$PATH:$HOME/bin:$bcctools
+export PATH
+    
+$ source ~/.bash_profile
+$ echo $PATH
+/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/root/bin:/root/bin:/usr/share/bcc/tools
+</code></pre>
+<h2 id="install-bcc-from-source">Install BCC from source</h2>
+<p>If you want to install a different version of BCC, you can refer to <a href="https://github.com/iovisor/bcc/blob/master/INSTALL.md">here</a>. I tried this but it seems very tricky to install it successfully. I&apos;ll not discuss it in this post.</p>
+<h2 id="use-the-bcc-tools">Use the BCC tools</h2>
+<p>It&apos;s not suprise if you see the following error for the first time run of BCC tools.</p>
+<pre><code>$ biolatency
+In file included from /virtual/main.c:2:
+In file included from /lib/modules/5.7.12-1.el7.elrepo.x86_64/build/include/uapi/linux/ptrace.h:142:
+In file included from /lib/modules/5.7.12-1.el7.elrepo.x86_64/build/arch/x86/include/asm/ptrace.h:5:
+/lib/modules/5.7.12-1.el7.elrepo.x86_64/build/arch/x86/include/asm/segment.h:266:2: error: expected &apos;(&apos; after &apos;asm&apos;
+        alternative_io (&quot;lsl %[seg],%[p]&quot;,
+        ^
+/lib/modules/5.7.12-1.el7.elrepo.x86_64/build/arch/x86/include/asm/alternative.h:240:2: note: expanded from macro &apos;alternative_io&apos;
+        asm_inline volatile (ALTERNATIVE(oldinstr, newinstr, feature)   \
+        ^
+/lib/modules/5.7.12-1.el7.elrepo.x86_64/build/include/linux/compiler_types.h:201:24: note: expanded from macro &apos;asm_inline&apos;
+#define asm_inline asm __inline
+                       ^
+In file included from /virtual/main.c:3:
+</code></pre>
+<p>This is because many BCC tools are broken with kernel 5.4+ and libbcc 0.10.</p>
+<p><strong>To fix this problem:</strong></p>
+<p>Modify as below for the BPF program definition.</p>
+<p>Original code:</p>
+<pre><code>$ vim biolatency
+&lt;snippet&gt;
+# define BPF program
+bpf_text = &quot;&quot;&quot;
+#include &lt;uapi/linux/ptrace.h&gt;
+#include &lt;linux/blkdev.h&gt;
+&lt;snippet&gt;
+</code></pre>
+<p>Modified code:</p>
+<pre><code>$ vim biolatency
+&lt;snippet&gt;
+# define BPF program
+bpf_text = &quot;&quot;&quot;
+#ifdef asm_inline
+#undef asm_inline
+#define asm_inline asm
+#endif
+#include &lt;uapi/linux/ptrace.h&gt;
+#include &lt;linux/blkdev.h&gt;
+&lt;snippet&gt;
+</code></pre>
+<p><strong>Run the BCC tool again now:</strong></p>
+<pre><code>$ biolatency
+Tracing block device I/O... Hit Ctrl-C to end.
+^C
+    usecs               : count     distribution
+    0 -&gt; 1          : 0        |                                        |
+    2 -&gt; 3          : 0        |                                        |
+    4 -&gt; 7          : 0        |                                        |
+    8 -&gt; 15         : 0        |                                        |
+    16 -&gt; 31        : 0        |                                        |
+    32 -&gt; 63        : 6        |********************                    |
+    64 -&gt; 127       : 12       |****************************************|
+    128 -&gt; 255      : 3        |**********                              |
+</code></pre>
+<h2 id="reference">Reference</h2>
+<ul>
+<li><a href="https://github.com/iovisor/bcc">https://github.com/iovisor/bcc</a></li>
+<li><a href="https://blogs.oracle.com/linux/post/intro-to-bcc-1">https://blogs.oracle.com/linux/post/intro-to-bcc-1</a></li>
+<li><a href="https://gitlab.com/gitlab-com/gl-infra/reliability/-/issues/12052">https://gitlab.com/gitlab-com/gl-infra/reliability/-/issues/12052</a></li>
+<li><a href="https://blog.csdn.net/thesre/article/details/122508493">https://blog.csdn.net/thesre/article/details/122508493</a></li>
+<li><a href="https://www.containiq.com/post/bcc-tools">https://www.containiq.com/post/bcc-tools</a></li>
+</ul>
+<!--kg-card-end: markdown-->]]></content:encoded></item><item><title><![CDATA[Install GCC from source]]></title><description><![CDATA[In this post, we will go through the steps to install GCC.]]></description><link>https://www.flamingbytes.com/blog/install-gcc-from-source/</link><guid isPermaLink="false">63e9a08bf19d570e66aae054</guid><category><![CDATA[Linux]]></category><dc:creator><![CDATA[relentlesstorm]]></dc:creator><pubDate>Fri, 10 Feb 2023 02:33:00 GMT</pubDate><media:content url="https://images.unsplash.com/photo-1675959449383-1c7a27684c3c?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=MnwxMTc3M3wwfDF8YWxsfDJ8fHx8fHwyfHwxNjc2MjU1NTg4&amp;ixlib=rb-4.0.3&amp;q=80&amp;w=2000" medium="image"/><content:encoded><![CDATA[<!--kg-card-begin: markdown--><img src="https://images.unsplash.com/photo-1675959449383-1c7a27684c3c?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=MnwxMTc3M3wwfDF8YWxsfDJ8fHx8fHwyfHwxNjc2MjU1NTg4&amp;ixlib=rb-4.0.3&amp;q=80&amp;w=2000" alt="Install GCC from source"><p>In this post, we will go through the steps to install <a href="https://gcc.gnu.org/">GCC</a> from source on CentOS 7.</p>
 <pre><code>$ cat /etc/centos-release
 CentOS Linux release 7.9.2009 (Core)
 
@@ -1011,84 +1132,4 @@ $ kubectl exec -it perfbench-0 -- bash
 <li><a href="https://kubernetes.io/docs/concepts/storage/storage-classes/">https://kubernetes.io/docs/concepts/storage/storage-classes/</a></li>
 <li><a href="https://kubernetes.io/docs/concepts/containers/images/">https://kubernetes.io/docs/concepts/containers/images/</a></li>
 </ul>
-<!--kg-card-end: markdown-->]]></content:encoded></item><item><title><![CDATA[Keep a docker container running and not exiting]]></title><description><![CDATA[<!--kg-card-begin: markdown--><p>In the kubernetes environment, we can keep a container(pod) alive and avoid it exits immediately after starting.</p>
-<h1 id="method-one">Method one</h1>
-<ol>
-<li>
-<p>Use a long-time-run command in Dockerfile</p>
-<pre><code class="language-shell">CMD [&quot;sh&quot;, &quot;-c&quot;, &quot;tail -f /dev/null&quot;]
-</code></pre>
-<p>or</p>
-<pre><code class="language-shell">CMD [&quot;sh&quot;, &quot;-c&quot;, &quot;sleep infinity&</code></pre></li></ol>]]></description><link>https://www.flamingbytes.com/blog/keep-a-docker-container-running-and-not-exiting/</link><guid isPermaLink="false">63b4b02a1527a00d97449ef1</guid><category><![CDATA[Big Data]]></category><dc:creator><![CDATA[relentlesstorm]]></dc:creator><pubDate>Wed, 28 Dec 2022 00:00:00 GMT</pubDate><media:content url="https://images.unsplash.com/photo-1667372335937-d03be6fb0a9c?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=MnwxMTc3M3wwfDF8c2VhcmNofDN8fGt1YmVybmV0ZXN8ZW58MHx8fHwxNjcyNzc3MDE2&amp;ixlib=rb-4.0.3&amp;q=80&amp;w=2000" medium="image"/><content:encoded><![CDATA[<!--kg-card-begin: markdown--><img src="https://images.unsplash.com/photo-1667372335937-d03be6fb0a9c?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=MnwxMTc3M3wwfDF8c2VhcmNofDN8fGt1YmVybmV0ZXN8ZW58MHx8fHwxNjcyNzc3MDE2&amp;ixlib=rb-4.0.3&amp;q=80&amp;w=2000" alt="Keep a docker container running and not exiting"><p>In the kubernetes environment, we can keep a container(pod) alive and avoid it exits immediately after starting.</p>
-<h1 id="method-one">Method one</h1>
-<ol>
-<li>
-<p>Use a long-time-run command in Dockerfile</p>
-<pre><code class="language-shell">CMD [&quot;sh&quot;, &quot;-c&quot;, &quot;tail -f /dev/null&quot;]
-</code></pre>
-<p>or</p>
-<pre><code class="language-shell">CMD [&quot;sh&quot;, &quot;-c&quot;, &quot;sleep infinity&quot;]
-</code></pre>
-</li>
-<li>
-<p>Build the docker image and push to docker repository</p>
-</li>
-<li>
-<p>Launch the container</p>
-<pre><code class="language-shell">$ kubectl run mycontainer -it --image=&lt;docker-image-name&gt;
-</code></pre>
-</li>
-</ol>
-<h1 id="method-two">Method two</h1>
-<p>When to deploy an application with kubernetes statefulset, we also can add it to the statefulset yaml file instead of adding it to the docker image through Dockerfile.</p>
-<pre><code class="language-shell">$ cat myapp.yaml
-apiVersion: apps/v1
-kind: StatefulSet
-metadata:
-  name: myapp
-spec:
-  serviceName: myapp
-  replicas: 1
-  selector:
-    matchLabels:
-      app: myapp
-  template:
-    metadata:
-      labels:
-        app: myapp
-    spec:
-      containers:
-      - name: myapp
-        image: noname/myapp:latest
-        command: [&quot;sh&quot;, &quot;-c&quot;, &quot;tail -f /dev/null&quot;]
-        imagePullPolicy: Always
-        volumeMounts:
-        - name: myapp-data
-          mountPath: /data
-        - name: myapp-log
-          mountPath: /log
-        securityContext:
-          privileged: true
-  volumeClaimTemplates:
-  - metadata:
-      name: myapp-data
-    spec:
-      storageClassName: &lt;storage-class&gt;
-      accessModes:
-      - ReadWriteOnce
-      resources:
-        requests:
-          storage: 20Gi
-  - metadata:
-      name: myapp-log
-    spec:
-      storageClassName: &lt;storage-class&gt;
-      accessModes:
-      - ReadWriteOnce
-      resources:
-        requests:
-          storage: 1Gi
-
-$ kubectl apply -f myapp.yaml          
-</code></pre>
 <!--kg-card-end: markdown-->]]></content:encoded></item></channel></rss>

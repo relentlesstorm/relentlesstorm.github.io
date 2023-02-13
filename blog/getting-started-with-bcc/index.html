@@ -45,144 +45,27 @@
     } 
     </style>
 
+    <meta name="description" content="BCC is a toolkit for creating efficient kernel tracing and manipulation programs, and includes several useful tools and examples." />
     <link rel="icon" href="https://www.flamingbytes.com/content/images/size/w256h256/2023/01/FlamingBytes-icon-64x64.png" type="image/png" />
-    <link rel="canonical" href="https://www.flamingbytes.com/blog/useful-tools-in-linux-operating-system/" />
+    <link rel="canonical" href="https://www.flamingbytes.com/blog/getting-started-with-bcc/" />
     <meta name="referrer" content="no-referrer-when-downgrade" />
     
     <meta property="og:site_name" content="FlamingBytes" />
     <meta property="og:type" content="article" />
-    <meta property="og:title" content="Useful tools in Linux operating system" />
-    <meta property="og:description" content="Performance tools
-
-
- * vmstat
- * iostat
- * ifstat
- * netstat
- * nfsstat
- * mpstat
- * nstat
- * dstat
- * sar
- * iftop
- * pidstat
- * xosview
-
-
-
-Benchmark tools
-
-
- * fio
- * iozone
- * iperf
- * netperf
- * vdbench
- * sysbench
- * pgbench
- * YCSB
- * SPEC SFS 2014/SPECstorage Solution 2020
- * VMmark
-
-
-
-Debugging tools
-
-
- * htop
- * lslk
- * lsof
- * top
-
-
-
-Process tracing
-
-
- * ltrace
- * strace
- * pstack/gstack
- * ftrace
- * systemtap
- * ps
- * pmap
- * blktrace
- * ebpf
-
-
-
-Binary" />
-    <meta property="og:url" content="https://www.flamingbytes.com/blog/useful-tools-in-linux-operating-system/" />
-    <meta property="og:image" content="https://images.unsplash.com/photo-1536909526839-8f10e29ba80c?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDEwfHxyYWNlfGVufDB8fHx8MTY3Mjc4MTk3Mg&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000" />
-    <meta property="article:published_time" content="2022-03-25T00:00:00.000Z" />
-    <meta property="article:modified_time" content="2023-01-03T21:40:43.000Z" />
+    <meta property="og:title" content="Getting started with BCC (BPF Compiler Collection)" />
+    <meta property="og:description" content="BCC is a toolkit for creating efficient kernel tracing and manipulation programs, and includes several useful tools and examples." />
+    <meta property="og:url" content="https://www.flamingbytes.com/blog/getting-started-with-bcc/" />
+    <meta property="og:image" content="https://images.unsplash.com/photo-1661956602868-6ae368943878?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wxfDF8YWxsfDE2fHx8fHx8Mnx8MTY3NjI1NTU4OA&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000" />
+    <meta property="article:published_time" content="2023-02-12T03:40:00.000Z" />
+    <meta property="article:modified_time" content="2023-02-13T03:43:07.000Z" />
     <meta property="article:tag" content="Performance" />
     
     <meta property="article:publisher" content="https://www.facebook.com/ghost" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Useful tools in Linux operating system" />
-    <meta name="twitter:description" content="Performance tools
-
-
- * vmstat
- * iostat
- * ifstat
- * netstat
- * nfsstat
- * mpstat
- * nstat
- * dstat
- * sar
- * iftop
- * pidstat
- * xosview
-
-
-
-Benchmark tools
-
-
- * fio
- * iozone
- * iperf
- * netperf
- * vdbench
- * sysbench
- * pgbench
- * YCSB
- * SPEC SFS 2014/SPECstorage Solution 2020
- * VMmark
-
-
-
-Debugging tools
-
-
- * htop
- * lslk
- * lsof
- * top
-
-
-
-Process tracing
-
-
- * ltrace
- * strace
- * pstack/gstack
- * ftrace
- * systemtap
- * ps
- * pmap
- * blktrace
- * ebpf
-
-
-
-Binary" />
-    <meta name="twitter:url" content="https://www.flamingbytes.com/blog/useful-tools-in-linux-operating-system/" />
-    <meta name="twitter:image" content="https://images.unsplash.com/photo-1536909526839-8f10e29ba80c?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDEwfHxyYWNlfGVufDB8fHx8MTY3Mjc4MTk3Mg&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000" />
+    <meta name="twitter:title" content="Getting started with BCC (BPF Compiler Collection)" />
+    <meta name="twitter:description" content="BCC is a toolkit for creating efficient kernel tracing and manipulation programs, and includes several useful tools and examples." />
+    <meta name="twitter:url" content="https://www.flamingbytes.com/blog/getting-started-with-bcc/" />
+    <meta name="twitter:image" content="https://images.unsplash.com/photo-1661956602868-6ae368943878?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wxfDF8YWxsfDE2fHx8fHx8Mnx8MTY3NjI1NTU4OA&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000" />
     <meta name="twitter:label1" content="Written by" />
     <meta name="twitter:data1" content="relentlesstorm" />
     <meta name="twitter:label2" content="Filed under" />
@@ -218,18 +101,18 @@ Binary" />
         "url": "https://www.flamingbytes.com/author/relentlesstorm/",
         "sameAs": []
     },
-    "headline": "Useful tools in Linux operating system",
-    "url": "https://www.flamingbytes.com/blog/useful-tools-in-linux-operating-system/",
-    "datePublished": "2022-03-25T00:00:00.000Z",
-    "dateModified": "2023-01-03T21:40:43.000Z",
+    "headline": "Getting started with BCC (BPF Compiler Collection)",
+    "url": "https://www.flamingbytes.com/blog/getting-started-with-bcc/",
+    "datePublished": "2023-02-12T03:40:00.000Z",
+    "dateModified": "2023-02-13T03:43:07.000Z",
     "image": {
         "@type": "ImageObject",
-        "url": "https://images.unsplash.com/photo-1536909526839-8f10e29ba80c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxMTc3M3wwfDF8c2VhcmNofDEwfHxyYWNlfGVufDB8fHx8MTY3Mjc4MTk3Mg&ixlib=rb-4.0.3&q=80&w=2000",
+        "url": "https://images.unsplash.com/photo-1661956602868-6ae368943878?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxMTc3M3wxfDF8YWxsfDE2fHx8fHx8Mnx8MTY3NjI1NTU4OA&ixlib=rb-4.0.3&q=80&w=2000",
         "width": 2000,
         "height": 1333
     },
     "keywords": "Performance",
-    "description": "Performance tools\n\n\n * vmstat\n * iostat\n * ifstat\n * netstat\n * nfsstat\n * mpstat\n * nstat\n * dstat\n * sar\n * iftop\n * pidstat\n * xosview\n\n\n\nBenchmark tools\n\n\n * fio\n * iozone\n * iperf\n * netperf\n * vdbench\n * sysbench\n * pgbench\n * YCSB\n * SPEC SFS 2014/SPECstorage Solution 2020\n * VMmark\n\n\n\nDebugging tools\n\n\n * htop\n * lslk\n * lsof\n * top\n\n\n\nProcess tracing\n\n\n * ltrace\n * strace\n * pstack/gstack\n * ftrace\n * systemtap\n * ps\n * pmap\n * blktrace\n * ebpf\n\n\n\nBinary debugging\n\n\n * ldd\n * file\n * nm",
+    "description": "BCC is a toolkit for creating efficient kernel tracing and manipulation programs, and includes several useful tools and examples. ",
     "mainEntityOfPage": {
         "@type": "WebPage",
         "@id": "https://www.flamingbytes.com/"
@@ -295,7 +178,7 @@ Binary" />
             <header class="gh-article-header gh-canvas">
                     <a class="gh-article-tag" href="https://www.flamingbytes.com/blog/tag/performance/">Performance</a>
 
-                <h1 class="gh-article-title">Useful tools in Linux operating system</h1>
+                <h1 class="gh-article-title">Getting started with BCC (BPF Compiler Collection)</h1>
 
                     <aside class="gh-article-sidebar">
 
@@ -314,130 +197,162 @@ Binary" />
 
         <div class="gh-article-meta">
             <div class="gh-article-meta-inner">
-                <time class="gh-article-date" datetime="2022-03-25">Mar 25, 2022</time>
+                <time class="gh-article-date" datetime="2023-02-12">Feb 12, 2023</time>
                     <span class="gh-article-meta-sep"></span>
-                    <span class="gh-article-length">1 min</span>
+                    <span class="gh-article-length">3 min</span>
             </div>
         </div>
 
     </aside>
 
+                    <p class="gh-article-excerpt">BCC is a toolkit for creating efficient kernel tracing and manipulation programs, and includes several useful tools and examples. </p>
 
                     <figure class="gh-article-image">
         <img
-            srcset="https://images.unsplash.com/photo-1536909526839-8f10e29ba80c?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDEwfHxyYWNlfGVufDB8fHx8MTY3Mjc4MTk3Mg&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;300 300w,
-                    https://images.unsplash.com/photo-1536909526839-8f10e29ba80c?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDEwfHxyYWNlfGVufDB8fHx8MTY3Mjc4MTk3Mg&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720 720w,
-                    https://images.unsplash.com/photo-1536909526839-8f10e29ba80c?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDEwfHxyYWNlfGVufDB8fHx8MTY3Mjc4MTk3Mg&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;960 960w,
-                    https://images.unsplash.com/photo-1536909526839-8f10e29ba80c?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDEwfHxyYWNlfGVufDB8fHx8MTY3Mjc4MTk3Mg&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1200 1200w,
-                    https://images.unsplash.com/photo-1536909526839-8f10e29ba80c?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDEwfHxyYWNlfGVufDB8fHx8MTY3Mjc4MTk3Mg&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000 2000w"
+            srcset="https://images.unsplash.com/photo-1661956602868-6ae368943878?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wxfDF8YWxsfDE2fHx8fHx8Mnx8MTY3NjI1NTU4OA&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;300 300w,
+                    https://images.unsplash.com/photo-1661956602868-6ae368943878?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wxfDF8YWxsfDE2fHx8fHx8Mnx8MTY3NjI1NTU4OA&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720 720w,
+                    https://images.unsplash.com/photo-1661956602868-6ae368943878?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wxfDF8YWxsfDE2fHx8fHx8Mnx8MTY3NjI1NTU4OA&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;960 960w,
+                    https://images.unsplash.com/photo-1661956602868-6ae368943878?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wxfDF8YWxsfDE2fHx8fHx8Mnx8MTY3NjI1NTU4OA&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1200 1200w,
+                    https://images.unsplash.com/photo-1661956602868-6ae368943878?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wxfDF8YWxsfDE2fHx8fHx8Mnx8MTY3NjI1NTU4OA&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000 2000w"
             sizes="(max-width: 1200px) 100vw, 1200px"
-            src="https://images.unsplash.com/photo-1536909526839-8f10e29ba80c?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDEwfHxyYWNlfGVufDB8fHx8MTY3Mjc4MTk3Mg&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1200"
-            alt="Useful tools in Linux operating system"
+            src="https://images.unsplash.com/photo-1661956602868-6ae368943878?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wxfDF8YWxsfDE2fHx8fHx8Mnx8MTY3NjI1NTU4OA&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1200"
+            alt="Getting started with BCC (BPF Compiler Collection)"
         >
-            <figcaption>Photo by <a href="https://unsplash.com/@rblumbergs?utm_source=ghost&utm_medium=referral&utm_campaign=api-credit">Ralfs Blumbergs</a> / <a href="https://unsplash.com/?utm_source=ghost&utm_medium=referral&utm_campaign=api-credit">Unsplash</a></figcaption>
+            <figcaption>Photo by <a href="https://unsplash.com/@mailchimp?utm_source=ghost&utm_medium=referral&utm_campaign=api-credit">Mailchimp</a> / <a href="https://unsplash.com/?utm_source=ghost&utm_medium=referral&utm_campaign=api-credit">Unsplash</a></figcaption>
     </figure>
             </header>
 
             <section class="gh-content gh-canvas">
                 <aside class="gh-sidebar"><div class="gh-toc"></div></aside> 
 
-                <!--kg-card-begin: markdown--><h2 id="performance-tools">Performance tools</h2>
+                <!--kg-card-begin: markdown--><h2 id="intro-to-bcc">Intro to BCC</h2>
+<p><a href="https://github.com/iovisor/bcc">BCC</a> is a toolkit for creating efficient kernel tracing and manipulation programs, and includes several useful tools and examples. It makes use of extended BPF (Berkeley Packet Filters), formally known as eBPF, a new feature that was first added to Linux 3.15. Much of what BCC uses requires Linux 4.1 and above.</p>
+<h2 id="install-bcc-from-packages">Install BCC from packages</h2>
+<p>In general, a Linux kernel version 4.1 or newer is required.</p>
+<pre><code>$ cat /etc/centos-release
+CentOS Linux release 7.9.2009 (Core)
+
+$ uname -r
+5.7.12-1.el7.elrepo.x86_64
+</code></pre>
+<p>In addition, the kernel should have been compiled with the following <a href="https://github.com/iovisor/bcc/blob/master/INSTALL.md">flags set</a>.</p>
+<pre><code>CONFIG_BPF=y
+CONFIG_BPF_SYSCALL=y
+# [optional, for tc filters]
+CONFIG_NET_CLS_BPF=m
+# [optional, for tc actions]
+CONFIG_NET_ACT_BPF=m
+CONFIG_BPF_JIT=y
+# [for Linux kernel versions 4.1 through 4.6]
+CONFIG_HAVE_BPF_JIT=y
+# [for Linux kernel versions 4.7 and later]
+CONFIG_HAVE_EBPF_JIT=y
+# [optional, for kprobes]
+CONFIG_BPF_EVENTS=y
+# Need kernel headers through /sys/kernel/kheaders.tar.xz
+CONFIG_IKHEADERS=y
+</code></pre>
+<p>There are a few optional kernel flags needed for running bcc networking examples on vanilla kernel:</p>
+<pre><code>CONFIG_NET_SCH_SFQ=m
+CONFIG_NET_ACT_POLICE=m
+CONFIG_NET_ACT_GACT=m
+CONFIG_DUMMY=m
+CONFIG_VXLAN=m
+</code></pre>
+<p>These kernel configuration might be set by default after the OS installation but you should double check as below.</p>
+<pre><code>$ cat /boot/config-$(uname -r)
+</code></pre>
+<p><strong>To install the BCC tools from the official yum repository:</strong></p>
+<pre><code>$ yum install bcc-tools
+Installed:
+  bcc-tools.x86_64 0:0.10.0-1.el7
+
+Dependency Installed:
+  bcc.x86_64 0:0.10.0-1.el7   python-bcc.x86_64 0:0.10.0-1.el7
+</code></pre>
+<p>The following BCC tools are pre-defined and available to use after installation.</p>
+<pre><code>$ cd /usr/share/bcc
+$ ls
+introspection  tools
+$ cd /usr/share/bcc/tools
+$ ls
+argdist bpflist cobjnew dcstat ext4dist funclatency javagc llcstat nfsslower opensnoop phpstat pythonstat rubystat sofdsnoop syncsnoop tcpaccept tcpsubnet vfscount bashreadline btrfsdist cpudist deadlock ext4slower funcslower javaobjnew mdflush nodegc perlcalls  pidpersec reset-trace runqlat softirqs syscount tcpconnect tcptop vfsstat biolatency btrfsslower cpuunclaimed deadlock.c filelife gethostlatency  javastat memleak nodestat perlflow profile rubycalls runqlen solisten tclcalls tcpconnlat tcptracer wakeuptime biosnoop cachestat dbslower doc fileslower hardirqs javathreads mountsnoop offcputime perlstat pythoncalls rubyflow runqslower sslsniff tclflow tcpdrop tplist xfsdist biotop cachetop dbstat drsnoop filetop javacalls killsnoop mysqld_qslower offwaketime phpcalls pythonflow rubygc shmsnoop stackcount tclobjnew tcplife trace xfsslower bitesize capable dcsnoop execsnoop funccount javaflow lib nfsdist oomkill phpflow pythongc rubyobjnew slabratetop statsnoop tclstat tcpretrans ttysnoop
+</code></pre>
+<p><strong>To add bcc directory to the $PATH:</strong></p>
+<pre><code>$ vim .bash_profile
+bcctools=/usr/share/bcc/tools
+PATH=$PATH:$HOME/bin:$bcctools
+export PATH
+    
+$ source ~/.bash_profile
+$ echo $PATH
+/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/root/bin:/root/bin:/usr/share/bcc/tools
+</code></pre>
+<h2 id="install-bcc-from-source">Install BCC from source</h2>
+<p>If you want to install a different version of BCC, you can refer to <a href="https://github.com/iovisor/bcc/blob/master/INSTALL.md">here</a>. I tried this but it seems very tricky to install it successfully. I'll not discuss it in this post.</p>
+<h2 id="use-the-bcc-tools">Use the BCC tools</h2>
+<p>It's not suprise if you see the following error for the first time run of BCC tools.</p>
+<pre><code>$ biolatency
+In file included from /virtual/main.c:2:
+In file included from /lib/modules/5.7.12-1.el7.elrepo.x86_64/build/include/uapi/linux/ptrace.h:142:
+In file included from /lib/modules/5.7.12-1.el7.elrepo.x86_64/build/arch/x86/include/asm/ptrace.h:5:
+/lib/modules/5.7.12-1.el7.elrepo.x86_64/build/arch/x86/include/asm/segment.h:266:2: error: expected '(' after 'asm'
+        alternative_io (&quot;lsl %[seg],%[p]&quot;,
+        ^
+/lib/modules/5.7.12-1.el7.elrepo.x86_64/build/arch/x86/include/asm/alternative.h:240:2: note: expanded from macro 'alternative_io'
+        asm_inline volatile (ALTERNATIVE(oldinstr, newinstr, feature)   \
+        ^
+/lib/modules/5.7.12-1.el7.elrepo.x86_64/build/include/linux/compiler_types.h:201:24: note: expanded from macro 'asm_inline'
+#define asm_inline asm __inline
+                       ^
+In file included from /virtual/main.c:3:
+</code></pre>
+<p>This is because many BCC tools are broken with kernel 5.4+ and libbcc 0.10.</p>
+<p><strong>To fix this problem:</strong></p>
+<p>Modify as below for the BPF program definition.</p>
+<p>Original code:</p>
+<pre><code>$ vim biolatency
+&lt;snippet&gt;
+# define BPF program
+bpf_text = &quot;&quot;&quot;
+#include &lt;uapi/linux/ptrace.h&gt;
+#include &lt;linux/blkdev.h&gt;
+&lt;snippet&gt;
+</code></pre>
+<p>Modified code:</p>
+<pre><code>$ vim biolatency
+&lt;snippet&gt;
+# define BPF program
+bpf_text = &quot;&quot;&quot;
+#ifdef asm_inline
+#undef asm_inline
+#define asm_inline asm
+#endif
+#include &lt;uapi/linux/ptrace.h&gt;
+#include &lt;linux/blkdev.h&gt;
+&lt;snippet&gt;
+</code></pre>
+<p><strong>Run the BCC tool again now:</strong></p>
+<pre><code>$ biolatency
+Tracing block device I/O... Hit Ctrl-C to end.
+^C
+    usecs               : count     distribution
+    0 -&gt; 1          : 0        |                                        |
+    2 -&gt; 3          : 0        |                                        |
+    4 -&gt; 7          : 0        |                                        |
+    8 -&gt; 15         : 0        |                                        |
+    16 -&gt; 31        : 0        |                                        |
+    32 -&gt; 63        : 6        |********************                    |
+    64 -&gt; 127       : 12       |****************************************|
+    128 -&gt; 255      : 3        |**********                              |
+</code></pre>
+<h2 id="reference">Reference</h2>
 <ul>
-<li>vmstat</li>
-<li>iostat</li>
-<li>ifstat</li>
-<li>netstat</li>
-<li>nfsstat</li>
-<li>mpstat</li>
-<li>nstat</li>
-<li>dstat</li>
-<li>sar</li>
-<li>iftop</li>
-<li>pidstat</li>
-<li>xosview</li>
-</ul>
-<h2 id="benchmark-tools">Benchmark tools</h2>
-<ul>
-<li>fio</li>
-<li>iozone</li>
-<li>iperf</li>
-<li>netperf</li>
-<li>vdbench</li>
-<li>sysbench</li>
-<li>pgbench</li>
-<li>YCSB</li>
-<li>SPEC SFS 2014/SPECstorage Solution 2020</li>
-<li>VMmark</li>
-</ul>
-<h2 id="debugging-tools">Debugging tools</h2>
-<ul>
-<li>htop</li>
-<li>lslk</li>
-<li>lsof</li>
-<li>top</li>
-</ul>
-<h2 id="process-tracing">Process tracing</h2>
-<ul>
-<li>ltrace</li>
-<li>strace</li>
-<li>pstack/gstack</li>
-<li>ftrace</li>
-<li>systemtap</li>
-<li>ps</li>
-<li>pmap</li>
-<li>blktrace</li>
-<li>ebpf</li>
-</ul>
-<h2 id="binary-debugging">Binary debugging</h2>
-<ul>
-<li>ldd</li>
-<li>file</li>
-<li>nm</li>
-<li>objdump</li>
-<li>readelf</li>
-</ul>
-<h2 id="memory-usage-tools">Memory usage tools</h2>
-<ul>
-<li>free</li>
-<li>memusage</li>
-<li>memusagestat</li>
-<li>slabtop</li>
-</ul>
-<h2 id="accounting-tools">Accounting tools</h2>
-<ul>
-<li>dump-acct</li>
-<li>dump-utmp</li>
-<li>sa</li>
-</ul>
-<h2 id="hardware-debugging-tools">Hardware debugging tools</h2>
-<ul>
-<li>dmidecode</li>
-<li>ifinfo</li>
-<li>lsdev</li>
-<li>lshal</li>
-<li>lshw</li>
-<li>lsmod</li>
-<li>lspci</li>
-<li>lsusb</li>
-<li>smartctl</li>
-<li>x86info</li>
-<li>/opt/QLogic_Corporation/QConvergeConsoleCLI/qaucli</li>
-</ul>
-<h2 id="application-debugging">Application debugging</h2>
-<ul>
-<li>mailstats</li>
-<li>qshape</li>
-</ul>
-<h2 id="xorg-related-tools">Xorg related tools</h2>
-<ul>
-<li>xdpyinfo</li>
-<li>xrestop</li>
-</ul>
-<h2 id="others">Others</h2>
-<ul>
-<li>collectl</li>
-<li>proc</li>
-<li>procinfo</li>
+<li><a href="https://github.com/iovisor/bcc">https://github.com/iovisor/bcc</a></li>
+<li><a href="https://blogs.oracle.com/linux/post/intro-to-bcc-1">https://blogs.oracle.com/linux/post/intro-to-bcc-1</a></li>
+<li><a href="https://gitlab.com/gitlab-com/gl-infra/reliability/-/issues/12052">https://gitlab.com/gitlab-com/gl-infra/reliability/-/issues/12052</a></li>
+<li><a href="https://blog.csdn.net/thesre/article/details/122508493">https://blog.csdn.net/thesre/article/details/122508493</a></li>
+<li><a href="https://www.containiq.com/post/bcc-tools">https://www.containiq.com/post/bcc-tools</a></li>
 </ul>
 <!--kg-card-end: markdown-->
 
@@ -459,44 +374,6 @@ Binary" />
                 <div class="gh-topic gh-topic-grid">
                     <div class="gh-topic-content">
                             <article class="gh-card post">
-    <a class="gh-card-link" href="/blog/getting-started-with-bcc/">
-            <figure class="gh-card-image">
-                <img
-                    srcset="https://images.unsplash.com/photo-1661956602868-6ae368943878?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wxfDF8YWxsfDE2fHx8fHx8Mnx8MTY3NjI1NTU4OA&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;300 300w,
-                            https://images.unsplash.com/photo-1661956602868-6ae368943878?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wxfDF8YWxsfDE2fHx8fHx8Mnx8MTY3NjI1NTU4OA&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720 720w,
-                            https://images.unsplash.com/photo-1661956602868-6ae368943878?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wxfDF8YWxsfDE2fHx8fHx8Mnx8MTY3NjI1NTU4OA&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;960 960w,
-                            https://images.unsplash.com/photo-1661956602868-6ae368943878?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wxfDF8YWxsfDE2fHx8fHx8Mnx8MTY3NjI1NTU4OA&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1200 1200w,
-                            https://images.unsplash.com/photo-1661956602868-6ae368943878?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wxfDF8YWxsfDE2fHx8fHx8Mnx8MTY3NjI1NTU4OA&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000 2000w"
-                    sizes="(max-width: 1200px) 100vw, 1200px"
-                    src="https://images.unsplash.com/photo-1661956602868-6ae368943878?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wxfDF8YWxsfDE2fHx8fHx8Mnx8MTY3NjI1NTU4OA&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720"
-                    alt="Getting started with BCC (BPF Compiler Collection)"
-                >
-            </figure>
-
-        <div class="gh-card-wrapper">
-            <header class="gh-card-header">
-                <h3 class="gh-card-title">Getting started with BCC (BPF Compiler Collection)</h3>
-            </header>
-
-                    <div class="gh-card-excerpt">BCC is a toolkit for creating efficient kernel tracing and manipulation programs, and includes several useful tools and examples.</div>
-
-            <footer class="gh-card-footer">
-                <span class="gh-card-author">relentlesstorm</span>
-                <time class="gh-card-date" datetime="2023-02-12">Feb 12, 2023</time>
-                    <script
-    data-ghost-comment-count="63e9a9a1f19d570e66aae077"
-    data-ghost-comment-count-empty=""
-    data-ghost-comment-count-singular="comment"
-    data-ghost-comment-count-plural="comments"
-    data-ghost-comment-count-tag="span"
-    data-ghost-comment-count-class-name="gh-card-comments"
-    data-ghost-comment-count-autowrap="true"
->
-</script>
-            </footer>
-        </div>
-    </a>
-</article>                            <article class="gh-card post">
     <a class="gh-card-link" href="/blog/using-systemtap-to-analyze-latency-of-the-kernel-module-function/">
             <figure class="gh-card-image">
                 <img
@@ -582,6 +459,56 @@ SystemTap is a tracing and probing tool that allows users to study and monitor t
             </footer>
         </div>
     </a>
+</article>                            <article class="gh-card post">
+    <a class="gh-card-link" href="/blog/using-ftrace-to-analyze-latency-of-the-kernel-module-function/">
+            <figure class="gh-card-image">
+                <img
+                    srcset="https://images.unsplash.com/photo-1613083093144-bfa5c3eb8337?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDJ8fHRyYWNlfGVufDB8fHx8MTY3Mjc3ODI2Ng&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;300 300w,
+                            https://images.unsplash.com/photo-1613083093144-bfa5c3eb8337?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDJ8fHRyYWNlfGVufDB8fHx8MTY3Mjc3ODI2Ng&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720 720w,
+                            https://images.unsplash.com/photo-1613083093144-bfa5c3eb8337?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDJ8fHRyYWNlfGVufDB8fHx8MTY3Mjc3ODI2Ng&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;960 960w,
+                            https://images.unsplash.com/photo-1613083093144-bfa5c3eb8337?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDJ8fHRyYWNlfGVufDB8fHx8MTY3Mjc3ODI2Ng&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1200 1200w,
+                            https://images.unsplash.com/photo-1613083093144-bfa5c3eb8337?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDJ8fHRyYWNlfGVufDB8fHx8MTY3Mjc3ODI2Ng&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000 2000w"
+                    sizes="(max-width: 1200px) 100vw, 1200px"
+                    src="https://images.unsplash.com/photo-1613083093144-bfa5c3eb8337?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDJ8fHRyYWNlfGVufDB8fHx8MTY3Mjc3ODI2Ng&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720"
+                    alt="Using ftrace to analyze latency of the kernel module function"
+                >
+            </figure>
+
+        <div class="gh-card-wrapper">
+            <header class="gh-card-header">
+                <h3 class="gh-card-title">Using ftrace to analyze latency of the kernel module function</h3>
+            </header>
+
+                    <div class="gh-card-excerpt">In this example, we study the latency of the function "nfsd_vfs_write" from kernel module "nfsd".
+
+
+
+ftrace configuration
+
+
+The following ftrace options are used in this example. There are 8 nfsd processes to be traced.
+
+
+ * current_tracer: function_graph
+ * pids: 3591 3592 3593 3594 3595 3596 3597 3598
+ * filters:</div>
+
+            <footer class="gh-card-footer">
+                <span class="gh-card-author">relentlesstorm</span>
+                <time class="gh-card-date" datetime="2022-07-14">Jul 14, 2022</time>
+                    <script
+    data-ghost-comment-count="63b491f41527a00d97449d10"
+    data-ghost-comment-count-empty=""
+    data-ghost-comment-count-singular="comment"
+    data-ghost-comment-count-plural="comments"
+    data-ghost-comment-count-tag="span"
+    data-ghost-comment-count-class-name="gh-card-comments"
+    data-ghost-comment-count-autowrap="true"
+>
+</script>
+            </footer>
+        </div>
+    </a>
 </article>                    </div>
                 </div>
             </div>
@@ -591,7 +518,7 @@ SystemTap is a tracing and probing tool that allows users to study and monitor t
                     <div class="gh-comments gh-read-next gh-canvas">
             <section class="gh-pagehead">
                 <h4 class="gh-pagehead-title">Comments (<script
-    data-ghost-comment-count="63b4a0af1527a00d97449e5e"
+    data-ghost-comment-count="63e9a9a1f19d570e66aae077"
     data-ghost-comment-count-empty="0"
     data-ghost-comment-count-singular=""
     data-ghost-comment-count-plural=""
@@ -602,7 +529,7 @@ SystemTap is a tracing and probing tool that allows users to study and monitor t
 </script>)</h3>
             </section>
             
-        <script defer src="https://cdn.jsdelivr.net/ghost/comments-ui@~0.12/umd/comments-ui.min.js" data-ghost-comments="https://www.flamingbytes.com/" data-api="https://www.flamingbytes.com/ghost/api/content/" data-admin="https://www.flamingbytes.com/ghost/" data-key="321a1d1aea33fd468f6e61f563" data-styles="https://cdn.jsdelivr.net/ghost/comments-ui@~0.12/umd/main.css" data-title="" data-count="false" data-post-id="63b4a0af1527a00d97449e5e" data-sentry-dsn="" data-color-scheme="auto" data-avatar-saturation="60" data-accent-color="#6a13ec" data-app-version="0.12" data-comments-enabled="all" data-publication="FlamingBytes" crossorigin="anonymous"></script>
+        <script defer src="https://cdn.jsdelivr.net/ghost/comments-ui@~0.12/umd/comments-ui.min.js" data-ghost-comments="https://www.flamingbytes.com/" data-api="https://www.flamingbytes.com/ghost/api/content/" data-admin="https://www.flamingbytes.com/ghost/" data-key="321a1d1aea33fd468f6e61f563" data-styles="https://cdn.jsdelivr.net/ghost/comments-ui@~0.12/umd/main.css" data-title="" data-count="false" data-post-id="63e9a9a1f19d570e66aae077" data-sentry-dsn="" data-color-scheme="auto" data-avatar-saturation="60" data-accent-color="#6a13ec" data-app-version="0.12" data-comments-enabled="all" data-publication="FlamingBytes" crossorigin="anonymous"></script>
     
         </div>
         -->
@@ -611,8 +538,8 @@ SystemTap is a tracing and probing tool that allows users to study and monitor t
         <div id="disqus_thread"></div>
 <script>
     var disqus_config = function () {
-        this.page.url = "https://www.flamingbytes.com/blog/useful-tools-in-linux-operating-system/";
-        this.page.identifier = "ghost-63b4a0af1527a00d97449e5e"
+        this.page.url = "https://www.flamingbytes.com/blog/getting-started-with-bcc/";
+        this.page.identifier = "ghost-63e9a9a1f19d570e66aae077"
     };
     (function() {
     var d = document, s = d.createElement('script');

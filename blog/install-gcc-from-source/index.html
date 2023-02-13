@@ -45,6 +45,7 @@
     } 
     </style>
 
+    <meta name="description" content="In this post, we will go through the steps to install GCC." />
     <link rel="icon" href="https://www.flamingbytes.com/content/images/size/w256h256/2023/01/FlamingBytes-icon-64x64.png" type="image/png" />
     <link rel="canonical" href="https://www.flamingbytes.com/blog/install-gcc-from-source/" />
     <meta name="referrer" content="no-referrer-when-downgrade" />
@@ -52,47 +53,17 @@
     <meta property="og:site_name" content="FlamingBytes" />
     <meta property="og:type" content="article" />
     <meta property="og:title" content="Install GCC from source" />
-    <meta property="og:description" content="In this post, we will go through the steps to install GCC from source on CentOS 7.
-
-
-$ cat /etc/centos-release
-CentOS Linux release 7.9.2009 (Core)
-
-$ uname -r
-5.7.12-1.el7.elrepo.x86_64
-
-
-
-
-Download GCC source
-
-
-$ curl -LO https://gcc.gnu.org/pub/gcc/releases/gcc-12.2." />
+    <meta property="og:description" content="In this post, we will go through the steps to install GCC." />
     <meta property="og:url" content="https://www.flamingbytes.com/blog/install-gcc-from-source/" />
     <meta property="og:image" content="https://images.unsplash.com/photo-1675959449383-1c7a27684c3c?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8YWxsfDJ8fHx8fHwyfHwxNjc2MjU1NTg4&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000" />
-    <meta property="article:published_time" content="2023-02-13T02:33:45.000Z" />
-    <meta property="article:modified_time" content="2023-02-13T02:33:45.000Z" />
+    <meta property="article:published_time" content="2023-02-10T02:33:00.000Z" />
+    <meta property="article:modified_time" content="2023-02-13T03:43:43.000Z" />
     <meta property="article:tag" content="Linux" />
     
     <meta property="article:publisher" content="https://www.facebook.com/ghost" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="Install GCC from source" />
-    <meta name="twitter:description" content="In this post, we will go through the steps to install GCC from source on CentOS 7.
-
-
-$ cat /etc/centos-release
-CentOS Linux release 7.9.2009 (Core)
-
-$ uname -r
-5.7.12-1.el7.elrepo.x86_64
-
-
-
-
-Download GCC source
-
-
-$ curl -LO https://gcc.gnu.org/pub/gcc/releases/gcc-12.2." />
+    <meta name="twitter:description" content="In this post, we will go through the steps to install GCC." />
     <meta name="twitter:url" content="https://www.flamingbytes.com/blog/install-gcc-from-source/" />
     <meta name="twitter:image" content="https://images.unsplash.com/photo-1675959449383-1c7a27684c3c?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8YWxsfDJ8fHx8fHwyfHwxNjc2MjU1NTg4&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000" />
     <meta name="twitter:label1" content="Written by" />
@@ -132,8 +103,8 @@ $ curl -LO https://gcc.gnu.org/pub/gcc/releases/gcc-12.2." />
     },
     "headline": "Install GCC from source",
     "url": "https://www.flamingbytes.com/blog/install-gcc-from-source/",
-    "datePublished": "2023-02-13T02:33:45.000Z",
-    "dateModified": "2023-02-13T02:33:45.000Z",
+    "datePublished": "2023-02-10T02:33:00.000Z",
+    "dateModified": "2023-02-13T03:43:43.000Z",
     "image": {
         "@type": "ImageObject",
         "url": "https://images.unsplash.com/photo-1675959449383-1c7a27684c3c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxMTc3M3wwfDF8YWxsfDJ8fHx8fHwyfHwxNjc2MjU1NTg4&ixlib=rb-4.0.3&q=80&w=2000",
@@ -141,7 +112,7 @@ $ curl -LO https://gcc.gnu.org/pub/gcc/releases/gcc-12.2." />
         "height": 1125
     },
     "keywords": "Linux",
-    "description": "In this post, we will go through the steps to install GCC from source on CentOS 7.\n\n\n$ cat /etc/centos-release\nCentOS Linux release 7.9.2009 (Core)\n\n$ uname -r\n5.7.12-1.el7.elrepo.x86_64\n\n\n\n\nDownload GCC source\n\n\n$ curl -LO https://gcc.gnu.org/pub/gcc/releases/gcc-12.2.0/gcc-12.2.0.tar.gz\n\n\n\nUntar the source file:\n\n\n$ tar zxf gcc-12.2.0.tar.gz\n\n\n\n\nDownload the dependent libraries\n\n\n$ cd gcc-12.2.0/\n$ ./contrib/download_prerequisites\n2023-02-01 00:41:01 URL:http://gcc.gnu.org/pub/gcc/infrastructu",
+    "description": "In this post, we will go through the steps to install GCC.",
     "mainEntityOfPage": {
         "@type": "WebPage",
         "@id": "https://www.flamingbytes.com/"
@@ -226,7 +197,7 @@ $ curl -LO https://gcc.gnu.org/pub/gcc/releases/gcc-12.2." />
 
         <div class="gh-article-meta">
             <div class="gh-article-meta-inner">
-                <time class="gh-article-date" datetime="2023-02-13">Feb 13, 2023</time>
+                <time class="gh-article-date" datetime="2023-02-10">Feb 10, 2023</time>
                     <span class="gh-article-meta-sep"></span>
                     <span class="gh-article-length">1 min</span>
             </div>
@@ -234,6 +205,7 @@ $ curl -LO https://gcc.gnu.org/pub/gcc/releases/gcc-12.2." />
 
     </aside>
 
+                    <p class="gh-article-excerpt">In this post, we will go through the steps to install GCC.</p>
 
                     <figure class="gh-article-image">
         <img
