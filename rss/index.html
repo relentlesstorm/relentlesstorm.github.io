@@ -1,4 +1,203 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:media="http://search.yahoo.com/mrss/"><channel><title><![CDATA[FlamingBytes]]></title><description><![CDATA[Stay hungry, Stay foolish.]]></description><link>https://www.flamingbytes.com/</link><image><url>https://www.flamingbytes.com/favicon.png</url><title>FlamingBytes</title><link>https://www.flamingbytes.com/</link></image><generator>Ghost 5.26</generator><lastBuildDate>Mon, 13 Feb 2023 03:44:57 GMT</lastBuildDate><atom:link href="https://www.flamingbytes.com/rss/" rel="self" type="application/rss+xml"/><ttl>60</ttl><item><title><![CDATA[Getting started with BCC (BPF Compiler Collection)]]></title><description><![CDATA[BCC is a toolkit for creating efficient kernel tracing and manipulation programs, and includes several useful tools and examples. ]]></description><link>https://www.flamingbytes.com/blog/getting-started-with-bcc/</link><guid isPermaLink="false">63e9a9a1f19d570e66aae077</guid><category><![CDATA[Performance]]></category><dc:creator><![CDATA[relentlesstorm]]></dc:creator><pubDate>Sun, 12 Feb 2023 03:40:00 GMT</pubDate><media:content url="https://images.unsplash.com/photo-1661956602868-6ae368943878?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=MnwxMTc3M3wxfDF8YWxsfDE2fHx8fHx8Mnx8MTY3NjI1NTU4OA&amp;ixlib=rb-4.0.3&amp;q=80&amp;w=2000" medium="image"/><content:encoded><![CDATA[<!--kg-card-begin: markdown--><h2 id="intro-to-bcc">Intro to BCC</h2>
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:media="http://search.yahoo.com/mrss/"><channel><title><![CDATA[FlamingBytes]]></title><description><![CDATA[Stay hungry, Stay foolish.]]></description><link>https://www.flamingbytes.com/</link><image><url>https://www.flamingbytes.com/favicon.png</url><title>FlamingBytes</title><link>https://www.flamingbytes.com/</link></image><generator>Ghost 5.26</generator><lastBuildDate>Tue, 14 Feb 2023 05:24:19 GMT</lastBuildDate><atom:link href="https://www.flamingbytes.com/rss/" rel="self" type="application/rss+xml"/><ttl>60</ttl><item><title><![CDATA[YCSB benchmark on PostgreSQL]]></title><description><![CDATA[go-ycsb is a Go port of YCSB. It fully supports all YCSB generators and the Core workload so we can do the basic CRUD benchmarks with Go.]]></description><link>https://www.flamingbytes.com/blog/ycsb-benchmark-on-postgresql/</link><guid isPermaLink="false">63eb1767361c0d0ddf89fbef</guid><category><![CDATA[Benchmarking]]></category><dc:creator><![CDATA[relentlesstorm]]></dc:creator><pubDate>Tue, 14 Feb 2023 05:20:50 GMT</pubDate><media:content url="https://images.unsplash.com/photo-1533284133567-0da9844151ce?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=MnwxMTc3M3wwfDF8c2VhcmNofDl8fHJhY2V8ZW58MHx8fHwxNjc2MzUxODY1&amp;ixlib=rb-4.0.3&amp;q=80&amp;w=2000" medium="image"/><content:encoded><![CDATA[<!--kg-card-begin: markdown--><h2 id="create-a-postgresql-database">Create a PostgreSQL database</h2>
+<img src="https://images.unsplash.com/photo-1533284133567-0da9844151ce?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=MnwxMTc3M3wwfDF8c2VhcmNofDl8fHJhY2V8ZW58MHx8fHwxNjc2MzUxODY1&amp;ixlib=rb-4.0.3&amp;q=80&amp;w=2000" alt="YCSB benchmark on PostgreSQL"><p>You can follow this <a href="https://www.flamingbytes.com/blog/getting-started-with-postgresql/">post</a> to install PostgreSQL and create the database cluster.</p>
+<p><strong>To create a database:</strong></p>
+<pre><code>$ db_host=10.10.10.243; db_port=5432; db_user=postgres; db_name=testdb
+
+$ psql --host=$db_host --port=$db_port --username=$db_user -w -c &quot;create database $db_name&quot;
+$ psql --host=$db_host --port=$db_port --username=$db_user -w -c &quot;\l&quot;
+$ psql --host=$db_host --port=$db_port --username=$db_user -w -d $db_name -c &quot;\dt+&quot;
+</code></pre>
+<h2 id="load-data-to-database">Load data to database</h2>
+<p><a href="https://github.com/pingcap/go-ycsb">go-ycsb</a> is a Go port of YCSB. It fully supports all YCSB generators and the Core workload so we can do the basic CRUD benchmarks with Go.</p>
+<pre><code>$ ./bin/go-ycsb load postgresql -P workloads/workloadd --threads 768 -p pg.host=$db_host -p pg.port=$db_port -p pg.user=$db_user -p pg.db=$db_name -p pg.sslmode=disable -p dropdata=true
+&lt;snippet&gt;
+Run finished, takes 29m39.847077518s
+INSERT - Takes(s): 1779.8, Count: 97404992, OPS: 54727.5, Avg(us): 11176, Min(us): 179, Max(us): 80767, 99th(us): 72127, 99.9th(us): 79807, 99.99th(us): 80703
+</code></pre>
+<h2 id="run-ycsb-benchmark">Run YCSB benchmark</h2>
+<pre><code>$ ./bin/go-ycsb run postgresql -P workloads/workloadd --threads 768 -p pg.host=$db_host -p pg.port=$db_port -p pg.user=$db_user -p pg.db=$db_name -p pg.sslmode=disable
+&lt;snippet&gt;
+Run finished, takes 14m8.828228178s
+INSERT - Takes(s): 848.8, Count: 4981537, OPS: 5868.8, Avg(us): 1968, Min(us): 226, Max(us): 19327, 99th(us): 11623, 99.9th(us): 17567, 99.99th(us): 19119
+READ   - Takes(s): 848.8, Count: 93786269, OPS: 110492.3, Avg(us): 5899, Min(us): 78, Max(us): 41247, 99th(us): 32831, 99.9th(us): 40063, 99.99th(us): 41119
+</code></pre>
+<h2 id="reference">Reference</h2>
+<ul>
+<li><a href="https://github.com/pingcap/go-ycsb">https://github.com/pingcap/go-ycsb</a></li>
+</ul>
+<!--kg-card-end: markdown-->]]></content:encoded></item><item><title><![CDATA[Getting started with PostgreSQL]]></title><description><![CDATA[PostgreSQL is a powerful, open source object-relational database system that uses and extends the SQL language combined with many features that safely store and scale the most complicated data workloads. ]]></description><link>https://www.flamingbytes.com/blog/getting-started-with-postgresql/</link><guid isPermaLink="false">63eb11f1361c0d0ddf89fb77</guid><category><![CDATA[Big Data]]></category><dc:creator><![CDATA[relentlesstorm]]></dc:creator><pubDate>Mon, 13 Feb 2023 05:02:00 GMT</pubDate><media:content url="https://images.unsplash.com/photo-1489875347897-49f64b51c1f8?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=MnwxMTc3M3wwfDF8c2VhcmNofDF8fG15c3FsfGVufDB8fHx8MTY3NjM1MDkxOQ&amp;ixlib=rb-4.0.3&amp;q=80&amp;w=2000" medium="image"/><content:encoded><![CDATA[<!--kg-card-begin: markdown--><h2 id="install-the-postgresql-from-yum-repository">Install the PostgreSQL from YUM repository</h2>
+<img src="https://images.unsplash.com/photo-1489875347897-49f64b51c1f8?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=MnwxMTc3M3wwfDF8c2VhcmNofDF8fG15c3FsfGVufDB8fHx8MTY3NjM1MDkxOQ&amp;ixlib=rb-4.0.3&amp;q=80&amp;w=2000" alt="Getting started with PostgreSQL"><p><strong>Install the repository RPM:</strong></p>
+<pre><code>$ yum install -y https://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm
+</code></pre>
+<p><strong>Install PostgreSQL:</strong></p>
+<pre><code>$ yum install -y postgresql15-server
+</code></pre>
+<h2 id="create-a-database-cluster">Create a Database Cluster</h2>
+<p>Before you can do anything, you must initialize a database storage area on disk. We call this a database cluster.</p>
+<pre><code>$ su - postgres
+
+-bash-4.2$ /usr/pgsql-15/bin/pg_ctl --help
+pg_ctl is a utility to initialize, start, stop, or control a PostgreSQL server.
+
+Usage:
+  pg_ctl init[db]   [-D DATADIR] [-s] [-o OPTIONS]
+  pg_ctl start      [-D DATADIR] [-l FILENAME] [-W] [-t SECS] [-s]
+                    [-o OPTIONS] [-p PATH] [-c]
+  pg_ctl stop       [-D DATADIR] [-m SHUTDOWN-MODE] [-W] [-t SECS] [-s]
+  pg_ctl restart    [-D DATADIR] [-m SHUTDOWN-MODE] [-W] [-t SECS] [-s]
+                    [-o OPTIONS] [-c]
+  pg_ctl reload     [-D DATADIR] [-s]
+  pg_ctl status     [-D DATADIR]
+  pg_ctl promote    [-D DATADIR] [-W] [-t SECS] [-s]
+  pg_ctl logrotate  [-D DATADIR] [-s]
+  pg_ctl kill       SIGNALNAME PID
+
+Common options:
+  -D, --pgdata=DATADIR   location of the database storage area
+  -s, --silent           only print errors, no informational messages
+  -t, --timeout=SECS     seconds to wait when using -w option
+  -V, --version          output version information, then exit
+  -w, --wait             wait until operation completes (default)
+  -W, --no-wait          do not wait until operation completes
+  -?, --help             show this help, then exit
+If the -D option is omitted, the environment variable PGDATA is used.
+
+Options for start or restart:
+  -c, --core-files       allow postgres to produce core files
+  -l, --log=FILENAME     write (or append) server log to FILENAME
+  -o, --options=OPTIONS  command line options to pass to postgres
+                         (PostgreSQL server executable) or initdb
+  -p PATH-TO-POSTGRES    normally not necessary
+
+Options for stop or restart:
+  -m, --mode=MODE        MODE can be &quot;smart&quot;, &quot;fast&quot;, or &quot;immediate&quot;
+
+Shutdown modes are:
+  smart       quit after all clients have disconnected
+  fast        quit directly, with proper shutdown (default)
+  immediate   quit without complete shutdown; will lead to recovery on restart
+
+Allowed signal names for kill:
+  ABRT HUP INT KILL QUIT TERM USR1 USR2
+
+Report bugs to &lt;pgsql-bugs@lists.postgresql.org&gt;.
+PostgreSQL home page: &lt;https://www.postgresql.org/&gt;
+</code></pre>
+<p><strong>Create the data directory:</strong></p>
+<pre><code>$ mkdir -p /mnt/pgsql15/data
+$ chown -R postgres /mnt/pgsql15
+</code></pre>
+<p><strong>Create the database cluster:</strong></p>
+<pre><code>$ su - postgres -c &quot;/usr/pgsql-15/bin/initdb -D /mnt/pgsql15/data&quot;
+
+$ ls /mnt/pgsql15/data
+base log pg_dynshmem pg_ident.conf pg_multixact pg_replslot pg_snapshots  pg_stat_tmp pg_tblspc PG_VERSION pg_xact postgresql.conf
+global pg_commit_ts pg_hba.conf pg_logical pg_notify pg_serial pg_stat pg_subtrans pg_twophase pg_wal postgresql.auto.conf
+</code></pre>
+<p><strong>Start and stop the database server:</strong></p>
+<pre><code>-bash-4.2$ /usr/pgsql-15/bin/pg_ctl -D /mnt/pgsql15/data -l logfile start
+waiting for server to start.... done
+server started
+
+-bash-4.2$ /usr/pgsql-15/bin/pg_ctl -D /mnt/pgsql15/data stop
+waiting for server to shut down.... done
+server stopped
+
+-bash-4.2$ /usr/pgsql-15/bin/pg_ctl -D /mnt/pgsql15/data -l logfile start
+waiting for server to start.... done
+server started
+
+-bash-4.2$ ls -ltr
+total 4
+drwx------ 4 postgres postgres  51 Feb 13 20:48 15
+-rw------- 1 postgres postgres 374 Feb 13 22:26 logfile
+</code></pre>
+<p><strong>Restart the database server:</strong></p>
+<pre><code>-bash-4.2$ /usr/pgsql-15/bin/pg_ctl -D /mnt/pgsql15/data -l logfile restart
+waiting for server to shut down.... done
+server stopped
+waiting for server to start.... done
+server started
+</code></pre>
+<p><strong>Check the database service:</strong></p>
+<pre><code>-bash-4.2$ /usr/pgsql-15/bin/pg_ctl -D /mnt/pgsql15/data status
+pg_ctl: server is running (PID: 77038)
+/usr/pgsql-15/bin/postgres &quot;-D&quot; &quot;/mnt/pgsql15/data&quot;
+
+-bash-4.2$ ps aux | grep postgres | grep -v grep
+root     73095  0.0  0.0 191900  4348 pts/0    S    21:49   0:00 su - postgres
+postgres 73096  0.0  0.0 115560  3456 pts/0    S    21:49   0:00 -bash
+postgres 77434  0.1  0.0 401372 23652 ?        Ss   22:26   0:00 /usr/pgsql-15/bin/postgres -D /mnt/pgsql15/data
+postgres 77435  0.0  0.0 253204  5692 ?        Ss   22:26   0:00 postgres: logger
+postgres 77436  0.0  0.0 401524  5728 ?        Ss   22:26   0:00 postgres: checkpointer
+postgres 77437  0.0  0.0 401508  5784 ?        Ss   22:26   0:00 postgres: background writer
+postgres 77439  0.0  0.0 401508 10372 ?        Ss   22:26   0:00 postgres: walwriter
+postgres 77440  0.0  0.0 402992  8864 ?        Ss   22:26   0:00 postgres: autovacuum launcher
+postgres 77441  0.0  0.0 402976  6904 ?        Ss   22:26   0:00 postgres: logical replication launcher
+postgres 77480  0.0  0.0 155468  3784 pts/0    R+   22:27   0:00 ps aux
+</code></pre>
+<h2 id="using-psql">Using psql</h2>
+<p><a href="https://www.postgresql.org/docs/current/app-psql.html">psql</a> is a terminal-based front-end to PostgreSQL. It enables you to type in queries interactively, issue them to PostgreSQL, and see the query results. Alternatively, input can be from a file or from command line arguments. In addition, psql provides a number of meta-commands and various shell-like features to facilitate writing scripts and automating a wide variety of tasks.</p>
+<p><strong>Create a database:</strong></p>
+<pre><code>$ su - postgres
+Last login: Mon Feb 13 20:12:36 UTC 2023 on pts/0
+
+-bash-4.2$ psql
+psql (15.2)
+Type &quot;help&quot; for help.
+
+postgres=# \l
+                                                 List of databases
+   Name    |  Owner   | Encoding |   Collate   |    Ctype    | ICU Locale | Locale Provider |   Access privileges
+-----------+----------+----------+-------------+-------------+------------+-----------------+-----------------------
+ postgres  | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 |            | libc            |
+ template0 | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 |            | libc            | =c/postgres          +
+           |          |          |             |             |            |                 | postgres=CTc/postgres
+ template1 | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 |            | libc            | =c/postgres          +
+           |          |          |             |             |            |                 | postgres=CTc/postgres
+(3 rows)
+
+
+postgres=# create database testdb;
+CREATE DATABASE
+
+postgres=# \l
+                                                 List of databases
+   Name    |  Owner   | Encoding |   Collate   |    Ctype    | ICU Locale | Locale Provider |   Access privileges
+-----------+----------+----------+-------------+-------------+------------+-----------------+-----------------------
+ postgres  | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 |            | libc            |
+ template0 | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 |            | libc            | =c/postgres          +
+           |          |          |             |             |            |                 | postgres=CTc/postgres
+ template1 | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 |            | libc            | =c/postgres          +
+           |          |          |             |             |            |                 | postgres=CTc/postgres
+ testdb    | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 |            | libc            |
+(4 rows)
+</code></pre>
+<p><strong>Drop database:</strong></p>
+<pre><code>postgres=# drop database if exists testdb;
+DROP DATABASE
+postgres=# \l
+                                                 List of databases
+   Name    |  Owner   | Encoding |   Collate   |    Ctype    | ICU Locale | Locale Provider |   Access privileges
+-----------+----------+----------+-------------+-------------+------------+-----------------+-----------------------
+ postgres  | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 |            | libc            |
+ template0 | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 |            | libc            | =c/postgres          +
+           |          |          |             |             |            |                 | postgres=CTc/postgres
+ template1 | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 |            | libc            | =c/postgres          +
+           |          |          |             |             |            |                 | postgres=CTc/postgres
+(3 rows)
+</code></pre>
+<p><strong>Manipulate the database remotely:</strong></p>
+<pre><code>psql --host=10.13.121.243 --port=5432 --username=postgres -w -c &quot;create database testdb&quot;
+psql --host=10.13.121.243 --port=5432 --username=postgres -w -c &quot;\l&quot;
+psql --host=10.13.121.243 --port=5432 --username=postgres -w -d testdb -c &quot;\dt+&quot;
+</code></pre>
+<h2 id="reference">Reference</h2>
+<ul>
+<li><a href="https://www.postgresql.org/download/linux/redhat/">https://www.postgresql.org/download/linux/redhat/</a></li>
+<li><a href="https://www.postgresql.org/docs/15/creating-cluster.html">https://www.postgresql.org/docs/15/creating-cluster.html</a></li>
+</ul>
+<!--kg-card-end: markdown-->]]></content:encoded></item><item><title><![CDATA[Getting started with BCC (BPF Compiler Collection)]]></title><description><![CDATA[BCC is a toolkit for creating efficient kernel tracing and manipulation programs, and includes several useful tools and examples. ]]></description><link>https://www.flamingbytes.com/blog/getting-started-with-bcc/</link><guid isPermaLink="false">63e9a9a1f19d570e66aae077</guid><category><![CDATA[Performance]]></category><dc:creator><![CDATA[relentlesstorm]]></dc:creator><pubDate>Sun, 12 Feb 2023 03:40:00 GMT</pubDate><media:content url="https://images.unsplash.com/photo-1661956602868-6ae368943878?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=MnwxMTc3M3wxfDF8YWxsfDE2fHx8fHx8Mnx8MTY3NjI1NTU4OA&amp;ixlib=rb-4.0.3&amp;q=80&amp;w=2000" medium="image"/><content:encoded><![CDATA[<!--kg-card-begin: markdown--><h2 id="intro-to-bcc">Intro to BCC</h2>
 <img src="https://images.unsplash.com/photo-1661956602868-6ae368943878?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=MnwxMTc3M3wxfDF8YWxsfDE2fHx8fHx8Mnx8MTY3NjI1NTU4OA&amp;ixlib=rb-4.0.3&amp;q=80&amp;w=2000" alt="Getting started with BCC (BPF Compiler Collection)"><p><a href="https://github.com/iovisor/bcc">BCC</a> is a toolkit for creating efficient kernel tracing and manipulation programs, and includes several useful tools and examples. It makes use of extended BPF (Berkeley Packet Filters), formally known as eBPF, a new feature that was first added to Linux 3.15. Much of what BCC uses requires Linux 4.1 and above.</p>
 <h2 id="install-bcc-from-packages">Install BCC from packages</h2>
 <p>In general, a Linux kernel version 4.1 or newer is required.</p>
@@ -957,179 +1156,5 @@ vm1
 <ul>
 <li><a href="https://github.com/kubevirt/kubevirt/releases">https://github.com/kubevirt/kubevirt/releases</a></li>
 <li><a href="https://kubevirt.io/user-guide/operations/virtctl_client_tool/">https://kubevirt.io/user-guide/operations/virtctl_client_tool/</a></li>
-</ul>
-<!--kg-card-end: markdown-->]]></content:encoded></item><item><title><![CDATA[Using node selector to assign virtual machines to a node]]></title><description><![CDATA[Kubernetes node selector can help control which node to deploy the VM or pod on.]]></description><link>https://www.flamingbytes.com/blog/using-node-selector-to-assign-virtual-mahcines-to-a-node/</link><guid isPermaLink="false">63b4b4011527a00d97449fb7</guid><category><![CDATA[Big Data]]></category><dc:creator><![CDATA[relentlesstorm]]></dc:creator><pubDate>Fri, 30 Dec 2022 00:00:00 GMT</pubDate><media:content url="https://images.unsplash.com/photo-1667372335962-5fd503a8ae5b?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=MnwxMTc3M3wwfDF8c2VhcmNofDh8fGt1YmVybmV0ZXN8ZW58MHx8fHwxNjcyNzc3MDE2&amp;ixlib=rb-4.0.3&amp;q=80&amp;w=2000" medium="image"/><content:encoded><![CDATA[<!--kg-card-begin: markdown--><img src="https://images.unsplash.com/photo-1667372335962-5fd503a8ae5b?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=MnwxMTc3M3wwfDF8c2VhcmNofDh8fGt1YmVybmV0ZXN8ZW58MHx8fHwxNjcyNzc3MDE2&amp;ixlib=rb-4.0.3&amp;q=80&amp;w=2000" alt="Using node selector to assign virtual machines to a node"><p>In some circumstances, we want to control which node the virtual machine or pod deploys to. The <strong>node selector</strong> can be used to assign virtual machine or pod to a node.</p>
-<h2 id="add-label-to-a-node">Add label to a node</h2>
-<p>The label can be added to a node from either command line or openshift web console.</p>
-<pre><code class="language-shell">$ oc get nodes
-NAME                   STATUS                     ROLES    AGE   VERSION
-master1   Ready                      master   46h   v1.20.11+63f841a
-master2   Ready                      master   46h   v1.20.11+63f841a
-master3   Ready                      master   46h   v1.20.11+63f841a
-worker1    Ready                      worker   45h   v1.20.11+63f841a
-worker2    Ready                      worker   45h   v1.20.11+63f841a
-worker3    Ready,SchedulingDisabled   worker   45h   v1.20.11+63f841a
-
-$ oc label nodes worker1 worker-node-name=w1
-
-$ oc describe node worker1 | grep worker-node-name
-                    worker-node-name=w1
-
-$ oc get nodes --show-labels
-NAME       STATUS                     ROLES    AGE   VERSION            LABELS
-worker1    Ready                      worker   45h   v1.20.11+63f841a   &lt;omitted..&gt;worker-node-name=w1
-&lt;omitted..&gt;
-</code></pre>
-<p>This can also be done through openshift web console by clicking the &quot;edit labels&quot; option on a node.<br>
-<img src="https://www.flamingbytes.com/content/images/posts/edit-labels.png" alt="Using node selector to assign virtual machines to a node" loading="lazy"></p>
-<h2 id="add-a-nodeselector-field-to-the-virtual-machine">Add a nodeSelector field to the virtual machine</h2>
-<p>A node selector can be added through openshift web console.</p>
-<p><img src="https://www.flamingbytes.com/content/images/posts/node-selector-1.png" alt="Using node selector to assign virtual machines to a node" loading="lazy"></p>
-<p><img src="https://www.flamingbytes.com/content/images/posts/nodeselector.png" alt="Using node selector to assign virtual machines to a node" loading="lazy"></p>
-<pre><code class="language-shell">$ oc describe vm vm1
-    Spec:
-      Node Selector:
-        Worker - Node - Name:            w1
-</code></pre>
-<h2 id="reference">Reference</h2>
-<ul>
-<li><a href="https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/">https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/</a></li>
-</ul>
-<!--kg-card-end: markdown-->]]></content:encoded></item><item><title><![CDATA[Deploy application with kubernetes statefulset]]></title><description><![CDATA[Demonstrate how to deploy application with Kubernetes statefulset. ]]></description><link>https://www.flamingbytes.com/blog/deploy-application-with-kubernetes-statefulset/</link><guid isPermaLink="false">63b4b0631527a00d97449efe</guid><category><![CDATA[Big Data]]></category><dc:creator><![CDATA[relentlesstorm]]></dc:creator><pubDate>Thu, 29 Dec 2022 00:00:00 GMT</pubDate><media:content url="https://images.unsplash.com/photo-1667372525724-16cede94db0b?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=MnwxMTc3M3wwfDF8c2VhcmNofDJ8fGt1YmVybmV0ZXN8ZW58MHx8fHwxNjcyNzc3MDE2&amp;ixlib=rb-4.0.3&amp;q=80&amp;w=2000" medium="image"/><content:encoded><![CDATA[<!--kg-card-begin: markdown--><img src="https://images.unsplash.com/photo-1667372525724-16cede94db0b?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=MnwxMTc3M3wwfDF8c2VhcmNofDJ8fGt1YmVybmV0ZXN8ZW58MHx8fHwxNjcyNzc3MDE2&amp;ixlib=rb-4.0.3&amp;q=80&amp;w=2000" alt="Deploy application with kubernetes statefulset"><p>StatefulSet is the workload API object used to manage stateful applications.</p>
-<p>Like a Deployment, a StatefulSet manages Pods that are based on an identical container spec. Unlike a Deployment, a StatefulSet maintains a sticky identity for each of their Pods. These pods are created from the same spec, but are not interchangeable: each has a persistent identifier that it maintains across any rescheduling.</p>
-<p>If you want to use storage volumes to provide persistence for your workload, you can use a StatefulSet as part of the solution. Although individual Pods in a StatefulSet are susceptible to failure, the persistent Pod identifiers make it easier to match existing volumes to the new Pods that replace any that have failed.</p>
-<p><a href="https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/">Source</a></p>
-<p>The example below demonstrates the components of a StatefulSet.</p>
-<pre><code class="language-shell">$ cat perfbench-statefulset.yaml
-apiVersion: apps/v1
-kind: StatefulSet
-metadata:
-  name: perfbench
-spec:
-  serviceName: perfbench
-  replicas: 1
-  selector:
-    matchLabels:
-      app: perfbench
-  template:
-    metadata:
-      labels:
-        app: perfbench
-    spec:
-      containers:
-      - name: perfbench
-        image: noname/perfbench:latest
-        volumeMounts:
-        - name: perfbench-data
-          mountPath: /perfdata
-        - name: perfbench-log
-          mountPath: /perflog
-        securityContext:
-          privileged: true
-  volumeClaimTemplates:
-  - metadata:
-      name: perfbench-data
-    spec:
-      storageClassName: &lt;storage-class&gt;
-      accessModes:
-      - ReadWriteOnce
-      resources:
-        requests:
-          storage: 20Gi
-  - metadata:
-      name: perfbench-log
-    spec:
-      storageClassName: &lt;storage-class&gt;
-      accessModes:
-      - ReadWriteOnce
-      resources:
-        requests:
-          storage: 1Gi
-</code></pre>
-<p>The statefulset can be created as below.</p>
-<pre><code class="language-shell">$ kubectl apply -f perfbench-statefulset.yaml
-</code></pre>
-<p>In case of any failure to create the statefulset, you can check the events with the following commands.</p>
-<pre><code class="language-shell">$ kubectl describe pod perfbench-0
-Name:         perfbench-0
-Namespace:    default
-Priority:     0
-Node:         &lt;hostname&gt;/&lt;ip-address&gt;
-Start Time:   Sat, 26 Feb 2022 06:22:27 +0000
-Labels:       app=perfbench
-              controller-revision-hash=perfbench-7657fb8779
-              statefulset.kubernetes.io/pod-name=perfbench-0
-Annotations:  cni.projectcalico.org/containerID: c8569d9a3f01f546ca92fb2d0cba98d4d971933e53ab83373ed34c91040d92bc
-              cni.projectcalico.org/podIP: 192.168.201.145/32
-              cni.projectcalico.org/podIPs: 192.168.201.145/32
-Status:       Running
-IP:           192.168.201.145
-IPs:
-  IP:           192.168.201.145
-Controlled By:  StatefulSet/perfbench
-Containers:
-  perfbench:
-    Container ID:   docker://b6a2c838837395c1c85913d4735e3167d3cea6b5ed3ade276584461d643eaee5
-    Image:          noname/perfbench:latest
-    Image ID:       docker-pullable://&lt;noname/perfbench@sha256:5460e3c04ea972afcde3db092b514919867f87974d012f046c538ac816c7aaae
-    Port:           &lt;none&gt;
-    Host Port:      &lt;none&gt;
-    State:          Running
-      Started:      Sat, 26 Feb 2022 06:22:35 +0000
-    Ready:          True
-    Restart Count:  0
-    Environment:    &lt;none&gt;
-    Mounts:
-      /perfdata from perfbench-data (rw)
-      /perflog from perfbench-log (rw)
-      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-x8qhw (ro)
-Conditions:
-  Type              Status
-  Initialized       True
-  Ready             True
-  ContainersReady   True
-  PodScheduled      True
-Volumes:
-  perfbench-data:
-    Type:       PersistentVolumeClaim (a reference to a PersistentVolumeClaim in the same namespace)
-    ClaimName:  perfbench-data-perfbench-0
-    ReadOnly:   false
-  perfbench-log:
-    Type:       PersistentVolumeClaim (a reference to a PersistentVolumeClaim in the same namespace)
-    ClaimName:  perfbench-log-perfbench-0
-    ReadOnly:   false
-  kube-api-access-x8qhw:
-    Type:                    Projected (a volume that contains injected data from multiple sources)
-    TokenExpirationSeconds:  3607
-    ConfigMapName:           kube-root-ca.crt
-    ConfigMapOptional:       &lt;nil&gt;
-    DownwardAPI:             true
-QoS Class:                   BestEffort
-Node-Selectors:              &lt;none&gt;
-Tolerations:                 node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
-                             node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
-Events:
-  Type     Reason            Age                From               Message
-  ----     ------            ----               ----               -------
-  Warning  FailedScheduling  20s (x2 over 21s)  default-scheduler  0/3 nodes are available: 3 pod has unbound immediate PersistentVolumeClaims.
-  Normal   Scheduled         18s                default-scheduler  Successfully assigned default/perfbench-0 to &lt;hostname&gt;
-  Normal   Pulling           16s                kubelet            Pulling image &quot;&lt;noname/perfbench:latest&quot;
-  Normal   Pulled            11s                kubelet            Successfully pulled image &quot;&lt;noname/perfbench:latest&quot; in 4.368378217s
-  Normal   Created           10s                kubelet            Created container perfbench
-  Normal   Started           10s                kubelet            Started container perfbench
-</code></pre>
-<p>You can check the pod status and login to the pod container as below.</p>
-<pre><code class="language-shell">$ kubectl get pod
-NAME         READY   STATUS    RESTARTS   AGE
-perfbench-0   1/1     Running   0          3m44s
-
-$ kubectl exec -it perfbench-0 -- bash
-</code></pre>
-<h2 id="reference">Reference</h2>
-<ul>
-<li><a href="https://kubernetes.io/docs/concepts/workloads/controllers/deployment/">https://kubernetes.io/docs/concepts/workloads/controllers/deployment/</a></li>
-<li><a href="https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/">https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/</a></li>
-<li><a href="https://kubernetes.io/docs/concepts/storage/storage-classes/">https://kubernetes.io/docs/concepts/storage/storage-classes/</a></li>
-<li><a href="https://kubernetes.io/docs/concepts/containers/images/">https://kubernetes.io/docs/concepts/containers/images/</a></li>
 </ul>
 <!--kg-card-end: markdown-->]]></content:encoded></item></channel></rss>

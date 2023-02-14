@@ -45,34 +45,27 @@
     } 
     </style>
 
+    <meta name="description" content="go-ycsb is a Go port of YCSB. It fully supports all YCSB generators and the Core workload so we can do the basic CRUD benchmarks with Go." />
     <link rel="icon" href="https://www.flamingbytes.com/content/images/size/w256h256/2023/01/FlamingBytes-icon-64x64.png" type="image/png" />
-    <link rel="canonical" href="https://www.flamingbytes.com/blog/fio-direct-i-o-error-with-1k-blocksize/" />
+    <link rel="canonical" href="https://www.flamingbytes.com/blog/ycsb-benchmark-on-postgresql/" />
     <meta name="referrer" content="no-referrer-when-downgrade" />
     
     <meta property="og:site_name" content="FlamingBytes" />
     <meta property="og:type" content="article" />
-    <meta property="og:title" content="fio direct I/O error with 1k blocksize" />
-    <meta property="og:description" content="When to run fio write with small blocksize(e.g. 1k), the following error is seen.
-
-$ fio --blocksize&#x3D;1k --ioengine&#x3D;libaio --readwrite&#x3D;randwrite --filesize&#x3D;2G --group_reporting --direct&#x3D;1 --iodepth&#x3D;128 --randrepeat&#x3D;1 --end_fsync&#x3D;1 --
-name&#x3D;job1 --numjobs&#x3D;1 --filename&#x3D;/mnt/fiomnt/fio.dat
-job1: (g&#x3D;0): rw&#x3D;" />
-    <meta property="og:url" content="https://www.flamingbytes.com/blog/fio-direct-i-o-error-with-1k-blocksize/" />
-    <meta property="og:image" content="https://images.unsplash.com/photo-1566633806501-349d557a616d?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDJ8fGFsaWdufGVufDB8fHx8MTY3NDYyODcwMw&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000" />
-    <meta property="article:published_time" content="2023-01-23T06:39:00.000Z" />
-    <meta property="article:modified_time" content="2023-01-25T07:18:25.000Z" />
+    <meta property="og:title" content="YCSB benchmark on PostgreSQL" />
+    <meta property="og:description" content="go-ycsb is a Go port of YCSB. It fully supports all YCSB generators and the Core workload so we can do the basic CRUD benchmarks with Go." />
+    <meta property="og:url" content="https://www.flamingbytes.com/blog/ycsb-benchmark-on-postgresql/" />
+    <meta property="og:image" content="https://images.unsplash.com/photo-1533284133567-0da9844151ce?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDl8fHJhY2V8ZW58MHx8fHwxNjc2MzUxODY1&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000" />
+    <meta property="article:published_time" content="2023-02-14T05:20:50.000Z" />
+    <meta property="article:modified_time" content="2023-02-14T05:23:41.000Z" />
     <meta property="article:tag" content="Benchmarking" />
     
     <meta property="article:publisher" content="https://www.facebook.com/ghost" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="fio direct I/O error with 1k blocksize" />
-    <meta name="twitter:description" content="When to run fio write with small blocksize(e.g. 1k), the following error is seen.
-
-$ fio --blocksize&#x3D;1k --ioengine&#x3D;libaio --readwrite&#x3D;randwrite --filesize&#x3D;2G --group_reporting --direct&#x3D;1 --iodepth&#x3D;128 --randrepeat&#x3D;1 --end_fsync&#x3D;1 --
-name&#x3D;job1 --numjobs&#x3D;1 --filename&#x3D;/mnt/fiomnt/fio.dat
-job1: (g&#x3D;0): rw&#x3D;" />
-    <meta name="twitter:url" content="https://www.flamingbytes.com/blog/fio-direct-i-o-error-with-1k-blocksize/" />
-    <meta name="twitter:image" content="https://images.unsplash.com/photo-1566633806501-349d557a616d?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDJ8fGFsaWdufGVufDB8fHx8MTY3NDYyODcwMw&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000" />
+    <meta name="twitter:title" content="YCSB benchmark on PostgreSQL" />
+    <meta name="twitter:description" content="go-ycsb is a Go port of YCSB. It fully supports all YCSB generators and the Core workload so we can do the basic CRUD benchmarks with Go." />
+    <meta name="twitter:url" content="https://www.flamingbytes.com/blog/ycsb-benchmark-on-postgresql/" />
+    <meta name="twitter:image" content="https://images.unsplash.com/photo-1533284133567-0da9844151ce?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDl8fHJhY2V8ZW58MHx8fHwxNjc2MzUxODY1&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000" />
     <meta name="twitter:label1" content="Written by" />
     <meta name="twitter:data1" content="relentlesstorm" />
     <meta name="twitter:label2" content="Filed under" />
@@ -108,18 +101,18 @@ job1: (g&#x3D;0): rw&#x3D;" />
         "url": "https://www.flamingbytes.com/author/relentlesstorm/",
         "sameAs": []
     },
-    "headline": "fio direct I/O error with 1k blocksize",
-    "url": "https://www.flamingbytes.com/blog/fio-direct-i-o-error-with-1k-blocksize/",
-    "datePublished": "2023-01-23T06:39:00.000Z",
-    "dateModified": "2023-01-25T07:18:25.000Z",
+    "headline": "YCSB benchmark on PostgreSQL",
+    "url": "https://www.flamingbytes.com/blog/ycsb-benchmark-on-postgresql/",
+    "datePublished": "2023-02-14T05:20:50.000Z",
+    "dateModified": "2023-02-14T05:23:41.000Z",
     "image": {
         "@type": "ImageObject",
-        "url": "https://images.unsplash.com/photo-1566633806501-349d557a616d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxMTc3M3wwfDF8c2VhcmNofDJ8fGFsaWdufGVufDB8fHx8MTY3NDYyODcwMw&ixlib=rb-4.0.3&q=80&w=2000",
+        "url": "https://images.unsplash.com/photo-1533284133567-0da9844151ce?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxMTc3M3wwfDF8c2VhcmNofDl8fHJhY2V8ZW58MHx8fHwxNjc2MzUxODY1&ixlib=rb-4.0.3&q=80&w=2000",
         "width": 2000,
         "height": 1333
     },
     "keywords": "Benchmarking",
-    "description": "When to run fio write with small blocksize(e.g. 1k), the following error is seen.\n\n$ fio --blocksize&#x3D;1k --ioengine&#x3D;libaio --readwrite&#x3D;randwrite --filesize&#x3D;2G --group_reporting --direct&#x3D;1 --iodepth&#x3D;128 --randrepeat&#x3D;1 --end_fsync&#x3D;1 --\nname&#x3D;job1 --numjobs&#x3D;1 --filename&#x3D;/mnt/fiomnt/fio.dat\njob1: (g&#x3D;0): rw&#x3D;randwrite, bs&#x3D;(R) 1024B-1024B, (W) 1024B-1024B, (T) 1024B-1024B, ioengine&#x3D;libaio, iodepth&#x3D;128\nfio-3.7\nStarting 1 process\nfio: io_u error on file /mnt/fiomnt/fio.dat: Invalid argument: write offset&#x3D;1",
+    "description": "go-ycsb is a Go port of YCSB. It fully supports all YCSB generators and the Core workload so we can do the basic CRUD benchmarks with Go.",
     "mainEntityOfPage": {
         "@type": "WebPage",
         "@id": "https://www.flamingbytes.com/"
@@ -185,7 +178,7 @@ job1: (g&#x3D;0): rw&#x3D;" />
             <header class="gh-article-header gh-canvas">
                     <a class="gh-article-tag" href="https://www.flamingbytes.com/blog/tag/benchmarking/">Benchmarking</a>
 
-                <h1 class="gh-article-title">fio direct I/O error with 1k blocksize</h1>
+                <h1 class="gh-article-title">YCSB benchmark on PostgreSQL</h1>
 
                     <aside class="gh-article-sidebar">
 
@@ -204,7 +197,7 @@ job1: (g&#x3D;0): rw&#x3D;" />
 
         <div class="gh-article-meta">
             <div class="gh-article-meta-inner">
-                <time class="gh-article-date" datetime="2023-01-23">Jan 23, 2023</time>
+                <time class="gh-article-date" datetime="2023-02-14">Feb 14, 2023</time>
                     <span class="gh-article-meta-sep"></span>
                     <span class="gh-article-length">1 min</span>
             </div>
@@ -212,40 +205,54 @@ job1: (g&#x3D;0): rw&#x3D;" />
 
     </aside>
 
+                    <p class="gh-article-excerpt">go-ycsb is a Go port of YCSB. It fully supports all YCSB generators and the Core workload so we can do the basic CRUD benchmarks with Go.</p>
 
                     <figure class="gh-article-image">
         <img
-            srcset="https://images.unsplash.com/photo-1566633806501-349d557a616d?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDJ8fGFsaWdufGVufDB8fHx8MTY3NDYyODcwMw&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;300 300w,
-                    https://images.unsplash.com/photo-1566633806501-349d557a616d?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDJ8fGFsaWdufGVufDB8fHx8MTY3NDYyODcwMw&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720 720w,
-                    https://images.unsplash.com/photo-1566633806501-349d557a616d?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDJ8fGFsaWdufGVufDB8fHx8MTY3NDYyODcwMw&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;960 960w,
-                    https://images.unsplash.com/photo-1566633806501-349d557a616d?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDJ8fGFsaWdufGVufDB8fHx8MTY3NDYyODcwMw&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1200 1200w,
-                    https://images.unsplash.com/photo-1566633806501-349d557a616d?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDJ8fGFsaWdufGVufDB8fHx8MTY3NDYyODcwMw&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000 2000w"
+            srcset="https://images.unsplash.com/photo-1533284133567-0da9844151ce?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDl8fHJhY2V8ZW58MHx8fHwxNjc2MzUxODY1&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;300 300w,
+                    https://images.unsplash.com/photo-1533284133567-0da9844151ce?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDl8fHJhY2V8ZW58MHx8fHwxNjc2MzUxODY1&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720 720w,
+                    https://images.unsplash.com/photo-1533284133567-0da9844151ce?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDl8fHJhY2V8ZW58MHx8fHwxNjc2MzUxODY1&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;960 960w,
+                    https://images.unsplash.com/photo-1533284133567-0da9844151ce?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDl8fHJhY2V8ZW58MHx8fHwxNjc2MzUxODY1&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1200 1200w,
+                    https://images.unsplash.com/photo-1533284133567-0da9844151ce?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDl8fHJhY2V8ZW58MHx8fHwxNjc2MzUxODY1&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000 2000w"
             sizes="(max-width: 1200px) 100vw, 1200px"
-            src="https://images.unsplash.com/photo-1566633806501-349d557a616d?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDJ8fGFsaWdufGVufDB8fHx8MTY3NDYyODcwMw&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1200"
-            alt="fio direct I/O error with 1k blocksize"
+            src="https://images.unsplash.com/photo-1533284133567-0da9844151ce?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDl8fHJhY2V8ZW58MHx8fHwxNjc2MzUxODY1&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1200"
+            alt="YCSB benchmark on PostgreSQL"
         >
-            <figcaption>Photo by <a href="https://unsplash.com/@gitfo?utm_source=ghost&utm_medium=referral&utm_campaign=api-credit">Gerrie van der Walt</a> / <a href="https://unsplash.com/?utm_source=ghost&utm_medium=referral&utm_campaign=api-credit">Unsplash</a></figcaption>
+            <figcaption>Photo by <a href="https://unsplash.com/it/@pietromattia?utm_source=ghost&utm_medium=referral&utm_campaign=api-credit">Pietro Mattia</a> / <a href="https://unsplash.com/?utm_source=ghost&utm_medium=referral&utm_campaign=api-credit">Unsplash</a></figcaption>
     </figure>
             </header>
 
             <section class="gh-content gh-canvas">
                 <aside class="gh-sidebar"><div class="gh-toc"></div></aside> 
 
-                <p>When to run fio write with small blocksize(e.g. 1k), the following error is seen.</p><pre><code>$ fio --blocksize=1k --ioengine=libaio --readwrite=randwrite --filesize=2G --group_reporting --direct=1 --iodepth=128 --randrepeat=1 --end_fsync=1 --
-name=job1 --numjobs=1 --filename=/mnt/fiomnt/fio.dat
-job1: (g=0): rw=randwrite, bs=(R) 1024B-1024B, (W) 1024B-1024B, (T) 1024B-1024B, ioengine=libaio, iodepth=128
-fio-3.7
-Starting 1 process
-fio: io_u error on file /mnt/fiomnt/fio.dat: Invalid argument: write offset=129521664, buflen=1024
-fio: io_u error on file /mnt/fiomnt/fio.dat: Invalid argument: write offset=1589760000, buflen=1024
-fio: pid=93922, err=22/file:io_u.c:1747, func=io_u error, error=Invalid argument
-job1: (groupid=0, jobs=1): err=22 (file:io_u.c:1747, func=io_u error, error=Invalid argument): pid=93922: Wed Jan 25 00:42:00 2023
-cpu : usr=0.00%, sys=0.00%, ctx=1, majf=0, minf=14
-IO depths : 1=0.8%, 2=1.6%, 4=3.1%, 8=6.2%, 16=12.5%, 32=25.0%, &amp;gt;=64=50.8%
-submit : 0=0.0%, 4=100.0%, 8=0.0%, 16=0.0%, 32=0.0%, 64=0.0%, &amp;gt;=64=0.0%
-complete : 0=0.0%, 4=100.0%, 8=0.0%, 16=0.0%, 32=0.0%, 64=0.0%, &amp;gt;=64=0.0%
-issued rwts: total=0,128,0,0 short=0,0,0,0 dropped=0,0,0,0
-latency : target=0, window=0, percentile=100.00%, depth=128</code></pre><p><strong>Cause:</strong></p><p>For direct I/O,  the I/O size has to be multiple of filesystem/block device blocksize. In this case, the filesystem blocksize is 4k which can not be well aligned with the requested I/O size(1k). To fix this, the filesystem blocksize should be less than or equal to 1k.</p>
+                <!--kg-card-begin: markdown--><h2 id="create-a-postgresql-database">Create a PostgreSQL database</h2>
+<p>You can follow this <a href="https://www.flamingbytes.com/blog/getting-started-with-postgresql/">post</a> to install PostgreSQL and create the database cluster.</p>
+<p><strong>To create a database:</strong></p>
+<pre><code>$ db_host=10.10.10.243; db_port=5432; db_user=postgres; db_name=testdb
+
+$ psql --host=$db_host --port=$db_port --username=$db_user -w -c &quot;create database $db_name&quot;
+$ psql --host=$db_host --port=$db_port --username=$db_user -w -c &quot;\l&quot;
+$ psql --host=$db_host --port=$db_port --username=$db_user -w -d $db_name -c &quot;\dt+&quot;
+</code></pre>
+<h2 id="load-data-to-database">Load data to database</h2>
+<p><a href="https://github.com/pingcap/go-ycsb">go-ycsb</a> is a Go port of YCSB. It fully supports all YCSB generators and the Core workload so we can do the basic CRUD benchmarks with Go.</p>
+<pre><code>$ ./bin/go-ycsb load postgresql -P workloads/workloadd --threads 768 -p pg.host=$db_host -p pg.port=$db_port -p pg.user=$db_user -p pg.db=$db_name -p pg.sslmode=disable -p dropdata=true
+&lt;snippet&gt;
+Run finished, takes 29m39.847077518s
+INSERT - Takes(s): 1779.8, Count: 97404992, OPS: 54727.5, Avg(us): 11176, Min(us): 179, Max(us): 80767, 99th(us): 72127, 99.9th(us): 79807, 99.99th(us): 80703
+</code></pre>
+<h2 id="run-ycsb-benchmark">Run YCSB benchmark</h2>
+<pre><code>$ ./bin/go-ycsb run postgresql -P workloads/workloadd --threads 768 -p pg.host=$db_host -p pg.port=$db_port -p pg.user=$db_user -p pg.db=$db_name -p pg.sslmode=disable
+&lt;snippet&gt;
+Run finished, takes 14m8.828228178s
+INSERT - Takes(s): 848.8, Count: 4981537, OPS: 5868.8, Avg(us): 1968, Min(us): 226, Max(us): 19327, 99th(us): 11623, 99.9th(us): 17567, 99.99th(us): 19119
+READ   - Takes(s): 848.8, Count: 93786269, OPS: 110492.3, Avg(us): 5899, Min(us): 78, Max(us): 41247, 99th(us): 32831, 99.9th(us): 40063, 99.99th(us): 41119
+</code></pre>
+<h2 id="reference">Reference</h2>
+<ul>
+<li><a href="https://github.com/pingcap/go-ycsb">https://github.com/pingcap/go-ycsb</a></li>
+</ul>
+<!--kg-card-end: markdown-->
 
                 <!-- native ads start -->
                 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8578408127828851" crossorigin="anonymous"></script>
@@ -265,44 +272,6 @@ latency : target=0, window=0, percentile=100.00%, depth=128</code></pre><p><stro
                 <div class="gh-topic gh-topic-grid">
                     <div class="gh-topic-content">
                             <article class="gh-card post">
-    <a class="gh-card-link" href="/blog/ycsb-benchmark-on-postgresql/">
-            <figure class="gh-card-image">
-                <img
-                    srcset="https://images.unsplash.com/photo-1533284133567-0da9844151ce?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDl8fHJhY2V8ZW58MHx8fHwxNjc2MzUxODY1&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;300 300w,
-                            https://images.unsplash.com/photo-1533284133567-0da9844151ce?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDl8fHJhY2V8ZW58MHx8fHwxNjc2MzUxODY1&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720 720w,
-                            https://images.unsplash.com/photo-1533284133567-0da9844151ce?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDl8fHJhY2V8ZW58MHx8fHwxNjc2MzUxODY1&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;960 960w,
-                            https://images.unsplash.com/photo-1533284133567-0da9844151ce?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDl8fHJhY2V8ZW58MHx8fHwxNjc2MzUxODY1&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1200 1200w,
-                            https://images.unsplash.com/photo-1533284133567-0da9844151ce?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDl8fHJhY2V8ZW58MHx8fHwxNjc2MzUxODY1&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000 2000w"
-                    sizes="(max-width: 1200px) 100vw, 1200px"
-                    src="https://images.unsplash.com/photo-1533284133567-0da9844151ce?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDl8fHJhY2V8ZW58MHx8fHwxNjc2MzUxODY1&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720"
-                    alt="YCSB benchmark on PostgreSQL"
-                >
-            </figure>
-
-        <div class="gh-card-wrapper">
-            <header class="gh-card-header">
-                <h3 class="gh-card-title">YCSB benchmark on PostgreSQL</h3>
-            </header>
-
-                    <div class="gh-card-excerpt">go-ycsb is a Go port of YCSB. It fully supports all YCSB generators and the Core workload so we can do the basic CRUD benchmarks with Go.</div>
-
-            <footer class="gh-card-footer">
-                <span class="gh-card-author">relentlesstorm</span>
-                <time class="gh-card-date" datetime="2023-02-14">Feb 14, 2023</time>
-                    <script
-    data-ghost-comment-count="63eb1767361c0d0ddf89fbef"
-    data-ghost-comment-count-empty=""
-    data-ghost-comment-count-singular="comment"
-    data-ghost-comment-count-plural="comments"
-    data-ghost-comment-count-tag="span"
-    data-ghost-comment-count-class-name="gh-card-comments"
-    data-ghost-comment-count-autowrap="true"
->
-</script>
-            </footer>
-        </div>
-    </a>
-</article>                            <article class="gh-card post">
     <a class="gh-card-link" href="/blog/surprised-how-can-the-write-throughput-be-10x-faster-than-the-cloud-native-disk-performance/">
             <figure class="gh-card-image">
                 <img
@@ -329,6 +298,48 @@ latency : target=0, window=0, percentile=100.00%, depth=128</code></pre><p><stro
                 <time class="gh-card-date" datetime="2023-01-25">Jan 25, 2023</time>
                     <script
     data-ghost-comment-count="63d0cefe2eaec20e4c700378"
+    data-ghost-comment-count-empty=""
+    data-ghost-comment-count-singular="comment"
+    data-ghost-comment-count-plural="comments"
+    data-ghost-comment-count-tag="span"
+    data-ghost-comment-count-class-name="gh-card-comments"
+    data-ghost-comment-count-autowrap="true"
+>
+</script>
+            </footer>
+        </div>
+    </a>
+</article>                            <article class="gh-card post">
+    <a class="gh-card-link" href="/blog/fio-direct-i-o-error-with-1k-blocksize/">
+            <figure class="gh-card-image">
+                <img
+                    srcset="https://images.unsplash.com/photo-1566633806501-349d557a616d?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDJ8fGFsaWdufGVufDB8fHx8MTY3NDYyODcwMw&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;300 300w,
+                            https://images.unsplash.com/photo-1566633806501-349d557a616d?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDJ8fGFsaWdufGVufDB8fHx8MTY3NDYyODcwMw&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720 720w,
+                            https://images.unsplash.com/photo-1566633806501-349d557a616d?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDJ8fGFsaWdufGVufDB8fHx8MTY3NDYyODcwMw&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;960 960w,
+                            https://images.unsplash.com/photo-1566633806501-349d557a616d?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDJ8fGFsaWdufGVufDB8fHx8MTY3NDYyODcwMw&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1200 1200w,
+                            https://images.unsplash.com/photo-1566633806501-349d557a616d?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDJ8fGFsaWdufGVufDB8fHx8MTY3NDYyODcwMw&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000 2000w"
+                    sizes="(max-width: 1200px) 100vw, 1200px"
+                    src="https://images.unsplash.com/photo-1566633806501-349d557a616d?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDJ8fGFsaWdufGVufDB8fHx8MTY3NDYyODcwMw&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720"
+                    alt="fio direct I/O error with 1k blocksize"
+                >
+            </figure>
+
+        <div class="gh-card-wrapper">
+            <header class="gh-card-header">
+                <h3 class="gh-card-title">fio direct I/O error with 1k blocksize</h3>
+            </header>
+
+                    <div class="gh-card-excerpt">When to run fio write with small blocksize(e.g. 1k), the following error is seen.
+
+$ fio --blocksize=1k --ioengine=libaio --readwrite=randwrite --filesize=2G --group_reporting --direct=1 --iodepth=128 --randrepeat=1 --end_fsync=1 --
+name=job1 --numjobs=1 --filename=/mnt/fiomnt/fio.dat
+job1: (g=0): rw=</div>
+
+            <footer class="gh-card-footer">
+                <span class="gh-card-author">relentlesstorm</span>
+                <time class="gh-card-date" datetime="2023-01-23">Jan 23, 2023</time>
+                    <script
+    data-ghost-comment-count="63d0cadc2eaec20e4c700329"
     data-ghost-comment-count-empty=""
     data-ghost-comment-count-singular="comment"
     data-ghost-comment-count-plural="comments"
@@ -393,7 +404,7 @@ However, sysbench is a straight-forward throughput/latency benchmarking tool. It
                     <div class="gh-comments gh-read-next gh-canvas">
             <section class="gh-pagehead">
                 <h4 class="gh-pagehead-title">Comments (<script
-    data-ghost-comment-count="63d0cadc2eaec20e4c700329"
+    data-ghost-comment-count="63eb1767361c0d0ddf89fbef"
     data-ghost-comment-count-empty="0"
     data-ghost-comment-count-singular=""
     data-ghost-comment-count-plural=""
@@ -404,7 +415,7 @@ However, sysbench is a straight-forward throughput/latency benchmarking tool. It
 </script>)</h3>
             </section>
             
-        <script defer src="https://cdn.jsdelivr.net/ghost/comments-ui@~0.12/umd/comments-ui.min.js" data-ghost-comments="https://www.flamingbytes.com/" data-api="https://www.flamingbytes.com/ghost/api/content/" data-admin="https://www.flamingbytes.com/ghost/" data-key="321a1d1aea33fd468f6e61f563" data-styles="https://cdn.jsdelivr.net/ghost/comments-ui@~0.12/umd/main.css" data-title="" data-count="false" data-post-id="63d0cadc2eaec20e4c700329" data-sentry-dsn="" data-color-scheme="auto" data-avatar-saturation="60" data-accent-color="#6a13ec" data-app-version="0.12" data-comments-enabled="all" data-publication="FlamingBytes" crossorigin="anonymous"></script>
+        <script defer src="https://cdn.jsdelivr.net/ghost/comments-ui@~0.12/umd/comments-ui.min.js" data-ghost-comments="https://www.flamingbytes.com/" data-api="https://www.flamingbytes.com/ghost/api/content/" data-admin="https://www.flamingbytes.com/ghost/" data-key="321a1d1aea33fd468f6e61f563" data-styles="https://cdn.jsdelivr.net/ghost/comments-ui@~0.12/umd/main.css" data-title="" data-count="false" data-post-id="63eb1767361c0d0ddf89fbef" data-sentry-dsn="" data-color-scheme="auto" data-avatar-saturation="60" data-accent-color="#6a13ec" data-app-version="0.12" data-comments-enabled="all" data-publication="FlamingBytes" crossorigin="anonymous"></script>
     
         </div>
         -->
@@ -413,8 +424,8 @@ However, sysbench is a straight-forward throughput/latency benchmarking tool. It
         <div id="disqus_thread"></div>
 <script>
     var disqus_config = function () {
-        this.page.url = "https://www.flamingbytes.com/blog/fio-direct-i-o-error-with-1k-blocksize/";
-        this.page.identifier = "ghost-63d0cadc2eaec20e4c700329"
+        this.page.url = "https://www.flamingbytes.com/blog/ycsb-benchmark-on-postgresql/";
+        this.page.identifier = "ghost-63eb1767361c0d0ddf89fbef"
     };
     (function() {
     var d = document, s = d.createElement('script');
