@@ -1,4 +1,254 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:media="http://search.yahoo.com/mrss/"><channel><title><![CDATA[FlamingBytes]]></title><description><![CDATA[Stay hungry, Stay foolish.]]></description><link>https://www.flamingbytes.com/</link><image><url>https://www.flamingbytes.com/favicon.png</url><title>FlamingBytes</title><link>https://www.flamingbytes.com/</link></image><generator>Ghost 5.26</generator><lastBuildDate>Tue, 14 Feb 2023 05:24:19 GMT</lastBuildDate><atom:link href="https://www.flamingbytes.com/rss/" rel="self" type="application/rss+xml"/><ttl>60</ttl><item><title><![CDATA[YCSB benchmark on PostgreSQL]]></title><description><![CDATA[go-ycsb is a Go port of YCSB. It fully supports all YCSB generators and the Core workload so we can do the basic CRUD benchmarks with Go.]]></description><link>https://www.flamingbytes.com/blog/ycsb-benchmark-on-postgresql/</link><guid isPermaLink="false">63eb1767361c0d0ddf89fbef</guid><category><![CDATA[Benchmarking]]></category><dc:creator><![CDATA[relentlesstorm]]></dc:creator><pubDate>Tue, 14 Feb 2023 05:20:50 GMT</pubDate><media:content url="https://images.unsplash.com/photo-1533284133567-0da9844151ce?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=MnwxMTc3M3wwfDF8c2VhcmNofDl8fHJhY2V8ZW58MHx8fHwxNjc2MzUxODY1&amp;ixlib=rb-4.0.3&amp;q=80&amp;w=2000" medium="image"/><content:encoded><![CDATA[<!--kg-card-begin: markdown--><h2 id="create-a-postgresql-database">Create a PostgreSQL database</h2>
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:media="http://search.yahoo.com/mrss/"><channel><title><![CDATA[FlamingBytes]]></title><description><![CDATA[Stay hungry, Stay foolish.]]></description><link>https://www.flamingbytes.com/</link><image><url>https://www.flamingbytes.com/favicon.png</url><title>FlamingBytes</title><link>https://www.flamingbytes.com/</link></image><generator>Ghost 5.26</generator><lastBuildDate>Fri, 24 Feb 2023 01:38:58 GMT</lastBuildDate><atom:link href="https://www.flamingbytes.com/rss/" rel="self" type="application/rss+xml"/><ttl>60</ttl><item><title><![CDATA[Introduction to BPF performance tools]]></title><description><![CDATA[BPF stands for Berkeley Packet Filter, which was firstly developed to improve the performance of packet capture tools. It was rewritten later and turned into a general-purpose execution engine including the creation of performance analysis tools.]]></description><link>https://www.flamingbytes.com/blog/introduction-to-bpf-performance-tools/</link><guid isPermaLink="false">63f7fe52a9435e0ecab20d72</guid><dc:creator><![CDATA[relentlesstorm]]></dc:creator><pubDate>Wed, 22 Feb 2023 01:37:00 GMT</pubDate><media:content url="https://images.unsplash.com/photo-1519229875649-6b8da16368fd?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=MnwxMTc3M3wwfDF8c2VhcmNofDEwOHx8dHJhY2V8ZW58MHx8fHwxNjc3MTk4NTc1&amp;ixlib=rb-4.0.3&amp;q=80&amp;w=2000" medium="image"/><content:encoded><![CDATA[<!--kg-card-begin: markdown--><h2 id="what-are-bpf-and-ebpf">What are BPF and eBPF</h2>
+<img src="https://images.unsplash.com/photo-1519229875649-6b8da16368fd?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=MnwxMTc3M3wwfDF8c2VhcmNofDEwOHx8dHJhY2V8ZW58MHx8fHwxNjc3MTk4NTc1&amp;ixlib=rb-4.0.3&amp;q=80&amp;w=2000" alt="Introduction to BPF performance tools"><p>BPF stands for Berkeley Packet Filter, which was firstly developed to improve the performance of packet capture tools. It was rewritten later and turned into a general-purpose execution engine including the creation of performance analysis tools.</p>
+<p>BPF allows the kernel to run mini programs on system and application events, such as disk I/O. It makes the kernel fully programmable, empowering users(even non-kernel developers) to customize and control the system in order to solve real-world problems.</p>
+<p>Extended BPF is abbreviated as eBPF. Since the classic BPF is no longer developed, the kernel contains only one execution engine, BPF(eBPF), to run both extended BPF and classic BPF programs.</p>
+<h2 id="what-are-tracing-snooping-sampling-and-profiling">What are tracing, snooping, sampling and profiling</h2>
+<p><strong>Tracing</strong> is event based recording. BPF tools uses this type of instrumentation. You might be familiar with some Linux tracing tools. For example, <em>strace</em> records and prints system calls. <em>tcpdump</em> is another tracing tool for network packets.</p>
+<p>There are many ready-to-use BPF tools after you install <a href="https://www.flamingbytes.com/blog/getting-started-with-bcc/">BCC</a>. Some of them are <strong>snooping</strong> tools. It just a differnt naming. It&apos;s actually event based tracing.</p>
+<pre><code>$ ls /usr/share/bcc/tools/| grep snoop
+bindsnoop biosnoop compactsnoop dcsnoop drsnoop execsnoop exitsnoop killsnoop mountsnoop opensnoop shmsnoop sofdsnoop statsnoop syncsnoop threadsnoop ttysnoop
+</code></pre>
+<p><strong>Sampling</strong> tools take a subset of measurements which gives a coarse picture of the target system. It is also known as <strong>profiling</strong>. It&apos;s usually timer(frequency) based. For example, 100 samples can be taken every second per CPU. Obviously, the overhead is generally lower than event-based tracing. However, a disadvantage is the sampling would miss events.</p>
+<h2 id="what-are-bcc-and-bpftrace">What are BCC and bpftrace</h2>
+<p>Both BCC and bpftrace are front ends which have been developed for tracing based on BPF technology.</p>
+<p>BCC was the first tracing framework developed for BPF. It provides C programming environment for writing kernel BPF code and other languages for the user-level interface like python, Lua and C++. BCC is better suited for complex scripts and daemons. It can make use of other libraries. To get started with BCC, refer to this <a href="https://www.flamingbytes.com/blog/getting-started-with-bcc/">post</a>.</p>
+<p>bpftrace is a newer front end for developing BPF tools.It is ideal for powerful one-liners and custom short script. To get started with bpftrace, refer to this <a href="https://www.flamingbytes.com/blog/getting-started-with-bpftrace/">post</a>.</p>
+<p>BCC and bpftrace live in a Linux Foundation project on github called <strong>IO Visor</strong>.</p>
+<ul>
+<li><a href="https://github.com/iovisor/bcc">https://github.com/iovisor/bcc</a></li>
+<li><a href="https://github.com/iovisor/bpftrace">https://github.com/iovisor/bpftrace</a></li>
+</ul>
+<h2 id="bpf-tracing-visibility">BPF tracing visibility</h2>
+<p>BPF tracing gives you the visibility across the full software stack and allows new tools to be created on demand.</p>
+<p>Thanks to Brendan Gregg who annotated with BPF-based performance tools to observe different components across the system software stack as below.</p>
+<p><img src="https://www.brendangregg.com/Perf/bpf_book_tools.png" alt="Introduction to BPF performance tools" loading="lazy"></p>
+<p>In the past, I used traditional tools like perf, strace, ftrace and systemtap for the system tracing and profiling. I&apos;m interested in learning more about these BPF tracing tools in future.</p>
+<h2 id="dynamic-instrumentation-kprobes-and-uprobes">Dynamic instrumentation: kprobes and uprobes</h2>
+<p>BPF tracing supports multiple sources of events to provide visibility of the entire software stack.</p>
+<p>Dynamic instrumentation(also calledd Dynamic tracing) provides the ability to insert instrumentation points into software. It&apos;s often used by BPF tools to instrument the start and end of the kernel and application functions. BPF tracing tools use both kprobes and uprobes for dynamic instrumentation.</p>
+<p>For example,</p>
+<ul>
+<li>kprobe:vfs_read</li>
+<li>kretprobe:vfs_read</li>
+<li>uprobe:/bin/bash:readline</li>
+<li>uretprobe:/bin/bash:readline</li>
+</ul>
+<h2 id="static-instrumentation-tracepoints-and-usdt">Static instrumentation: tracepoints and USDT</h2>
+<p>A downside for dynamic instrumentation is the instruments functions can be renamed or removed from one software version to the next. This is <em>interface stability issue</em>. Static instrumentation comes with more stable events(functions) which are more well maintained by developers. Of course, this will become a maintenance burden for developers. So, the number of static instrumentation should be limited.</p>
+<p>BPF supports <em>tracepoints</em> for kernel static instrumentation and <em>USDT</em> for user-level static instrumentation. For example,</p>
+<ul>
+<li>tracepoint:syscalls:sys_enter_open</li>
+<li>usdt:/usr/sbin/mysqld:mysql:query__start</li>
+</ul>
+<h2 id="summary">Summary</h2>
+<p>This post introduces BPF tracing technology and its front ends BCC and bpftrace at high level. Dynamic and static instrumentation(tracing) can be used for performance analysis and troubeshooting.</p>
+<p>We will dive into these technologies in future posts.</p>
+<h2 id="reference">Reference</h2>
+<ul>
+<li>BPF Performance Tools by Brendan Gregg</li>
+</ul>
+<!--kg-card-end: markdown-->]]></content:encoded></item><item><title><![CDATA[Getting started with bpftrace]]></title><description><![CDATA[bpftrace is a high-level tracing language for Linux enhanced Berkeley Packet Filter (eBPF) available in recent Linux kernels (4.x). ]]></description><link>https://www.flamingbytes.com/blog/getting-started-with-bpftrace/</link><guid isPermaLink="false">63f7d46ea9435e0ecab20d18</guid><category><![CDATA[Performance]]></category><dc:creator><![CDATA[relentlesstorm]]></dc:creator><pubDate>Tue, 21 Feb 2023 21:08:00 GMT</pubDate><media:content url="https://images.unsplash.com/photo-1544206269-b7e48d9a93f7?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=MnwxMTc3M3wwfDF8c2VhcmNofDEwfHx0cmFjZXxlbnwwfHx8fDE2NzcxODY5MDI&amp;ixlib=rb-4.0.3&amp;q=80&amp;w=2000" medium="image"/><content:encoded><![CDATA[<!--kg-card-begin: markdown--><h2 id="intro-to-bpftrace">Intro to bpftrace</h2>
+<img src="https://images.unsplash.com/photo-1544206269-b7e48d9a93f7?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=MnwxMTc3M3wwfDF8c2VhcmNofDEwfHx0cmFjZXxlbnwwfHx8fDE2NzcxODY5MDI&amp;ixlib=rb-4.0.3&amp;q=80&amp;w=2000" alt="Getting started with bpftrace"><p><a href="https://github.com/iovisor/bpftrace">bpftrace</a> is a high-level tracing language for Linux enhanced Berkeley Packet Filter (eBPF) available in recent Linux kernels (4.x). bpftrace uses LLVM as a backend to compile scripts to BPF-bytecode and makes use of BCC for interacting with the Linux BPF system, as well as existing Linux tracing capabilities: kernel dynamic tracing (kprobes), user-level dynamic tracing (uprobes), and tracepoints. The bpftrace language is inspired by awk and C, and predecessor tracers such as DTrace and SystemTap. bpftrace was created by Alastair Robertson.</p>
+<h2 id="bpftrace-package-install">bpftrace package install</h2>
+<pre><code>$ curl https://repos.baslab.org/rhel/7/bpftools/bpftools.repo --output /etc/yum.repos.d/bpftools.repo
+ 
+$ yum install bpftrace bpftrace-tools bpftrace-doc bcc-static bcc-tools
+Installed:
+  bcc-static.x86_64 0:0.21.0-1.el7  bpftrace.x86_64 0:0.13.0-2.el7  bpftrace-doc.noarch 0:0.13.0-2.el7   bpftrace-tools.noarch 0:0.13.0-2.el7
+ 
+Updated:
+  bcc-tools.x86_64 0:0.21.0-1.el7
+ 
+Dependency Updated:
+  bcc.x86_64 0:0.21.0-1.el7  python-bcc.noarch 0:0.21.0-1.el7
+</code></pre>
+<p>Bpftrace ships with many ready-to-run tools after installation.</p>
+<pre><code>$ cd /usr/share/bpftrace/tools
+$ ls
+bashreadline.bt  biostacks.bt  cpuwalk.bt  execsnoop.bt       killsnoop.bt  naptime.bt    pidpersec.bt  setuids.bt    syncsnoop.bt  tcpconnect.bt  tcpretrans.bt   vfscount.bt   xfsdist.bt biolatency.bt    bitesize.bt   dcsnoop.bt  ext4dist.bt        loads.bt      oomkill.bt    runqlat.bt    statsnoop.bt  syscount.bt   tcpdrop.bt     tcpsynbl.bt     vfsstat.bt
+biosnoop.bt      capable.bt    doc         gethostlatency.bt  mdflush.bt    opensnoop.bt  runqlen.bt    swapin.bt     tcpaccept.bt  tcplife.bt     threadsnoop.bt  writeback.bt
+</code></pre>
+<h2 id="a-first-look-at-bpftrace-tracing-system-call-open">A first look at bpftrace: tracing system call open()</h2>
+<p>Run the bpftrace program at the command line(a one-liner):</p>
+<pre><code>$ bpftrace -e &apos;tracepoint:syscalls:sys_enter_open { printf(&quot;%s %s\n&quot;, comm, str(args-&gt;filename)); }&apos;
+Attaching 1 probe...
+</code></pre>
+<p>From a different terminal, start a <em>iostat</em> process to be traced:</p>
+<pre><code>$ iostat -ktdx 2
+</code></pre>
+<p>Monitor the tracing output:</p>
+<pre><code>$ bpftrace -e &apos;tracepoint:syscalls:sys_enter_open { printf(&quot;%s %s\n&quot;, comm, str(args-&gt;filename)); }&apos;
+&lt;omitted..&gt;
+iostat /proc/uptime
+iostat /proc/stat
+iostat /proc/diskstats
+iostat /proc/uptime
+iostat /proc/stat
+iostat /proc/diskstats
+iostat /proc/uptime
+iostat /proc/stat
+iostat /proc/diskstats
+^C
+</code></pre>
+<p>The output shows the process name and the filename passed to the open syscall system-wide. In the above example, the <em>iostat</em> process opens the following files every 2 seconds.</p>
+<pre><code>/proc/uptime
+/proc/stat
+/proc/diskstats
+</code></pre>
+<p>List all the open tracepoints:</p>
+<pre><code>$ bpftrace -l &apos;tracepoint:syscalls:sys_enter_open*&apos;
+tracepoint:syscalls:sys_enter_open
+tracepoint:syscalls:sys_enter_open_by_handle_at
+tracepoint:syscalls:sys_enter_open_tree
+tracepoint:syscalls:sys_enter_openat
+tracepoint:syscalls:sys_enter_openat2
+</code></pre>
+<p>Count the open(and variant) syscalls:</p>
+<pre><code>$ bpftrace -e &apos;tracepoint:syscalls:sys_enter_open* { @[probe]=count();}&apos;
+Attaching 5 probes...
+^C
+@[tracepoint:syscalls:sys_enter_open]: 66
+@[tracepoint:syscalls:sys_enter_openat]: 3963
+</code></pre>
+<p>Bpftrace ships with opensnoop.bt which traces both the start and end of open/openat syscall.</p>
+<pre><code>$ cat opensnoop.bt
+#!/usr/bin/bpftrace
+/*
+ * opensnoop        Trace open() syscalls.
+ *                For Linux, uses bpftrace and eBPF.
+ *
+ * Also a basic example of bpftrace.
+ *
+ * USAGE: opensnoop.bt
+ *
+ * This is a bpftrace version of the bcc tool of the same name.
+ *
+ * Copyright 2018 Netflix, Inc.
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;)
+ *
+ * 08-Sep-2018        Brendan Gregg        Created this.
+ */
+
+BEGIN
+{
+    printf(&quot;Tracing open syscalls... Hit Ctrl-C to end.\n&quot;);
+    printf(&quot;%-6s %-16s %4s %3s %s\n&quot;, &quot;PID&quot;, &quot;COMM&quot;, &quot;FD&quot;, &quot;ERR&quot;, &quot;PATH&quot;);
+}
+
+tracepoint:syscalls:sys_enter_open,
+tracepoint:syscalls:sys_enter_openat
+{
+    @filename[tid] = args-&gt;filename;
+}
+
+tracepoint:syscalls:sys_exit_open,
+tracepoint:syscalls:sys_exit_openat
+/@filename[tid]/
+{
+    $ret = args-&gt;ret;
+    $fd = $ret &gt; 0 ? $ret : -1;
+    $errno = $ret &gt; 0 ? 0 : - $ret;
+    printf(&quot;%-6d %-16s %4d %3d %s\n&quot;, pid, comm, $fd, $errno, str(@filename[tid]));
+    delete(@filename[tid]);
+}
+
+END
+{
+    clear(@filename);
+}
+</code></pre>
+<p>It outputs process id, command, fd and the opened file path.</p>
+<pre><code>$ ./opensnoop.bt | egrep &quot;PID|iostat&quot;
+PID    COMM               FD ERR PATH
+28992  iostat              3   0 /etc/ld.so.cache
+28992  iostat              3   0 /lib64/libc.so.6
+28992  iostat              3   0 /usr/lib/locale/locale-archive
+28992  iostat              3   0 /sys/devices/system/cpu
+28992  iostat              3   0 /proc/diskstats
+28992  iostat              3   0 /etc/localtime
+28992  iostat              3   0 /proc/uptime
+28992  iostat              3   0 /proc/stat
+28992  iostat              3   0 /proc/diskstats
+28992  iostat              4   0 /etc/sysconfig/sysstat.ioconf
+28992  iostat              3   0 /proc/uptime
+28992  iostat              3   0 /proc/stat
+28992  iostat              3   0 /proc/diskstats
+^C
+</code></pre>
+<h2 id="reference">Reference</h2>
+<ul>
+<li><a href="https://github.com/iovisor/bpftrace/blob/master/INSTALL.md#CentOS-package">https://github.com/iovisor/bpftrace/blob/master/INSTALL.md#CentOS-package</a></li>
+<li><a href="https://github.com/fbs/el7-bpf-specs/blob/master/README.md#repository">https://github.com/fbs/el7-bpf-specs/blob/master/README.md#repository</a></li>
+</ul>
+<!--kg-card-end: markdown-->]]></content:encoded></item><item><title><![CDATA[How to install BCC on Ubuntu 22.04]]></title><description><![CDATA[<!--kg-card-begin: markdown--><p><strong>To build the toolchain from source, one needs:</strong></p>
+<p>LLVM 3.7.1 or newer, compiled with BPF support (default=on)<br>
+Clang, built from the same tree as LLVM<br>
+cmake (&gt;=3.1), gcc (&gt;=4.7), flex, bison<br>
+LuaJIT, if you want Lua support</p>
+<pre><code>root@ubuntu:~# cat /etc/*release
+DISTRIB_</code></pre>]]></description><link>https://www.flamingbytes.com/blog/how-to-install-bcc-on-ubuntu-22-04/</link><guid isPermaLink="false">63ec80774febc7438165a75d</guid><category><![CDATA[Linux]]></category><dc:creator><![CDATA[relentlesstorm]]></dc:creator><pubDate>Tue, 14 Feb 2023 06:54:00 GMT</pubDate><media:content url="https://images.unsplash.com/photo-1518414881329-0f96c8f2a924?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=MnwxMTc3M3wwfDF8c2VhcmNofDF8fHZhbGVudGluZSUyMGRheXxlbnwwfHx8fDE2NzY0NDQxNDA&amp;ixlib=rb-4.0.3&amp;q=80&amp;w=2000" medium="image"/><content:encoded><![CDATA[<!--kg-card-begin: markdown--><img src="https://images.unsplash.com/photo-1518414881329-0f96c8f2a924?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=MnwxMTc3M3wwfDF8c2VhcmNofDF8fHZhbGVudGluZSUyMGRheXxlbnwwfHx8fDE2NzY0NDQxNDA&amp;ixlib=rb-4.0.3&amp;q=80&amp;w=2000" alt="How to install BCC on Ubuntu 22.04"><p><strong>To build the toolchain from source, one needs:</strong></p>
+<p>LLVM 3.7.1 or newer, compiled with BPF support (default=on)<br>
+Clang, built from the same tree as LLVM<br>
+cmake (&gt;=3.1), gcc (&gt;=4.7), flex, bison<br>
+LuaJIT, if you want Lua support</p>
+<pre><code>root@ubuntu:~# cat /etc/*release
+DISTRIB_ID=Ubuntu
+DISTRIB_RELEASE=22.04
+DISTRIB_CODENAME=jammy
+DISTRIB_DESCRIPTION=&quot;Ubuntu 22.04.1 LTS&quot;
+PRETTY_NAME=&quot;Ubuntu 22.04.1 LTS&quot;
+NAME=&quot;Ubuntu&quot;
+VERSION_ID=&quot;22.04&quot;
+VERSION=&quot;22.04.1 LTS (Jammy Jellyfish)&quot;
+VERSION_CODENAME=jammy
+ID=ubuntu
+ID_LIKE=debian
+HOME_URL=&quot;https://www.ubuntu.com/&quot;
+SUPPORT_URL=&quot;https://help.ubuntu.com/&quot;
+BUG_REPORT_URL=&quot;https://bugs.launchpad.net/ubuntu/&quot;
+PRIVACY_POLICY_URL=&quot;https://www.ubuntu.com/legal/terms-and-policies/privacy-policy&quot;
+UBUNTU_CODENAME=jammy
+root@ubuntu:~# uname -r
+5.15.0-60-generic
+
+</code></pre>
+<h2 id="install-build-dependencies">Install build dependencies</h2>
+<pre><code># For Jammy (22.04)
+root@ubuntu:~# apt install -y bison build-essential cmake flex git libedit-dev \
+libllvm14 llvm-14-dev libclang-14-dev python3 zlib1g-dev libelf-dev libfl-dev python3-distutils
+</code></pre>
+<h2 id="install-and-compile-bcc">Install and compile BCC</h2>
+<pre><code>root@ubuntu:~# git clone https://github.com/iovisor/bcc.git
+root@ubuntu:~# mkdir bcc/build; cd bcc/build
+root@ubuntu:~# cmake ..
+root@ubuntu:~# make
+root@ubuntu:~# make install
+root@ubuntu:~# cmake -DPYTHON_CMD=python3 .. # build python3 binding
+root@ubuntu:~# pushd src/python/
+root@ubuntu:~# make
+root@ubuntu:~# make install
+root@ubuntu:~# popd
+</code></pre>
+<h2 id="a-first-look-at-bcc">A first look at BCC</h2>
+<pre><code>root@ubuntu:~# biolatency 
+Tracing block device I/O... Hit Ctrl-C to end.
+^C
+     usecs               : count     distribution
+     0 -&gt; 1          : 0        |                                        |
+     2 -&gt; 3          : 0        |                                        |
+     4 -&gt; 7          : 0        |                                        |
+     8 -&gt; 15         : 0        |                                        |
+     16 -&gt; 31        : 0        |                                        |
+     32 -&gt; 63        : 0        |                                        |
+     64 -&gt; 127       : 0        |                                        |
+     128 -&gt; 255      : 1        |****************************************|
+
+</code></pre>
+<h2 id="reference">Reference</h2>
+<ul>
+<li><a href="https://github.com/iovisor/bcc/blob/master/INSTALL.md#ubuntu---source">https://github.com/iovisor/bcc/blob/master/INSTALL.md#ubuntu---source</a></li>
+</ul>
+<!--kg-card-end: markdown-->]]></content:encoded></item><item><title><![CDATA[YCSB benchmark on PostgreSQL]]></title><description><![CDATA[go-ycsb is a Go port of YCSB. It fully supports all YCSB generators and the Core workload so we can do the basic CRUD benchmarks with Go.]]></description><link>https://www.flamingbytes.com/blog/ycsb-benchmark-on-postgresql/</link><guid isPermaLink="false">63eb1767361c0d0ddf89fbef</guid><category><![CDATA[Benchmarking]]></category><dc:creator><![CDATA[relentlesstorm]]></dc:creator><pubDate>Tue, 14 Feb 2023 05:20:50 GMT</pubDate><media:content url="https://images.unsplash.com/photo-1533284133567-0da9844151ce?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=MnwxMTc3M3wwfDF8c2VhcmNofDl8fHJhY2V8ZW58MHx8fHwxNjc2MzUxODY1&amp;ixlib=rb-4.0.3&amp;q=80&amp;w=2000" medium="image"/><content:encoded><![CDATA[<!--kg-card-begin: markdown--><h2 id="create-a-postgresql-database">Create a PostgreSQL database</h2>
 <img src="https://images.unsplash.com/photo-1533284133567-0da9844151ce?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=MnwxMTc3M3wwfDF8c2VhcmNofDl8fHJhY2V8ZW58MHx8fHwxNjc2MzUxODY1&amp;ixlib=rb-4.0.3&amp;q=80&amp;w=2000" alt="YCSB benchmark on PostgreSQL"><p>You can follow this <a href="https://www.flamingbytes.com/blog/getting-started-with-postgresql/">post</a> to install PostgreSQL and create the database cluster.</p>
 <p><strong>To create a database:</strong></p>
 <pre><code>$ db_host=10.10.10.243; db_port=5432; db_user=postgres; db_name=testdb
@@ -1038,123 +1288,4 @@ trying URL &apos;https://cloud.r-project.org/bin/macosx/big-sur-arm64/contrib/4.
   &lt;/body&gt;
 &lt;/html&gt;
 </code></pre>
-<!--kg-card-end: markdown-->]]></content:encoded></item><item><title><![CDATA[How to install GUI desktop on CentOS 7]]></title><description><![CDATA[Install GNOME desktop via the groups option of yum.]]></description><link>https://www.flamingbytes.com/blog/how-to-install-gui-desktop-on-centos-7/</link><guid isPermaLink="false">63c2f5b9639c6f0d6ee203fa</guid><category><![CDATA[Linux]]></category><dc:creator><![CDATA[relentlesstorm]]></dc:creator><pubDate>Wed, 04 Jan 2023 18:35:00 GMT</pubDate><media:content url="https://images.unsplash.com/photo-1508739773434-c26b3d09e071?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=MnwxMTc3M3wwfDF8c2VhcmNofDR8fGRlc2t0b3B8ZW58MHx8fHwxNjczNzIxNDg0&amp;ixlib=rb-4.0.3&amp;q=80&amp;w=2000" medium="image"/><content:encoded><![CDATA[<!--kg-card-begin: markdown--><img src="https://images.unsplash.com/photo-1508739773434-c26b3d09e071?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=MnwxMTc3M3wwfDF8c2VhcmNofDR8fGRlc2t0b3B8ZW58MHx8fHwxNjczNzIxNDg0&amp;ixlib=rb-4.0.3&amp;q=80&amp;w=2000" alt="How to install GUI desktop on CentOS 7"><p>Install GNOME desktop via the groups option of yum:</p>
-<pre><code>$ yum update
-$ yum -y groups install &quot;GNOME Desktop&quot;
-</code></pre>
-<p>Inform the startx command which desktop env to run:</p>
-<pre><code>$ echo &quot;exec gnome-session&quot; &gt;&gt; ~/.xinitrc
-</code></pre>
-<p>Manually start the GUI desktop:</p>
-<pre><code>$ startx
-</code></pre>
-<p>Automaticlly start the GUI desktop after reboot:</p>
-<pre><code>$ systemctl set-default graphical.target
-$ reboot
-</code></pre>
-<!--kg-card-end: markdown-->]]></content:encoded></item><item><title><![CDATA[Using signals with kill command in Linux]]></title><description><![CDATA[Introduce how to use signals in Linux shell script with an example for sending SIGINT signal.]]></description><link>https://www.flamingbytes.com/blog/using-signals-with-kill-in-linux/</link><guid isPermaLink="false">63c37c5215cd8c0d7b6ee906</guid><category><![CDATA[Linux]]></category><dc:creator><![CDATA[relentlesstorm]]></dc:creator><pubDate>Wed, 04 Jan 2023 04:15:00 GMT</pubDate><media:content url="https://images.unsplash.com/photo-1530635481267-00edc014d006?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=MnwxMTc3M3wwfDF8c2VhcmNofDY3fHxzaWduYWx8ZW58MHx8fHwxNjczNzU2MTMy&amp;ixlib=rb-4.0.3&amp;q=80&amp;w=2000" medium="image"/><content:encoded><![CDATA[<!--kg-card-begin: markdown--><h2 id="usage-of-signals-with-kill">Usage of signals with kill</h2>
-<pre><code>$ kill -l
- 1) SIGHUP 2) SIGINT 3) SIGQUIT 4) SIGILL 5) SIGTRAP
- 6) SIGABRT 7) SIGBUS 8) SIGFPE 9) SIGKILL 10) SIGUSR1
-11) SIGSEGV 12) SIGUSR2 13) SIGPIPE 14) SIGALRM 15) SIGTERM
-16) SIGSTKFLT 17) SIGCHLD 18) SIGCONT 19) SIGSTOP 20) SIGTSTP
-21) SIGTTIN 22) SIGTTOU 23) SIGURG 24) SIGXCPU 25) SIGXFSZ
-26) SIGVTALRM 27) SIGPROF 28) SIGWINCH 29) SIGIO 30) SIGPWR
-31) SIGSYS 34) SIGRTMIN 35) SIGRTMIN+1 36) SIGRTMIN+2 37) SIGRTMIN+3
-38) SIGRTMIN+4 39) SIGRTMIN+5 40) SIGRTMIN+6 41) SIGRTMIN+7 42) SIGRTMIN+8
-43) SIGRTMIN+9 44) SIGRTMIN+10 45) SIGRTMIN+11 46) SIGRTMIN+12 47) SIGRTMIN+13
-48) SIGRTMIN+14 49) SIGRTMIN+15 50) SIGRTMAX-14 51) SIGRTMAX-13 52) SIGRTMAX-12
-53) SIGRTMAX-11 54) SIGRTMAX-10 55) SIGRTMAX-9 56) SIGRTMAX-8 57) SIGRTMAX-7
-58) SIGRTMAX-6 59) SIGRTMAX-5 60) SIGRTMAX-4 61) SIGRTMAX-3 62) SIGRTMAX-2
-63) SIGRTMAX-1 64) SIGRTMAX
-</code></pre>
-<!--kg-card-end: markdown--><!--kg-card-begin: markdown--><h2 id="an-example-to-send-sigint-signal-in-shell">An example to send SIGINT signal in shell</h2>
-<img src="https://images.unsplash.com/photo-1530635481267-00edc014d006?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=MnwxMTc3M3wwfDF8c2VhcmNofDY3fHxzaWduYWx8ZW58MHx8fHwxNjczNzU2MTMy&amp;ixlib=rb-4.0.3&amp;q=80&amp;w=2000" alt="Using signals with kill command in Linux"><p>In the following example, we start strace for a given process for given amounts of seconds. Once the time is up, we send SIGINT(Ctrl+C) signal to stop the tracing process. And a trace report will be generated to the output file strace.c.out.</p>
-<pre><code>$ cat strace_summary.sh
-processname=$1
-duration=$2
-while true
-do
-    strace -p `pidof $processname` -c &gt; strace.c.out 2&gt;&amp;1 &amp;
-    sleep $duration
-    break
-done
-
-kill -2 `pidof strace`
-</code></pre>
-<!--kg-card-end: markdown--><!--kg-card-begin: markdown--><h2 id="reference">Reference</h2>
-<ul>
-<li><a href="https://linux.die.net/Bash-Beginners-Guide/sect_12_01.html#:~:text=The%20interrupt%20signal%2C%20sends%20SIGINT,job%20running%20in%20the%20foreground.&amp;text=The%20delayed%20suspend%20character.,background%20or%20kill%20the%20process.">Signals in Linux</a></li>
-</ul>
-<!--kg-card-end: markdown-->]]></content:encoded></item><item><title><![CDATA[Using virtctl to access virtual machine in Kubernetes]]></title><description><![CDATA[Using virtctl to control virtual machine related operations on your kubernetes cluster.]]></description><link>https://www.flamingbytes.com/blog/using-virtctl-to-access-virtual-machine-in-kubernetes/</link><guid isPermaLink="false">63b4b4a91527a00d97449fdf</guid><category><![CDATA[Big Data]]></category><dc:creator><![CDATA[relentlesstorm]]></dc:creator><pubDate>Mon, 02 Jan 2023 00:00:00 GMT</pubDate><media:content url="https://images.unsplash.com/photo-1667372335936-3dc4ff716017?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=MnwxMTc3M3wwfDF8c2VhcmNofDEwfHxrdWJlcm5ldGVzfGVufDB8fHx8MTY3Mjc3NzAxNg&amp;ixlib=rb-4.0.3&amp;q=80&amp;w=2000" medium="image"/><content:encoded><![CDATA[<!--kg-card-begin: html--><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8578408127828851" crossorigin="anonymous">
-</script>
-<ins class="adsbygoogle" style="display:block; text-align:center;" data-ad-layout="in-article" data-ad-format="fluid" data-ad-client="ca-pub-8578408127828851" data-ad-slot="5596270594">
-</ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script><!--kg-card-end: html--><!--kg-card-begin: markdown--><h2 id="install-the-virtctl-client-tool">Install the virtctl client tool</h2>
-<img src="https://images.unsplash.com/photo-1667372335936-3dc4ff716017?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=MnwxMTc3M3wwfDF8c2VhcmNofDEwfHxrdWJlcm5ldGVzfGVufDB8fHx8MTY3Mjc3NzAxNg&amp;ixlib=rb-4.0.3&amp;q=80&amp;w=2000" alt="Using virtctl to access virtual machine in Kubernetes"><p>Basic VirtualMachineInstance operations can be performed with the stock kubectl utility. However, the virtctl binary utility is required to use advanced features such as:</p>
-<ul>
-<li>Serial and graphical console access</li>
-</ul>
-<p>It also provides convenience commands for:</p>
-<ul>
-<li>Starting and stopping VirtualMachineInstances</li>
-<li>Live migrating VirtualMachineInstances</li>
-<li>Uploading virtual machine disk images</li>
-</ul>
-<p>There are two ways to get it:</p>
-<ul>
-<li>the most recent version of the tool can be retrieved from the official release page</li>
-<li>it can be installed as a kubectl plugin using krew</li>
-</ul>
-<p>Example:</p>
-<pre><code class="language-shell">$ export VERSION=v0.48.1
-$ wget https://github.com/kubevirt/kubevirt/releases/download/${VERSION}/virtctl-${VERSION}-linux-amd64
-$ ln -s virtctl-v0.48.1-linux-amd64 virtctl
-$ chmod +x virtctl-v0.48.1-linux-amd64
-$ ./virtctl version
-Client Version: version.Info{GitVersion:&quot;v0.48.1&quot;, ...}
-</code></pre>
-<h2 id="access-the-virtual-machine-console">Access the virtual machine console</h2>
-<pre><code class="language-shell">$ ./virtctl -h
-virtctl controls virtual machine related operations on your kubernetes cluster.
-
-Available Commands:
-  addvolume         add a volume to a running VM
-  console           Connect to a console of a virtual machine instance.
-  expose            Expose a virtual machine instance, virtual machine, or virtual machine instance replica set as a new service.
-  fslist            Return full list of filesystems available on the guest machine.
-  guestfs           Start a shell into the libguestfs pod
-  guestosinfo       Return guest agent info about operating system.
-  help              Help about any command
-  image-upload      Upload a VM image to a DataVolume/PersistentVolumeClaim.
-  migrate           Migrate a virtual machine.
-  pause             Pause a virtual machine
-  permitted-devices List the permitted devices for vmis.
-  port-forward      Forward local ports to a virtualmachine or virtualmachineinstance.
-  removevolume      remove a volume from a running VM
-  restart           Restart a virtual machine.
-  soft-reboot       Soft reboot a virtual machine instance
-  ssh               Open a SSH connection to a virtual machine instance.
-  start             Start a virtual machine.
-  stop              Stop a virtual machine.
-  unpause           Unpause a virtual machine
-  usbredir          Redirect a usb device to a virtual machine instance.
-  userlist          Return full list of logged in users on the guest machine.
-  version           Print the client and server version information.
-  vnc               Open a vnc connection to a virtual machine instance.
-
-Use &quot;virtctl &lt;command&gt; --help&quot; for more information about a given command.
-Use &quot;virtctl options&quot; for a list of global command-line options (applies to all commands).
-
-$ ./virtctl console vm1
-[root@vm1 output]# hostname
-vm1
-</code></pre>
-<h2 id="reference">Reference</h2>
-<ul>
-<li><a href="https://github.com/kubevirt/kubevirt/releases">https://github.com/kubevirt/kubevirt/releases</a></li>
-<li><a href="https://kubevirt.io/user-guide/operations/virtctl_client_tool/">https://kubevirt.io/user-guide/operations/virtctl_client_tool/</a></li>
-</ul>
 <!--kg-card-end: markdown-->]]></content:encoded></item></channel></rss>

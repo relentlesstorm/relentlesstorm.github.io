@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>FlamingBytes</title>
+    <link rel="stylesheet" href="/assets/built/screen.css?v=63ad02aced">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.12.3/tocbot.css">
+    
+    <style>
+    .gh-content {
+        position: relative;
+    }
+
+    .gh-toc > .toc-list {
+        position: relative;
+    }
+
+    .toc-list {
+        overflow: hidden;
+        list-style: none;
+    }
+
+    @media (min-width: 1300px) {
+        .gh-sidebar {
+            position: absolute; 
+            top: 0;
+            bottom: 0;
+            margin-top: 4vmin;
+            margin-left: 2vmin;
+            /*grid-column: wide-start / main-start; *//* Place the TOC to the left of the content */
+            grid-column: wide-end / main-end; /* Place the TOC to the right of the content */
+        }
+    
+        .gh-toc {
+            position: sticky; /* On larger screens, TOC will stay in the same spot on the page */
+            top: 4vmin;
+        }
+    }
+
+    .gh-toc .is-active-link::before {
+        background-color: var(--ghost-accent-color); /* Defines TOC accent color based on Accent color set in Ghost Admin */
+    } 
+    </style>
+
+    <link rel="icon" href="https://www.flamingbytes.com/content/images/size/w256h256/2023/01/FlamingBytes-icon-64x64.png" type="image/png" />
+    <link rel="canonical" href="https://www.flamingbytes.com/blog/how-to-install-bcc-on-ubuntu-22-04/" />
+    <meta name="referrer" content="no-referrer-when-downgrade" />
+    
+    <meta property="og:site_name" content="FlamingBytes" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="How to install BCC on Ubuntu 22.04" />
+    <meta property="og:description" content="To build the toolchain from source, one needs:
+
+
+LLVM 3.7.1 or newer, compiled with BPF support (default&#x3D;on)
+
+Clang, built from the same tree as LLVM
+
+cmake (&gt;&#x3D;3.1), gcc (&gt;&#x3D;4.7), flex, bison
+
+LuaJIT, if you want Lua support
+
+
+root@ubuntu:~# cat /etc/*release
+DISTRIB_ID&#x3D;Ubuntu" />
+    <meta property="og:url" content="https://www.flamingbytes.com/blog/how-to-install-bcc-on-ubuntu-22-04/" />
+    <meta property="og:image" content="https://images.unsplash.com/photo-1518414881329-0f96c8f2a924?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDF8fHZhbGVudGluZSUyMGRheXxlbnwwfHx8fDE2NzY0NDQxNDA&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000" />
+    <meta property="article:published_time" content="2023-02-14T06:54:00.000Z" />
+    <meta property="article:modified_time" content="2023-02-15T06:55:57.000Z" />
+    <meta property="article:tag" content="Linux" />
+    
+    <meta property="article:publisher" content="https://www.facebook.com/ghost" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="How to install BCC on Ubuntu 22.04" />
+    <meta name="twitter:description" content="To build the toolchain from source, one needs:
+
+
+LLVM 3.7.1 or newer, compiled with BPF support (default&#x3D;on)
+
+Clang, built from the same tree as LLVM
+
+cmake (&gt;&#x3D;3.1), gcc (&gt;&#x3D;4.7), flex, bison
+
+LuaJIT, if you want Lua support
+
+
+root@ubuntu:~# cat /etc/*release
+DISTRIB_ID&#x3D;Ubuntu" />
+    <meta name="twitter:url" content="https://www.flamingbytes.com/blog/how-to-install-bcc-on-ubuntu-22-04/" />
+    <meta name="twitter:image" content="https://images.unsplash.com/photo-1518414881329-0f96c8f2a924?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDF8fHZhbGVudGluZSUyMGRheXxlbnwwfHx8fDE2NzY0NDQxNDA&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000" />
+    <meta name="twitter:label1" content="Written by" />
+    <meta name="twitter:data1" content="relentlesstorm" />
+    <meta name="twitter:label2" content="Filed under" />
+    <meta name="twitter:data2" content="Linux" />
+    <meta name="twitter:site" content="@ghost" />
+    <meta property="og:image:width" content="2000" />
+    <meta property="og:image:height" content="1306" />
+    
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "publisher": {
+        "@type": "Organization",
+        "name": "FlamingBytes",
+        "url": "https://www.flamingbytes.com/",
+        "logo": {
+            "@type": "ImageObject",
+            "url": "https://www.flamingbytes.com/content/images/size/w256h256/2023/01/FlamingBytes-icon-64x64.png",
+            "width": 60,
+            "height": 60
+        }
+    },
+    "author": {
+        "@type": "Person",
+        "name": "relentlesstorm",
+        "image": {
+            "@type": "ImageObject",
+            "url": "https://www.flamingbytes.com/content/images/2023/01/FlamingBytes-icon-64x64-1.png",
+            "width": 64,
+            "height": 64
+        },
+        "url": "https://www.flamingbytes.com/author/relentlesstorm/",
+        "sameAs": []
+    },
+    "headline": "How to install BCC on Ubuntu 22.04",
+    "url": "https://www.flamingbytes.com/blog/how-to-install-bcc-on-ubuntu-22-04/",
+    "datePublished": "2023-02-14T06:54:00.000Z",
+    "dateModified": "2023-02-15T06:55:57.000Z",
+    "image": {
+        "@type": "ImageObject",
+        "url": "https://images.unsplash.com/photo-1518414881329-0f96c8f2a924?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxMTc3M3wwfDF8c2VhcmNofDF8fHZhbGVudGluZSUyMGRheXxlbnwwfHx8fDE2NzY0NDQxNDA&ixlib=rb-4.0.3&q=80&w=2000",
+        "width": 2000,
+        "height": 1306
+    },
+    "keywords": "Linux",
+    "description": "To build the toolchain from source, one needs:\n\n\nLLVM 3.7.1 or newer, compiled with BPF support (default&#x3D;on)\n\nClang, built from the same tree as LLVM\n\ncmake (&gt;&#x3D;3.1), gcc (&gt;&#x3D;4.7), flex, bison\n\nLuaJIT, if you want Lua support\n\n\nroot@ubuntu:~# cat /etc/*release\nDISTRIB_ID&#x3D;Ubuntu\nDISTRIB_RELEASE&#x3D;22.04\nDISTRIB_CODENAME&#x3D;jammy\nDISTRIB_DESCRIPTION&#x3D;&quot;Ubuntu 22.04.1 LTS&quot;\nPRETTY_NAME&#x3D;&quot;Ubuntu 22.04.1 LTS&quot;\nNAME&#x3D;&quot;Ubuntu&quot;\nVERSION_ID&#x3D;&quot;22.04&quot;\nVERSION&#x3D;&quot;22.04.1 LTS (Jammy Jellyfish)&quot;\nVERSION_CODENAME&#x3D;jammy\nID&#x3D;ubunt",
+    "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https://www.flamingbytes.com/"
+    }
+}
+    </script>
+
+    <meta name="generator" content="Ghost 5.26" />
+    <link rel="alternate" type="application/rss+xml" title="FlamingBytes" href="https://www.flamingbytes.com/rss/" />
+    
+    <script defer src="https://cdn.jsdelivr.net/ghost/sodo-search@~1.1/umd/sodo-search.min.js" data-key="321a1d1aea33fd468f6e61f563" data-styles="https://cdn.jsdelivr.net/ghost/sodo-search@~1.1/umd/main.css" data-sodo-search="https://www.flamingbytes.com/" crossorigin="anonymous"></script>
+    <script defer src="/public/cards.min.js?v=63ad02aced"></script>
+    <link rel="stylesheet" type="text/css" href="/public/cards.min.css?v=63ad02aced">
+    <script defer src="/public/comment-counts.min.js?v=63ad02aced" data-ghost-comments-counts-api="https://www.flamingbytes.com/members/api/comments/counts/"></script>
+    <style>.gh-head-logo img{max-height:100px;height:100%;}</style>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-B8PQ47L2H0"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-B8PQ47L2H0');
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8578408127828851" crossorigin="anonymous"></script><style>:root {--ghost-accent-color: #6a13ec;}</style>
+</head>
+
+<body class="post-template tag-linux is-head-left-logo has-serif-body">
+<div class="gh-site">
+
+    <header id="gh-head" class="gh-head gh-outer">
+        <div class="gh-head-inner gh-inner">
+            <div class="gh-head-brand">
+                <div class="gh-head-brand-wrapper">
+                    <a class="gh-head-logo" href="https://www.flamingbytes.com">
+                            FlamingBytes
+                    </a>
+                </div>
+                <button class="gh-search gh-icon-btn" data-ghost-search><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" width="20" height="20"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg></button>
+                <button class="gh-burger"></button>
+            </div>
+
+            <nav class="gh-head-menu">
+                <ul class="nav">
+    <li class="nav-home"><a href="https://www.flamingbytes.com/">Home</a></li>
+    <li class="nav-tags"><a href="https://www.flamingbytes.com/blog/tags/">Tags</a></li>
+    <li class="nav-archive"><a href="https://www.flamingbytes.com/blog/archive/">Archive</a></li>
+    <li class="nav-about"><a href="https://www.flamingbytes.com/about/">About</a></li>
+</ul>
+
+            </nav>
+
+            <div class="gh-head-actions">
+                        <button class="gh-search gh-icon-btn" data-ghost-search><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" width="20" height="20"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg></button>
+            </div>
+        </div>
+    </header>
+
+    
+<main class="gh-main">
+        <article class="gh-article post tag-linux">
+
+            <header class="gh-article-header gh-canvas">
+                    <a class="gh-article-tag" href="https://www.flamingbytes.com/blog/tag/linux/">Linux</a>
+
+                <h1 class="gh-article-title">How to install BCC on Ubuntu 22.04</h1>
+
+                    <aside class="gh-article-sidebar">
+
+        <div class="gh-author-image-list">
+                <a class="gh-author-image" href="/author/relentlesstorm/">
+                        <img src="https://www.flamingbytes.com/content/images/2023/01/FlamingBytes-icon-64x64-1.png" alt="relentlesstorm">
+                </a>
+        </div>
+
+        <div class="gh-author-name-list">
+                <h4 class="gh-author-name">
+                    <a href="/author/relentlesstorm/">relentlesstorm</a>
+                </h4>
+                
+        </div>
+
+        <div class="gh-article-meta">
+            <div class="gh-article-meta-inner">
+                <time class="gh-article-date" datetime="2023-02-14">Feb 14, 2023</time>
+                    <span class="gh-article-meta-sep"></span>
+                    <span class="gh-article-length">1 min</span>
+            </div>
+        </div>
+
+    </aside>
+
+
+                    <figure class="gh-article-image">
+        <img
+            srcset="https://images.unsplash.com/photo-1518414881329-0f96c8f2a924?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDF8fHZhbGVudGluZSUyMGRheXxlbnwwfHx8fDE2NzY0NDQxNDA&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;300 300w,
+                    https://images.unsplash.com/photo-1518414881329-0f96c8f2a924?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDF8fHZhbGVudGluZSUyMGRheXxlbnwwfHx8fDE2NzY0NDQxNDA&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720 720w,
+                    https://images.unsplash.com/photo-1518414881329-0f96c8f2a924?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDF8fHZhbGVudGluZSUyMGRheXxlbnwwfHx8fDE2NzY0NDQxNDA&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;960 960w,
+                    https://images.unsplash.com/photo-1518414881329-0f96c8f2a924?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDF8fHZhbGVudGluZSUyMGRheXxlbnwwfHx8fDE2NzY0NDQxNDA&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1200 1200w,
+                    https://images.unsplash.com/photo-1518414881329-0f96c8f2a924?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDF8fHZhbGVudGluZSUyMGRheXxlbnwwfHx8fDE2NzY0NDQxNDA&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000 2000w"
+            sizes="(max-width: 1200px) 100vw, 1200px"
+            src="https://images.unsplash.com/photo-1518414881329-0f96c8f2a924?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDF8fHZhbGVudGluZSUyMGRheXxlbnwwfHx8fDE2NzY0NDQxNDA&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1200"
+            alt="How to install BCC on Ubuntu 22.04"
+        >
+            <figcaption>Photo by <a href="https://unsplash.com/@jessegoll?utm_source=ghost&utm_medium=referral&utm_campaign=api-credit">Jesse Goll</a> / <a href="https://unsplash.com/?utm_source=ghost&utm_medium=referral&utm_campaign=api-credit">Unsplash</a></figcaption>
+    </figure>
+            </header>
+
+            <section class="gh-content gh-canvas">
+                <aside class="gh-sidebar"><div class="gh-toc"></div></aside> 
+
+                <!--kg-card-begin: markdown--><p><strong>To build the toolchain from source, one needs:</strong></p>
+<p>LLVM 3.7.1 or newer, compiled with BPF support (default=on)<br>
+Clang, built from the same tree as LLVM<br>
+cmake (&gt;=3.1), gcc (&gt;=4.7), flex, bison<br>
+LuaJIT, if you want Lua support</p>
+<pre><code>root@ubuntu:~# cat /etc/*release
+DISTRIB_ID=Ubuntu
+DISTRIB_RELEASE=22.04
+DISTRIB_CODENAME=jammy
+DISTRIB_DESCRIPTION=&quot;Ubuntu 22.04.1 LTS&quot;
+PRETTY_NAME=&quot;Ubuntu 22.04.1 LTS&quot;
+NAME=&quot;Ubuntu&quot;
+VERSION_ID=&quot;22.04&quot;
+VERSION=&quot;22.04.1 LTS (Jammy Jellyfish)&quot;
+VERSION_CODENAME=jammy
+ID=ubuntu
+ID_LIKE=debian
+HOME_URL=&quot;https://www.ubuntu.com/&quot;
+SUPPORT_URL=&quot;https://help.ubuntu.com/&quot;
+BUG_REPORT_URL=&quot;https://bugs.launchpad.net/ubuntu/&quot;
+PRIVACY_POLICY_URL=&quot;https://www.ubuntu.com/legal/terms-and-policies/privacy-policy&quot;
+UBUNTU_CODENAME=jammy
+root@ubuntu:~# uname -r
+5.15.0-60-generic
+
+</code></pre>
+<h2 id="install-build-dependencies">Install build dependencies</h2>
+<pre><code># For Jammy (22.04)
+root@ubuntu:~# apt install -y bison build-essential cmake flex git libedit-dev \
+libllvm14 llvm-14-dev libclang-14-dev python3 zlib1g-dev libelf-dev libfl-dev python3-distutils
+</code></pre>
+<h2 id="install-and-compile-bcc">Install and compile BCC</h2>
+<pre><code>root@ubuntu:~# git clone https://github.com/iovisor/bcc.git
+root@ubuntu:~# mkdir bcc/build; cd bcc/build
+root@ubuntu:~# cmake ..
+root@ubuntu:~# make
+root@ubuntu:~# make install
+root@ubuntu:~# cmake -DPYTHON_CMD=python3 .. # build python3 binding
+root@ubuntu:~# pushd src/python/
+root@ubuntu:~# make
+root@ubuntu:~# make install
+root@ubuntu:~# popd
+</code></pre>
+<h2 id="a-first-look-at-bcc">A first look at BCC</h2>
+<pre><code>root@ubuntu:~# biolatency 
+Tracing block device I/O... Hit Ctrl-C to end.
+^C
+     usecs               : count     distribution
+     0 -&gt; 1          : 0        |                                        |
+     2 -&gt; 3          : 0        |                                        |
+     4 -&gt; 7          : 0        |                                        |
+     8 -&gt; 15         : 0        |                                        |
+     16 -&gt; 31        : 0        |                                        |
+     32 -&gt; 63        : 0        |                                        |
+     64 -&gt; 127       : 0        |                                        |
+     128 -&gt; 255      : 1        |****************************************|
+
+</code></pre>
+<h2 id="reference">Reference</h2>
+<ul>
+<li><a href="https://github.com/iovisor/bcc/blob/master/INSTALL.md#ubuntu---source">https://github.com/iovisor/bcc/blob/master/INSTALL.md#ubuntu---source</a></li>
+</ul>
+<!--kg-card-end: markdown-->
+
+                <!-- native ads start -->
+                <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8578408127828851" crossorigin="anonymous"></script>
+                <ins class="adsbygoogle" style="display:block; text-align:center;" data-ad-layout="in-article" data-ad-format="fluid" data-ad-client="ca-pub-8578408127828851" data-ad-slot="5596270594"></ins>
+                <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+                <!-- native ads end -->
+                
+            </section>
+
+        </article>
+
+                <div class="gh-read-next gh-canvas">
+                <section class="gh-pagehead">
+                    <h4 class="gh-pagehead-title">Read next</h4>
+                </section>
+
+                <div class="gh-topic gh-topic-grid">
+                    <div class="gh-topic-content">
+                            <article class="gh-card post">
+    <a class="gh-card-link" href="/blog/install-gcc-from-source/">
+            <figure class="gh-card-image">
+                <img
+                    srcset="https://images.unsplash.com/photo-1675959449383-1c7a27684c3c?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8YWxsfDJ8fHx8fHwyfHwxNjc2MjU1NTg4&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;300 300w,
+                            https://images.unsplash.com/photo-1675959449383-1c7a27684c3c?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8YWxsfDJ8fHx8fHwyfHwxNjc2MjU1NTg4&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720 720w,
+                            https://images.unsplash.com/photo-1675959449383-1c7a27684c3c?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8YWxsfDJ8fHx8fHwyfHwxNjc2MjU1NTg4&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;960 960w,
+                            https://images.unsplash.com/photo-1675959449383-1c7a27684c3c?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8YWxsfDJ8fHx8fHwyfHwxNjc2MjU1NTg4&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1200 1200w,
+                            https://images.unsplash.com/photo-1675959449383-1c7a27684c3c?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8YWxsfDJ8fHx8fHwyfHwxNjc2MjU1NTg4&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000 2000w"
+                    sizes="(max-width: 1200px) 100vw, 1200px"
+                    src="https://images.unsplash.com/photo-1675959449383-1c7a27684c3c?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8YWxsfDJ8fHx8fHwyfHwxNjc2MjU1NTg4&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720"
+                    alt="Install GCC from source"
+                >
+            </figure>
+
+        <div class="gh-card-wrapper">
+            <header class="gh-card-header">
+                <h3 class="gh-card-title">Install GCC from source</h3>
+            </header>
+
+                    <div class="gh-card-excerpt">In this post, we will go through the steps to install GCC.</div>
+
+            <footer class="gh-card-footer">
+                <span class="gh-card-author">relentlesstorm</span>
+                <time class="gh-card-date" datetime="2023-02-10">Feb 10, 2023</time>
+                    <script
+    data-ghost-comment-count="63e9a08bf19d570e66aae054"
+    data-ghost-comment-count-empty=""
+    data-ghost-comment-count-singular="comment"
+    data-ghost-comment-count-plural="comments"
+    data-ghost-comment-count-tag="span"
+    data-ghost-comment-count-class-name="gh-card-comments"
+    data-ghost-comment-count-autowrap="true"
+>
+</script>
+            </footer>
+        </div>
+    </a>
+</article>                            <article class="gh-card post">
+    <a class="gh-card-link" href="/blog/how-to-install-gui-desktop-on-centos-7/">
+            <figure class="gh-card-image">
+                <img
+                    srcset="https://images.unsplash.com/photo-1508739773434-c26b3d09e071?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDR8fGRlc2t0b3B8ZW58MHx8fHwxNjczNzIxNDg0&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;300 300w,
+                            https://images.unsplash.com/photo-1508739773434-c26b3d09e071?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDR8fGRlc2t0b3B8ZW58MHx8fHwxNjczNzIxNDg0&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720 720w,
+                            https://images.unsplash.com/photo-1508739773434-c26b3d09e071?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDR8fGRlc2t0b3B8ZW58MHx8fHwxNjczNzIxNDg0&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;960 960w,
+                            https://images.unsplash.com/photo-1508739773434-c26b3d09e071?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDR8fGRlc2t0b3B8ZW58MHx8fHwxNjczNzIxNDg0&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1200 1200w,
+                            https://images.unsplash.com/photo-1508739773434-c26b3d09e071?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDR8fGRlc2t0b3B8ZW58MHx8fHwxNjczNzIxNDg0&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000 2000w"
+                    sizes="(max-width: 1200px) 100vw, 1200px"
+                    src="https://images.unsplash.com/photo-1508739773434-c26b3d09e071?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDR8fGRlc2t0b3B8ZW58MHx8fHwxNjczNzIxNDg0&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720"
+                    alt="How to install GUI desktop on CentOS 7"
+                >
+            </figure>
+
+        <div class="gh-card-wrapper">
+            <header class="gh-card-header">
+                <h3 class="gh-card-title">How to install GUI desktop on CentOS 7</h3>
+            </header>
+
+                    <div class="gh-card-excerpt">Install GNOME desktop via the groups option of yum:
+
+
+$ yum update
+$ yum -y groups install "GNOME Desktop"
+
+
+
+Inform the startx command which desktop env to run:
+
+
+$ echo "exec gnome-session" >> ~/.xinitrc
+
+
+
+Manually start the GUI desktop:
+
+
+$ startx
+
+
+
+Automaticlly start the GUI desktop after reboot:
+
+
+$ systemctl set-default graphical.target
+$ reboot</div>
+
+            <footer class="gh-card-footer">
+                <span class="gh-card-author">relentlesstorm</span>
+                <time class="gh-card-date" datetime="2023-01-04">Jan 4, 2023</time>
+                    <script
+    data-ghost-comment-count="63c2f5b9639c6f0d6ee203fa"
+    data-ghost-comment-count-empty=""
+    data-ghost-comment-count-singular="comment"
+    data-ghost-comment-count-plural="comments"
+    data-ghost-comment-count-tag="span"
+    data-ghost-comment-count-class-name="gh-card-comments"
+    data-ghost-comment-count-autowrap="true"
+>
+</script>
+            </footer>
+        </div>
+    </a>
+</article>                            <article class="gh-card post">
+    <a class="gh-card-link" href="/blog/using-signals-with-kill-in-linux/">
+            <figure class="gh-card-image">
+                <img
+                    srcset="https://images.unsplash.com/photo-1530635481267-00edc014d006?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDY3fHxzaWduYWx8ZW58MHx8fHwxNjczNzU2MTMy&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;300 300w,
+                            https://images.unsplash.com/photo-1530635481267-00edc014d006?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDY3fHxzaWduYWx8ZW58MHx8fHwxNjczNzU2MTMy&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720 720w,
+                            https://images.unsplash.com/photo-1530635481267-00edc014d006?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDY3fHxzaWduYWx8ZW58MHx8fHwxNjczNzU2MTMy&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;960 960w,
+                            https://images.unsplash.com/photo-1530635481267-00edc014d006?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDY3fHxzaWduYWx8ZW58MHx8fHwxNjczNzU2MTMy&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1200 1200w,
+                            https://images.unsplash.com/photo-1530635481267-00edc014d006?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDY3fHxzaWduYWx8ZW58MHx8fHwxNjczNzU2MTMy&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000 2000w"
+                    sizes="(max-width: 1200px) 100vw, 1200px"
+                    src="https://images.unsplash.com/photo-1530635481267-00edc014d006?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDY3fHxzaWduYWx8ZW58MHx8fHwxNjczNzU2MTMy&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720"
+                    alt="Using signals with kill command in Linux"
+                >
+            </figure>
+
+        <div class="gh-card-wrapper">
+            <header class="gh-card-header">
+                <h3 class="gh-card-title">Using signals with kill command in Linux</h3>
+            </header>
+
+                    <div class="gh-card-excerpt">Usage of signals with kill
+
+
+$ kill -l
+ 1) SIGHUP 2) SIGINT 3) SIGQUIT 4) SIGILL 5) SIGTRAP
+ 6) SIGABRT 7) SIGBUS 8) SIGFPE 9) SIGKILL 10) SIGUSR1
+11) SIGSEGV 12) SIGUSR2 13) SIGPIPE 14) SIGALRM 15) SIGTERM
+16) SIGSTKFLT 17) SIGCHLD 18) SIGCONT 19) SIGSTOP 20) SIGTSTP
+21) SIGTTIN 22)</div>
+
+            <footer class="gh-card-footer">
+                <span class="gh-card-author">relentlesstorm</span>
+                <time class="gh-card-date" datetime="2023-01-04">Jan 4, 2023</time>
+                    <script
+    data-ghost-comment-count="63c37c5215cd8c0d7b6ee906"
+    data-ghost-comment-count-empty=""
+    data-ghost-comment-count-singular="comment"
+    data-ghost-comment-count-plural="comments"
+    data-ghost-comment-count-tag="span"
+    data-ghost-comment-count-class-name="gh-card-comments"
+    data-ghost-comment-count-autowrap="true"
+>
+</script>
+            </footer>
+        </div>
+    </a>
+</article>                    </div>
+                </div>
+            </div>
+
+    
+        <!-- ghost native comments
+                    <div class="gh-comments gh-read-next gh-canvas">
+            <section class="gh-pagehead">
+                <h4 class="gh-pagehead-title">Comments (<script
+    data-ghost-comment-count="63ec80774febc7438165a75d"
+    data-ghost-comment-count-empty="0"
+    data-ghost-comment-count-singular=""
+    data-ghost-comment-count-plural=""
+    data-ghost-comment-count-tag="span"
+    data-ghost-comment-count-class-name=""
+    data-ghost-comment-count-autowrap="true"
+>
+</script>)</h3>
+            </section>
+            
+        <script defer src="https://cdn.jsdelivr.net/ghost/comments-ui@~0.12/umd/comments-ui.min.js" data-ghost-comments="https://www.flamingbytes.com/" data-api="https://www.flamingbytes.com/ghost/api/content/" data-admin="https://www.flamingbytes.com/ghost/" data-key="321a1d1aea33fd468f6e61f563" data-styles="https://cdn.jsdelivr.net/ghost/comments-ui@~0.12/umd/main.css" data-title="" data-count="false" data-post-id="63ec80774febc7438165a75d" data-sentry-dsn="" data-color-scheme="auto" data-avatar-saturation="60" data-accent-color="#6a13ec" data-app-version="0.12" data-comments-enabled="all" data-publication="FlamingBytes" crossorigin="anonymous"></script>
+    
+        </div>
+        -->
+
+        <!-- disqus comments 
+        <div id="disqus_thread"></div>
+<script>
+    var disqus_config = function () {
+        this.page.url = "https://www.flamingbytes.com/blog/how-to-install-bcc-on-ubuntu-22-04/";
+        this.page.identifier = "ghost-63ec80774febc7438165a75d"
+    };
+    (function() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://www-flamingbytes-com.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+    })();
+</script>
+-->
+
+</main>
+
+    <footer class="gh-foot gh-outer">
+        <div class="gh-foot-inner gh-inner">
+
+            <!--<nav class="gh-foot-menu">
+                <<ul class="nav">
+    <li class="nav-sign-up"><a href="#/portal/">Sign up</a></li>
+</ul>
+
+            </nav>-->
+
+            <div class="gh-copyright">
+                    FlamingBytes © 2023. Powered by <a href="https://ghost.org/" target="_blank" rel="noopener">Ghost</a>
+            </div>
+        </div>
+    </footer>
+
+</div>
+
+    <div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="pswp__bg"></div>
+
+    <div class="pswp__scroll-wrap">
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)"></button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)"></button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="/assets/built/main.min.js?v=63ad02aced"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.12.3/tocbot.min.js"></script>
+
+<script>
+    tocbot.init({
+        // Where to render the table of contents.
+        tocSelector: '.gh-toc',
+        // Where to grab the headings to build the table of contents.
+        contentSelector: '.gh-content',
+        // Which headings to grab inside of the contentSelector element.
+        headingSelector: 'h1, h2, h3, h4',
+        // Ensure correct positioning
+        hasInnerContainers: true,
+    });
+</script>
+
+
+
+</body>
+
+</html>
