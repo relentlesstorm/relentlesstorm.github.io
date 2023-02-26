@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>FlamingBytes</title>
+    <link rel="stylesheet" href="/assets/built/screen.css?v=a42ca77307">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.12.3/tocbot.css">
+    
+    <style>
+    .gh-content {
+        position: relative;
+    }
+
+    .gh-toc > .toc-list {
+        position: relative;
+    }
+
+    .toc-list {
+        overflow: hidden;
+        list-style: none;
+    }
+
+    @media (min-width: 1300px) {
+        .gh-sidebar {
+            position: absolute; 
+            top: 0;
+            bottom: 0;
+            margin-top: 4vmin;
+            margin-left: 2vmin;
+            /*grid-column: wide-start / main-start; *//* Place the TOC to the left of the content */
+            grid-column: wide-end / main-end; /* Place the TOC to the right of the content */
+        }
+    
+        .gh-toc {
+            position: sticky; /* On larger screens, TOC will stay in the same spot on the page */
+            top: 4vmin;
+        }
+    }
+
+    .gh-toc .is-active-link::before {
+        background-color: var(--ghost-accent-color); /* Defines TOC accent color based on Accent color set in Ghost Admin */
+    } 
+    </style>
+
+    <link rel="icon" href="https://www.flamingbytes.com/content/images/size/w256h256/2023/01/FlamingBytes-icon-64x64.png" type="image/png" />
+    <link rel="canonical" href="https://www.flamingbytes.com/blog/analyze-cockroach-performance-from-db-console/" />
+    <meta name="referrer" content="no-referrer-when-downgrade" />
+    
+    <meta property="og:site_name" content="FlamingBytes" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="Analyze Cockroach performance from the built-in DB console" />
+    <meta property="og:description" content="In this post, we try to understand how to analyze CockroachDB performance by monitoring its built-in DB console.
+
+
+
+Problem statement
+
+
+We have a YCSB workload(insert:read&#x3D;0.5:0.5) run over single node CockroachDB server. As a result, the insert OPS is 10940 and average latency is ~31." />
+    <meta property="og:url" content="https://www.flamingbytes.com/blog/analyze-cockroach-performance-from-db-console/" />
+    <meta property="og:image" content="https://images.unsplash.com/photo-1608222351212-18fe0ec7b13b?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDN8fGRhc2hib2FyZHxlbnwwfHx8fDE2Nzc0NTUwMzE&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000" />
+    <meta property="article:published_time" content="2023-02-26T23:50:02.000Z" />
+    <meta property="article:modified_time" content="2023-02-26T23:50:02.000Z" />
+    <meta property="article:tag" content="Performance" />
+    
+    <meta property="article:publisher" content="https://www.facebook.com/ghost" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Analyze Cockroach performance from the built-in DB console" />
+    <meta name="twitter:description" content="In this post, we try to understand how to analyze CockroachDB performance by monitoring its built-in DB console.
+
+
+
+Problem statement
+
+
+We have a YCSB workload(insert:read&#x3D;0.5:0.5) run over single node CockroachDB server. As a result, the insert OPS is 10940 and average latency is ~31." />
+    <meta name="twitter:url" content="https://www.flamingbytes.com/blog/analyze-cockroach-performance-from-db-console/" />
+    <meta name="twitter:image" content="https://images.unsplash.com/photo-1608222351212-18fe0ec7b13b?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDN8fGRhc2hib2FyZHxlbnwwfHx8fDE2Nzc0NTUwMzE&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000" />
+    <meta name="twitter:label1" content="Written by" />
+    <meta name="twitter:data1" content="relentlesstorm" />
+    <meta name="twitter:label2" content="Filed under" />
+    <meta name="twitter:data2" content="Performance" />
+    <meta name="twitter:site" content="@ghost" />
+    <meta property="og:image:width" content="2000" />
+    <meta property="og:image:height" content="1500" />
+    
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "publisher": {
+        "@type": "Organization",
+        "name": "FlamingBytes",
+        "url": "https://www.flamingbytes.com/",
+        "logo": {
+            "@type": "ImageObject",
+            "url": "https://www.flamingbytes.com/content/images/size/w256h256/2023/01/FlamingBytes-icon-64x64.png",
+            "width": 60,
+            "height": 60
+        }
+    },
+    "author": {
+        "@type": "Person",
+        "name": "relentlesstorm",
+        "image": {
+            "@type": "ImageObject",
+            "url": "https://www.flamingbytes.com/content/images/2023/01/FlamingBytes-icon-64x64-1.png",
+            "width": 64,
+            "height": 64
+        },
+        "url": "https://www.flamingbytes.com/author/relentlesstorm/",
+        "sameAs": []
+    },
+    "headline": "Analyze Cockroach performance from the built-in DB console",
+    "url": "https://www.flamingbytes.com/blog/analyze-cockroach-performance-from-db-console/",
+    "datePublished": "2023-02-26T23:50:02.000Z",
+    "dateModified": "2023-02-26T23:50:02.000Z",
+    "image": {
+        "@type": "ImageObject",
+        "url": "https://images.unsplash.com/photo-1608222351212-18fe0ec7b13b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxMTc3M3wwfDF8c2VhcmNofDN8fGRhc2hib2FyZHxlbnwwfHx8fDE2Nzc0NTUwMzE&ixlib=rb-4.0.3&q=80&w=2000",
+        "width": 2000,
+        "height": 1500
+    },
+    "keywords": "Performance",
+    "description": "In this post, we try to understand how to analyze CockroachDB performance by monitoring its built-in DB console.\n\n\n\nProblem statement\n\n\nWe have a YCSB workload(insert:read&#x3D;0.5:0.5) run over single node CockroachDB server. As a result, the insert OPS is 10940 and average latency is ~31.3ms per operation. We notice that the backend NVME disk I/O latency is less than 1ms, which is fast enough to handle the I/Os. A question is which component introduces the extra ~30ms latency for each insert operat",
+    "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https://www.flamingbytes.com/"
+    }
+}
+    </script>
+
+    <meta name="generator" content="Ghost 5.26" />
+    <link rel="alternate" type="application/rss+xml" title="FlamingBytes" href="https://www.flamingbytes.com/rss/" />
+    
+    <script defer src="https://cdn.jsdelivr.net/ghost/sodo-search@~1.1/umd/sodo-search.min.js" data-key="321a1d1aea33fd468f6e61f563" data-styles="https://cdn.jsdelivr.net/ghost/sodo-search@~1.1/umd/main.css" data-sodo-search="https://www.flamingbytes.com/" crossorigin="anonymous"></script>
+    <script defer src="/public/cards.min.js?v=a42ca77307"></script>
+    <link rel="stylesheet" type="text/css" href="/public/cards.min.css?v=a42ca77307">
+    <script defer src="/public/comment-counts.min.js?v=a42ca77307" data-ghost-comments-counts-api="https://www.flamingbytes.com/members/api/comments/counts/"></script>
+    <style>.gh-head-logo img{max-height:100px;height:100%;}</style>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-B8PQ47L2H0"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-B8PQ47L2H0');
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8578408127828851" crossorigin="anonymous"></script><style>:root {--ghost-accent-color: #6a13ec;}</style>
+</head>
+
+<body class="post-template tag-performance is-head-left-logo has-serif-body">
+<div class="gh-site">
+
+    <header id="gh-head" class="gh-head gh-outer">
+        <div class="gh-head-inner gh-inner">
+            <div class="gh-head-brand">
+                <div class="gh-head-brand-wrapper">
+                    <a class="gh-head-logo" href="https://www.flamingbytes.com">
+                            FlamingBytes
+                    </a>
+                </div>
+                <button class="gh-search gh-icon-btn" data-ghost-search><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" width="20" height="20"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg></button>
+                <button class="gh-burger"></button>
+            </div>
+
+            <nav class="gh-head-menu">
+                <ul class="nav">
+    <li class="nav-home"><a href="https://www.flamingbytes.com/">Home</a></li>
+    <li class="nav-tags"><a href="https://www.flamingbytes.com/blog/tags/">Tags</a></li>
+    <li class="nav-archive"><a href="https://www.flamingbytes.com/blog/archive/">Archive</a></li>
+    <li class="nav-about"><a href="https://www.flamingbytes.com/about/">About</a></li>
+</ul>
+
+            </nav>
+
+            <div class="gh-head-actions">
+                        <button class="gh-search gh-icon-btn" data-ghost-search><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" width="20" height="20"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg></button>
+            </div>
+        </div>
+    </header>
+
+    
+<main class="gh-main">
+        <article class="gh-article post tag-performance">
+
+            <header class="gh-article-header gh-canvas">
+                    <a class="gh-article-tag" href="https://www.flamingbytes.com/blog/tag/performance/">Performance</a>
+
+                <h1 class="gh-article-title">Analyze Cockroach performance from the built-in DB console</h1>
+
+                    <aside class="gh-article-sidebar">
+
+        <div class="gh-author-image-list">
+                <a class="gh-author-image" href="/author/relentlesstorm/">
+                        <img src="https://www.flamingbytes.com/content/images/2023/01/FlamingBytes-icon-64x64-1.png" alt="relentlesstorm">
+                </a>
+        </div>
+
+        <div class="gh-author-name-list">
+                <h4 class="gh-author-name">
+                    <a href="/author/relentlesstorm/">relentlesstorm</a>
+                </h4>
+                
+        </div>
+
+        <div class="gh-article-meta">
+            <div class="gh-article-meta-inner">
+                <time class="gh-article-date" datetime="2023-02-26">Feb 26, 2023</time>
+                    <span class="gh-article-meta-sep"></span>
+                    <span class="gh-article-length">5 min</span>
+            </div>
+        </div>
+
+    </aside>
+
+
+                    <figure class="gh-article-image">
+        <img
+            srcset="https://images.unsplash.com/photo-1608222351212-18fe0ec7b13b?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDN8fGRhc2hib2FyZHxlbnwwfHx8fDE2Nzc0NTUwMzE&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;300 300w,
+                    https://images.unsplash.com/photo-1608222351212-18fe0ec7b13b?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDN8fGRhc2hib2FyZHxlbnwwfHx8fDE2Nzc0NTUwMzE&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720 720w,
+                    https://images.unsplash.com/photo-1608222351212-18fe0ec7b13b?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDN8fGRhc2hib2FyZHxlbnwwfHx8fDE2Nzc0NTUwMzE&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;960 960w,
+                    https://images.unsplash.com/photo-1608222351212-18fe0ec7b13b?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDN8fGRhc2hib2FyZHxlbnwwfHx8fDE2Nzc0NTUwMzE&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1200 1200w,
+                    https://images.unsplash.com/photo-1608222351212-18fe0ec7b13b?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDN8fGRhc2hib2FyZHxlbnwwfHx8fDE2Nzc0NTUwMzE&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000 2000w"
+            sizes="(max-width: 1200px) 100vw, 1200px"
+            src="https://images.unsplash.com/photo-1608222351212-18fe0ec7b13b?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDN8fGRhc2hib2FyZHxlbnwwfHx8fDE2Nzc0NTUwMzE&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1200"
+            alt="Analyze Cockroach performance from the built-in DB console"
+        >
+            <figcaption>Photo by <a href="https://unsplash.com/es/@pathdigital?utm_source=ghost&utm_medium=referral&utm_campaign=api-credit">path digital</a> / <a href="https://unsplash.com/?utm_source=ghost&utm_medium=referral&utm_campaign=api-credit">Unsplash</a></figcaption>
+    </figure>
+            </header>
+
+            <section class="gh-content gh-canvas">
+                <aside class="gh-sidebar"><div class="gh-toc"></div></aside> 
+
+                <!--kg-card-begin: markdown--><p>In this post, we try to understand how to analyze CockroachDB performance by monitoring its built-in DB console.</p>
+<h2 id="problem-statement">Problem statement</h2>
+<p>We have a YCSB workload(insert:read=0.5:0.5) run over single node CockroachDB server. As a result, the insert OPS is 10940 and average latency is ~31.3ms per operation. We notice that the backend NVME disk I/O latency is less than 1ms, which is fast enough to handle the I/Os. A question is which component introduces the extra ~30ms latency for each insert operation? We also notice that the CockroachDB consumes ~50% CPU in user space. So, we want to dig more about the CockroachDB behaviors by leveraging its DB console.</p>
+<pre><code>INSERT - Takes(s): 4517.6, Count: 49423144, OPS: 10940.0, Avg(us): 31295, Min(us): 1080, Max(us): 61951, 99th(us): 59583, 99.9th(us): 61663, 99.99th(us): 61919
+READ   - Takes(s): 4517.7, Count: 49892329, OPS: 11043.9, Avg(us): 2640, Min(us): 351, Max(us): 33887, 99th(us): 16527, 99.9th(us): 29887, 99.99th(us): 33535
+</code></pre>
+<h2 id="db-console-access">DB console access</h2>
+<p>The DB Console provides details about the CockroachDB cluster and database configuration, and helps optimize cluster performance.</p>
+<p>You can access the DB Console from every node at http://[host]:[http-port], or http://[host]:8080 by default.</p>
+<h2 id="overview">Overview</h2>
+<p>In the  Overview page, we know that it is a single node CockroachDB cluster. The node has 96 CPUs, 2% memory, and 2.6% disk capacity in use. Also, there are 477 CockroachDB range replicas.</p>
+<p><img src="https://www.flamingbytes.com/content/images/posts/crdb_overview.png" alt="image" loading="lazy"></p>
+<h2 id="databases">Databases</h2>
+<p>The Databases page shows details about the system and user databases in the cluster.</p>
+<p>In our case, the database <em>test</em> is used for YCSB benchmark. The database size is 148.7GB and it has one table with 433 ranges. The table is called <em>usertable</em> which has 11 columns. There is one index created on the table.</p>
+<p><img src="https://www.flamingbytes.com/content/images/posts/crdb_database.png" alt="image" loading="lazy"></p>
+<p><img src="https://www.flamingbytes.com/content/images/posts/crdb_table.png" alt="image" loading="lazy"></p>
+<p><img src="https://www.flamingbytes.com/content/images/posts/crdb_table_1.png" alt="image" loading="lazy"></p>
+<h2 id="sql-activity">SQL Activity</h2>
+<p>The SQL Activity page summarizes SQL activity in the cluster. Transactions(Statements) shows frequently executed and high-latency SQL transactions(statements).</p>
+<p>In our case, there are 138M insert and 50M select transactions. There are more inserts than selects because we had initial database load operations which insert 100M records to the table. After that, we ran YCSB workload with the insert to read ratio &quot;0.5:0.5&quot;.</p>
+<p>Furthermore, the transaction time for the &quot;Insert into usertable&quot; is 30.4ms. The SQL statement time is 30.2ms for this transaction. This helps explain why the average YCSB operation latency is ~31.3ms. The major overhead is from the insert transaction itself.</p>
+<p><img src="https://www.flamingbytes.com/content/images/posts/crdb_sql_transaction.png" alt="image" loading="lazy"></p>
+<p><img src="https://www.flamingbytes.com/content/images/posts/crdb_sql_statement.png" alt="image" loading="lazy"></p>
+<h2 id="metrics">Metrics</h2>
+<p>The Metrics page provides dashboards for all types of CockroachDB metrics.</p>
+<ul>
+<li>Overview dashboard has metrics about SQL performance, replication, and storage.</li>
+<li>Hardware dashboard has metrics about CPU usage, disk throughput, network traffic, storage capacity, and memory.</li>
+<li>Runtime dashboard has metrics about node count, CPU time, and memory usage.</li>
+<li>SQL dashboard has metrics about SQL connections, byte traffic, queries, transactions, and service latency.</li>
+<li>Storage dashboard has metrics about storage capacity and file descriptors.</li>
+<li>Replication dashboard has metrics about how data is replicated across the cluster, e.g., range status, replicas per store, and replica quiescence.</li>
+<li>Distributed dashboard has metrics about distribution tasks across the cluster, including RPCs, transactions, and node heartbeats.</li>
+<li>Queues dashboard has metrics about the health and performance of various queueing systems in CockroachDB, including the garbage collection and Raft log queues.</li>
+<li>Slow requests dashboard has metrics about important cluster tasks that take longer than expected to complete, including Raft proposals and lease acquisitions.</li>
+<li>Changefeeds dashboard has metrics about the changefeeds created across your cluster.</li>
+<li>Overload dashboard has metrics about the performance of the parts of your cluster relevant to the cluster's admission control system.<br>
+TTL dashboard has metrics about the progress and performance of batch deleting expired data using Row-Level TTL from your cluster.</li>
+</ul>
+<h3 id="overview-metrics">Overview metrics</h3>
+<p><img src="https://www.flamingbytes.com/content/images/posts/crdb_metric.png" alt="image" loading="lazy"></p>
+<h3 id="sql-metrics">SQL metrics</h3>
+<p>This shows the KV execution latency(90th and 99th percentile). In our case, the 90th percentile latency is ~31ms for the KV execution. At this point, we know why the CockroachDB introduces the high latency at the application layer. To improve the overall YCSB benchmark performance, changes on CockroachDB layer is needed.</p>
+<p><img src="https://www.flamingbytes.com/content/images/posts/crdb_metric_sql.png" alt="image" loading="lazy"></p>
+<h3 id="replication-metrics">Replication metrics</h3>
+<p>This shows how the number of range replicas increases significantly during database load time.</p>
+<p><img src="https://www.flamingbytes.com/content/images/posts/crdb_metric_replicas.png" alt="image" loading="lazy"></p>
+<h3 id="hardware-metrics">Hardware metrics</h3>
+<p>The hardware metrics are extremely useful for performance issue analysis. It shows the CPU, Memory, Disk I/O and network bandwidth utilization, which allows us to know if the system performance is limited by hardware or not.</p>
+<p>In our case, there is no hardware bottleneck. But we do notice that CockroachDB consumes up to 50% CPU in user space for 96 CPU cores system. From previous analysis, we know each SQL transaction takes a relative long CPU cycle(~30ms) to complete.</p>
+<p>I used <em>vmstat</em> and <em>top</em> to identify how much user/kernel CPU are utilized at system level and how much CPU is consumed by CockroachDB process. When YCSB is running, CockroachDB process consumes up to 50% CPU and most of the CPU is in user space.</p>
+<p><img src="https://www.flamingbytes.com/content/images/posts/crdb_hw_cpu_mem.png" alt="image" loading="lazy"></p>
+<p><img src="https://www.flamingbytes.com/content/images/posts/crdb_hw_bw.png" alt="image" loading="lazy"></p>
+<p><img src="https://www.flamingbytes.com/content/images/posts/crdb_hw_iops.png" alt="image" loading="lazy"></p>
+<p><img src="https://www.flamingbytes.com/content/images/posts/crdb_hw_nw.png" alt="image" loading="lazy"></p>
+<h2 id="summary">Summary</h2>
+<p>This post concludes how to analyze a typical performance issue by making use of the Cockroach DB console. The DB console is producation ready to use and shows many useful insight of CockroachDB and system metrics.</p>
+<h2 id="reference">Reference</h2>
+<ul>
+<li><a href="https://www.cockroachlabs.com/docs/v22.2/ui-overview.html">https://www.cockroachlabs.com/docs/v22.2/ui-overview.html</a></li>
+</ul>
+<!--kg-card-end: markdown-->
+
+                <!-- native ads start -->
+                <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8578408127828851" crossorigin="anonymous"></script>
+                <ins class="adsbygoogle" style="display:block; text-align:center;" data-ad-layout="in-article" data-ad-format="fluid" data-ad-client="ca-pub-8578408127828851" data-ad-slot="5596270594"></ins>
+                <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+                <!-- native ads end -->
+                
+            </section>
+
+        </article>
+
+                <div class="gh-read-next gh-canvas">
+                <section class="gh-pagehead">
+                    <h4 class="gh-pagehead-title">Read next</h4>
+                </section>
+
+                <div class="gh-topic gh-topic-grid">
+                    <div class="gh-topic-content">
+                            <article class="gh-card post">
+    <a class="gh-card-link" href="/blog/introduction-to-bpf-performance-tools/">
+            <figure class="gh-card-image">
+                <img
+                    srcset="https://images.unsplash.com/photo-1519229875649-6b8da16368fd?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDEwOHx8dHJhY2V8ZW58MHx8fHwxNjc3MTk4NTc1&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;300 300w,
+                            https://images.unsplash.com/photo-1519229875649-6b8da16368fd?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDEwOHx8dHJhY2V8ZW58MHx8fHwxNjc3MTk4NTc1&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720 720w,
+                            https://images.unsplash.com/photo-1519229875649-6b8da16368fd?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDEwOHx8dHJhY2V8ZW58MHx8fHwxNjc3MTk4NTc1&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;960 960w,
+                            https://images.unsplash.com/photo-1519229875649-6b8da16368fd?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDEwOHx8dHJhY2V8ZW58MHx8fHwxNjc3MTk4NTc1&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1200 1200w,
+                            https://images.unsplash.com/photo-1519229875649-6b8da16368fd?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDEwOHx8dHJhY2V8ZW58MHx8fHwxNjc3MTk4NTc1&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000 2000w"
+                    sizes="(max-width: 1200px) 100vw, 1200px"
+                    src="https://images.unsplash.com/photo-1519229875649-6b8da16368fd?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDEwOHx8dHJhY2V8ZW58MHx8fHwxNjc3MTk4NTc1&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720"
+                    alt="Introduction to BPF performance tools"
+                >
+            </figure>
+
+        <div class="gh-card-wrapper">
+            <header class="gh-card-header">
+                <h3 class="gh-card-title">Introduction to BPF performance tools</h3>
+            </header>
+
+                    <div class="gh-card-excerpt">BPF stands for Berkeley Packet Filter, which was firstly developed to improve the performance of packet capture tools. It was rewritten later and turned into a general-purpose execution engine including the creation of performance analysis tools.</div>
+
+            <footer class="gh-card-footer">
+                <span class="gh-card-author">relentlesstorm</span>
+                <time class="gh-card-date" datetime="2023-02-22">Feb 22, 2023</time>
+                    <script
+    data-ghost-comment-count="63f7fe52a9435e0ecab20d72"
+    data-ghost-comment-count-empty=""
+    data-ghost-comment-count-singular="comment"
+    data-ghost-comment-count-plural="comments"
+    data-ghost-comment-count-tag="span"
+    data-ghost-comment-count-class-name="gh-card-comments"
+    data-ghost-comment-count-autowrap="true"
+>
+</script>
+            </footer>
+        </div>
+    </a>
+</article>                            <article class="gh-card post">
+    <a class="gh-card-link" href="/blog/getting-started-with-bpftrace/">
+            <figure class="gh-card-image">
+                <img
+                    srcset="https://images.unsplash.com/photo-1544206269-b7e48d9a93f7?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDEwfHx0cmFjZXxlbnwwfHx8fDE2NzcxODY5MDI&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;300 300w,
+                            https://images.unsplash.com/photo-1544206269-b7e48d9a93f7?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDEwfHx0cmFjZXxlbnwwfHx8fDE2NzcxODY5MDI&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720 720w,
+                            https://images.unsplash.com/photo-1544206269-b7e48d9a93f7?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDEwfHx0cmFjZXxlbnwwfHx8fDE2NzcxODY5MDI&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;960 960w,
+                            https://images.unsplash.com/photo-1544206269-b7e48d9a93f7?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDEwfHx0cmFjZXxlbnwwfHx8fDE2NzcxODY5MDI&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1200 1200w,
+                            https://images.unsplash.com/photo-1544206269-b7e48d9a93f7?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDEwfHx0cmFjZXxlbnwwfHx8fDE2NzcxODY5MDI&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000 2000w"
+                    sizes="(max-width: 1200px) 100vw, 1200px"
+                    src="https://images.unsplash.com/photo-1544206269-b7e48d9a93f7?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDEwfHx0cmFjZXxlbnwwfHx8fDE2NzcxODY5MDI&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720"
+                    alt="Getting started with bpftrace"
+                >
+            </figure>
+
+        <div class="gh-card-wrapper">
+            <header class="gh-card-header">
+                <h3 class="gh-card-title">Getting started with bpftrace</h3>
+            </header>
+
+                    <div class="gh-card-excerpt">bpftrace is a high-level tracing language for Linux enhanced Berkeley Packet Filter (eBPF) available in recent Linux kernels (4.x).</div>
+
+            <footer class="gh-card-footer">
+                <span class="gh-card-author">relentlesstorm</span>
+                <time class="gh-card-date" datetime="2023-02-21">Feb 21, 2023</time>
+                    <script
+    data-ghost-comment-count="63f7d46ea9435e0ecab20d18"
+    data-ghost-comment-count-empty=""
+    data-ghost-comment-count-singular="comment"
+    data-ghost-comment-count-plural="comments"
+    data-ghost-comment-count-tag="span"
+    data-ghost-comment-count-class-name="gh-card-comments"
+    data-ghost-comment-count-autowrap="true"
+>
+</script>
+            </footer>
+        </div>
+    </a>
+</article>                            <article class="gh-card post">
+    <a class="gh-card-link" href="/blog/getting-started-with-bcc/">
+            <figure class="gh-card-image">
+                <img
+                    srcset="https://images.unsplash.com/photo-1661956602868-6ae368943878?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wxfDF8YWxsfDE2fHx8fHx8Mnx8MTY3NjI1NTU4OA&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;300 300w,
+                            https://images.unsplash.com/photo-1661956602868-6ae368943878?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wxfDF8YWxsfDE2fHx8fHx8Mnx8MTY3NjI1NTU4OA&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720 720w,
+                            https://images.unsplash.com/photo-1661956602868-6ae368943878?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wxfDF8YWxsfDE2fHx8fHx8Mnx8MTY3NjI1NTU4OA&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;960 960w,
+                            https://images.unsplash.com/photo-1661956602868-6ae368943878?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wxfDF8YWxsfDE2fHx8fHx8Mnx8MTY3NjI1NTU4OA&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1200 1200w,
+                            https://images.unsplash.com/photo-1661956602868-6ae368943878?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wxfDF8YWxsfDE2fHx8fHx8Mnx8MTY3NjI1NTU4OA&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000 2000w"
+                    sizes="(max-width: 1200px) 100vw, 1200px"
+                    src="https://images.unsplash.com/photo-1661956602868-6ae368943878?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wxfDF8YWxsfDE2fHx8fHx8Mnx8MTY3NjI1NTU4OA&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720"
+                    alt="Getting started with BCC (BPF Compiler Collection)"
+                >
+            </figure>
+
+        <div class="gh-card-wrapper">
+            <header class="gh-card-header">
+                <h3 class="gh-card-title">Getting started with BCC (BPF Compiler Collection)</h3>
+            </header>
+
+                    <div class="gh-card-excerpt">BCC is a toolkit for creating efficient kernel tracing and manipulation programs, and includes several useful tools and examples.</div>
+
+            <footer class="gh-card-footer">
+                <span class="gh-card-author">relentlesstorm</span>
+                <time class="gh-card-date" datetime="2023-02-12">Feb 12, 2023</time>
+                    <script
+    data-ghost-comment-count="63e9a9a1f19d570e66aae077"
+    data-ghost-comment-count-empty=""
+    data-ghost-comment-count-singular="comment"
+    data-ghost-comment-count-plural="comments"
+    data-ghost-comment-count-tag="span"
+    data-ghost-comment-count-class-name="gh-card-comments"
+    data-ghost-comment-count-autowrap="true"
+>
+</script>
+            </footer>
+        </div>
+    </a>
+</article>                    </div>
+                </div>
+            </div>
+
+    
+        <!-- ghost native comments
+                    <div class="gh-comments gh-read-next gh-canvas">
+            <section class="gh-pagehead">
+                <h4 class="gh-pagehead-title">Comments (<script
+    data-ghost-comment-count="63fbd09c5fc5490f28da1daa"
+    data-ghost-comment-count-empty="0"
+    data-ghost-comment-count-singular=""
+    data-ghost-comment-count-plural=""
+    data-ghost-comment-count-tag="span"
+    data-ghost-comment-count-class-name=""
+    data-ghost-comment-count-autowrap="true"
+>
+</script>)</h3>
+            </section>
+            
+        <script defer src="https://cdn.jsdelivr.net/ghost/comments-ui@~0.12/umd/comments-ui.min.js" data-ghost-comments="https://www.flamingbytes.com/" data-api="https://www.flamingbytes.com/ghost/api/content/" data-admin="https://www.flamingbytes.com/ghost/" data-key="321a1d1aea33fd468f6e61f563" data-styles="https://cdn.jsdelivr.net/ghost/comments-ui@~0.12/umd/main.css" data-title="" data-count="false" data-post-id="63fbd09c5fc5490f28da1daa" data-sentry-dsn="" data-color-scheme="auto" data-avatar-saturation="60" data-accent-color="#6a13ec" data-app-version="0.12" data-comments-enabled="all" data-publication="FlamingBytes" crossorigin="anonymous"></script>
+    
+        </div>
+        -->
+
+        <!-- disqus comments 
+        <div id="disqus_thread"></div>
+<script>
+    var disqus_config = function () {
+        this.page.url = "https://www.flamingbytes.com/blog/analyze-cockroach-performance-from-db-console/";
+        this.page.identifier = "ghost-63fbd09c5fc5490f28da1daa"
+    };
+    (function() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://www-flamingbytes-com.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+    })();
+</script>
+-->
+
+</main>
+
+    <footer class="gh-foot gh-outer">
+        <div class="gh-foot-inner gh-inner">
+
+            <!--<nav class="gh-foot-menu">
+                <<ul class="nav">
+    <li class="nav-sign-up"><a href="#/portal/">Sign up</a></li>
+</ul>
+
+            </nav>-->
+
+            <div class="gh-copyright">
+                    FlamingBytes © 2023. Powered by <a href="https://ghost.org/" target="_blank" rel="noopener">Ghost</a>
+            </div>
+        </div>
+    </footer>
+
+</div>
+
+    <div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="pswp__bg"></div>
+
+    <div class="pswp__scroll-wrap">
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)"></button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)"></button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="/assets/built/main.min.js?v=a42ca77307"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.12.3/tocbot.min.js"></script>
+
+<script>
+    tocbot.init({
+        // Where to render the table of contents.
+        tocSelector: '.gh-toc',
+        // Where to grab the headings to build the table of contents.
+        contentSelector: '.gh-content',
+        // Which headings to grab inside of the contentSelector element.
+        headingSelector: 'h1, h2, h3, h4',
+        // Ensure correct positioning
+        hasInnerContainers: true,
+    });
+</script>
+
+
+
+</body>
+
+</html>

@@ -1,4 +1,68 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:media="http://search.yahoo.com/mrss/"><channel><title><![CDATA[FlamingBytes]]></title><description><![CDATA[Stay hungry, Stay foolish.]]></description><link>https://www.flamingbytes.com/</link><image><url>https://www.flamingbytes.com/favicon.png</url><title>FlamingBytes</title><link>https://www.flamingbytes.com/</link></image><generator>Ghost 5.26</generator><lastBuildDate>Fri, 24 Feb 2023 01:38:58 GMT</lastBuildDate><atom:link href="https://www.flamingbytes.com/rss/" rel="self" type="application/rss+xml"/><ttl>60</ttl><item><title><![CDATA[Introduction to BPF performance tools]]></title><description><![CDATA[BPF stands for Berkeley Packet Filter, which was firstly developed to improve the performance of packet capture tools. It was rewritten later and turned into a general-purpose execution engine including the creation of performance analysis tools.]]></description><link>https://www.flamingbytes.com/blog/introduction-to-bpf-performance-tools/</link><guid isPermaLink="false">63f7fe52a9435e0ecab20d72</guid><dc:creator><![CDATA[relentlesstorm]]></dc:creator><pubDate>Wed, 22 Feb 2023 01:37:00 GMT</pubDate><media:content url="https://images.unsplash.com/photo-1519229875649-6b8da16368fd?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=MnwxMTc3M3wwfDF8c2VhcmNofDEwOHx8dHJhY2V8ZW58MHx8fHwxNjc3MTk4NTc1&amp;ixlib=rb-4.0.3&amp;q=80&amp;w=2000" medium="image"/><content:encoded><![CDATA[<!--kg-card-begin: markdown--><h2 id="what-are-bpf-and-ebpf">What are BPF and eBPF</h2>
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:media="http://search.yahoo.com/mrss/"><channel><title><![CDATA[FlamingBytes]]></title><description><![CDATA[Stay hungry, Stay foolish.]]></description><link>https://www.flamingbytes.com/</link><image><url>https://www.flamingbytes.com/favicon.png</url><title>FlamingBytes</title><link>https://www.flamingbytes.com/</link></image><generator>Ghost 5.26</generator><lastBuildDate>Sun, 26 Feb 2023 23:50:27 GMT</lastBuildDate><atom:link href="https://www.flamingbytes.com/rss/" rel="self" type="application/rss+xml"/><ttl>60</ttl><item><title><![CDATA[Analyze Cockroach performance from the built-in DB console]]></title><description><![CDATA[<!--kg-card-begin: markdown--><p>In this post, we try to understand how to analyze CockroachDB performance by monitoring its built-in DB console.</p>
+<h2 id="problem-statement">Problem statement</h2>
+<p>We have a YCSB workload(insert:read=0.5:0.5) run over single node CockroachDB server. As a result, the insert OPS is 10940 and average latency is ~31.</p>]]></description><link>https://www.flamingbytes.com/blog/analyze-cockroach-performance-from-db-console/</link><guid isPermaLink="false">63fbd09c5fc5490f28da1daa</guid><category><![CDATA[Performance]]></category><dc:creator><![CDATA[relentlesstorm]]></dc:creator><pubDate>Sun, 26 Feb 2023 23:50:02 GMT</pubDate><media:content url="https://images.unsplash.com/photo-1608222351212-18fe0ec7b13b?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=MnwxMTc3M3wwfDF8c2VhcmNofDN8fGRhc2hib2FyZHxlbnwwfHx8fDE2Nzc0NTUwMzE&amp;ixlib=rb-4.0.3&amp;q=80&amp;w=2000" medium="image"/><content:encoded><![CDATA[<!--kg-card-begin: markdown--><img src="https://images.unsplash.com/photo-1608222351212-18fe0ec7b13b?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=MnwxMTc3M3wwfDF8c2VhcmNofDN8fGRhc2hib2FyZHxlbnwwfHx8fDE2Nzc0NTUwMzE&amp;ixlib=rb-4.0.3&amp;q=80&amp;w=2000" alt="Analyze Cockroach performance from the built-in DB console"><p>In this post, we try to understand how to analyze CockroachDB performance by monitoring its built-in DB console.</p>
+<h2 id="problem-statement">Problem statement</h2>
+<p>We have a YCSB workload(insert:read=0.5:0.5) run over single node CockroachDB server. As a result, the insert OPS is 10940 and average latency is ~31.3ms per operation. We notice that the backend NVME disk I/O latency is less than 1ms, which is fast enough to handle the I/Os. A question is which component introduces the extra ~30ms latency for each insert operation? We also notice that the CockroachDB consumes ~50% CPU in user space. So, we want to dig more about the CockroachDB behaviors by leveraging its DB console.</p>
+<pre><code>INSERT - Takes(s): 4517.6, Count: 49423144, OPS: 10940.0, Avg(us): 31295, Min(us): 1080, Max(us): 61951, 99th(us): 59583, 99.9th(us): 61663, 99.99th(us): 61919
+READ   - Takes(s): 4517.7, Count: 49892329, OPS: 11043.9, Avg(us): 2640, Min(us): 351, Max(us): 33887, 99th(us): 16527, 99.9th(us): 29887, 99.99th(us): 33535
+</code></pre>
+<h2 id="db-console-access">DB console access</h2>
+<p>The DB Console provides details about the CockroachDB cluster and database configuration, and helps optimize cluster performance.</p>
+<p>You can access the DB Console from every node at http://[host]:[http-port], or http://[host]:8080 by default.</p>
+<h2 id="overview">Overview</h2>
+<p>In the  Overview page, we know that it is a single node CockroachDB cluster. The node has 96 CPUs, 2% memory, and 2.6% disk capacity in use. Also, there are 477 CockroachDB range replicas.</p>
+<p><img src="https://www.flamingbytes.com/content/images/posts/crdb_overview.png" alt="Analyze Cockroach performance from the built-in DB console" loading="lazy"></p>
+<h2 id="databases">Databases</h2>
+<p>The Databases page shows details about the system and user databases in the cluster.</p>
+<p>In our case, the database <em>test</em> is used for YCSB benchmark. The database size is 148.7GB and it has one table with 433 ranges. The table is called <em>usertable</em> which has 11 columns. There is one index created on the table.</p>
+<p><img src="https://www.flamingbytes.com/content/images/posts/crdb_database.png" alt="Analyze Cockroach performance from the built-in DB console" loading="lazy"></p>
+<p><img src="https://www.flamingbytes.com/content/images/posts/crdb_table.png" alt="Analyze Cockroach performance from the built-in DB console" loading="lazy"></p>
+<p><img src="https://www.flamingbytes.com/content/images/posts/crdb_table_1.png" alt="Analyze Cockroach performance from the built-in DB console" loading="lazy"></p>
+<h2 id="sql-activity">SQL Activity</h2>
+<p>The SQL Activity page summarizes SQL activity in the cluster. Transactions(Statements) shows frequently executed and high-latency SQL transactions(statements).</p>
+<p>In our case, there are 138M insert and 50M select transactions. There are more inserts than selects because we had initial database load operations which insert 100M records to the table. After that, we ran YCSB workload with the insert to read ratio &quot;0.5:0.5&quot;.</p>
+<p>Furthermore, the transaction time for the &quot;Insert into usertable&quot; is 30.4ms. The SQL statement time is 30.2ms for this transaction. This helps explain why the average YCSB operation latency is ~31.3ms. The major overhead is from the insert transaction itself.</p>
+<p><img src="https://www.flamingbytes.com/content/images/posts/crdb_sql_transaction.png" alt="Analyze Cockroach performance from the built-in DB console" loading="lazy"></p>
+<p><img src="https://www.flamingbytes.com/content/images/posts/crdb_sql_statement.png" alt="Analyze Cockroach performance from the built-in DB console" loading="lazy"></p>
+<h2 id="metrics">Metrics</h2>
+<p>The Metrics page provides dashboards for all types of CockroachDB metrics.</p>
+<ul>
+<li>Overview dashboard has metrics about SQL performance, replication, and storage.</li>
+<li>Hardware dashboard has metrics about CPU usage, disk throughput, network traffic, storage capacity, and memory.</li>
+<li>Runtime dashboard has metrics about node count, CPU time, and memory usage.</li>
+<li>SQL dashboard has metrics about SQL connections, byte traffic, queries, transactions, and service latency.</li>
+<li>Storage dashboard has metrics about storage capacity and file descriptors.</li>
+<li>Replication dashboard has metrics about how data is replicated across the cluster, e.g., range status, replicas per store, and replica quiescence.</li>
+<li>Distributed dashboard has metrics about distribution tasks across the cluster, including RPCs, transactions, and node heartbeats.</li>
+<li>Queues dashboard has metrics about the health and performance of various queueing systems in CockroachDB, including the garbage collection and Raft log queues.</li>
+<li>Slow requests dashboard has metrics about important cluster tasks that take longer than expected to complete, including Raft proposals and lease acquisitions.</li>
+<li>Changefeeds dashboard has metrics about the changefeeds created across your cluster.</li>
+<li>Overload dashboard has metrics about the performance of the parts of your cluster relevant to the cluster&apos;s admission control system.<br>
+TTL dashboard has metrics about the progress and performance of batch deleting expired data using Row-Level TTL from your cluster.</li>
+</ul>
+<h3 id="overview-metrics">Overview metrics</h3>
+<p><img src="https://www.flamingbytes.com/content/images/posts/crdb_metric.png" alt="Analyze Cockroach performance from the built-in DB console" loading="lazy"></p>
+<h3 id="sql-metrics">SQL metrics</h3>
+<p>This shows the KV execution latency(90th and 99th percentile). In our case, the 90th percentile latency is ~31ms for the KV execution. At this point, we know why the CockroachDB introduces the high latency at the application layer. To improve the overall YCSB benchmark performance, changes on CockroachDB layer is needed.</p>
+<p><img src="https://www.flamingbytes.com/content/images/posts/crdb_metric_sql.png" alt="Analyze Cockroach performance from the built-in DB console" loading="lazy"></p>
+<h3 id="replication-metrics">Replication metrics</h3>
+<p>This shows how the number of range replicas increases significantly during database load time.</p>
+<p><img src="https://www.flamingbytes.com/content/images/posts/crdb_metric_replicas.png" alt="Analyze Cockroach performance from the built-in DB console" loading="lazy"></p>
+<h3 id="hardware-metrics">Hardware metrics</h3>
+<p>The hardware metrics are extremely useful for performance issue analysis. It shows the CPU, Memory, Disk I/O and network bandwidth utilization, which allows us to know if the system performance is limited by hardware or not.</p>
+<p>In our case, there is no hardware bottleneck. But we do notice that CockroachDB consumes up to 50% CPU in user space for 96 CPU cores system. From previous analysis, we know each SQL transaction takes a relative long CPU cycle(~30ms) to complete.</p>
+<p>I used <em>vmstat</em> and <em>top</em> to identify how much user/kernel CPU are utilized at system level and how much CPU is consumed by CockroachDB process. When YCSB is running, CockroachDB process consumes up to 50% CPU and most of the CPU is in user space.</p>
+<p><img src="https://www.flamingbytes.com/content/images/posts/crdb_hw_cpu_mem.png" alt="Analyze Cockroach performance from the built-in DB console" loading="lazy"></p>
+<p><img src="https://www.flamingbytes.com/content/images/posts/crdb_hw_bw.png" alt="Analyze Cockroach performance from the built-in DB console" loading="lazy"></p>
+<p><img src="https://www.flamingbytes.com/content/images/posts/crdb_hw_iops.png" alt="Analyze Cockroach performance from the built-in DB console" loading="lazy"></p>
+<p><img src="https://www.flamingbytes.com/content/images/posts/crdb_hw_nw.png" alt="Analyze Cockroach performance from the built-in DB console" loading="lazy"></p>
+<h2 id="summary">Summary</h2>
+<p>This post concludes how to analyze a typical performance issue by making use of the Cockroach DB console. The DB console is producation ready to use and shows many useful insight of CockroachDB and system metrics.</p>
+<h2 id="reference">Reference</h2>
+<ul>
+<li><a href="https://www.cockroachlabs.com/docs/v22.2/ui-overview.html">https://www.cockroachlabs.com/docs/v22.2/ui-overview.html</a></li>
+</ul>
+<!--kg-card-end: markdown-->]]></content:encoded></item><item><title><![CDATA[Introduction to BPF performance tools]]></title><description><![CDATA[BPF stands for Berkeley Packet Filter, which was firstly developed to improve the performance of packet capture tools. It was rewritten later and turned into a general-purpose execution engine including the creation of performance analysis tools.]]></description><link>https://www.flamingbytes.com/blog/introduction-to-bpf-performance-tools/</link><guid isPermaLink="false">63f7fe52a9435e0ecab20d72</guid><category><![CDATA[Performance]]></category><dc:creator><![CDATA[relentlesstorm]]></dc:creator><pubDate>Wed, 22 Feb 2023 01:37:00 GMT</pubDate><media:content url="https://images.unsplash.com/photo-1519229875649-6b8da16368fd?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=MnwxMTc3M3wwfDF8c2VhcmNofDEwOHx8dHJhY2V8ZW58MHx8fHwxNjc3MTk4NTc1&amp;ixlib=rb-4.0.3&amp;q=80&amp;w=2000" medium="image"/><content:encoded><![CDATA[<!--kg-card-begin: markdown--><h2 id="what-are-bpf-and-ebpf">What are BPF and eBPF</h2>
 <img src="https://images.unsplash.com/photo-1519229875649-6b8da16368fd?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=MnwxMTc3M3wwfDF8c2VhcmNofDEwOHx8dHJhY2V8ZW58MHx8fHwxNjc3MTk4NTc1&amp;ixlib=rb-4.0.3&amp;q=80&amp;w=2000" alt="Introduction to BPF performance tools"><p>BPF stands for Berkeley Packet Filter, which was firstly developed to improve the performance of packet capture tools. It was rewritten later and turned into a general-purpose execution engine including the creation of performance analysis tools.</p>
 <p>BPF allows the kernel to run mini programs on system and application events, such as disk I/O. It makes the kernel fully programmable, empowering users(even non-kernel developers) to customize and control the system in order to solve real-world problems.</p>
 <p>Extended BPF is abbreviated as eBPF. Since the classic BPF is no longer developed, the kernel contains only one execution engine, BPF(eBPF), to run both extended BPF and classic BPF programs.</p>
@@ -1276,16 +1340,4 @@ trying URL &apos;https://cloud.r-project.org/bin/macosx/big-sur-arm64/contrib/4.
 <li><a href="https://www.w3schools.com/r/r_get_started.asp">https://www.w3schools.com/r/r_get_started.asp</a></li>
 <li><a href="https://www.datacamp.com/tutorial/top-ten-most-important-packages-in-r-for-data-science">https://www.datacamp.com/tutorial/top-ten-most-important-packages-in-r-for-data-science</a></li>
 </ul>
-<!--kg-card-end: markdown-->]]></content:encoded></item><item><title><![CDATA[How to redirect the default "404 page not found" error page in Ghost blog]]></title><description><![CDATA[A method to redirect a non-existent page in Ghost blog. ]]></description><link>https://www.flamingbytes.com/blog/how-to-redirect-the-default-404-page-not-found-error-page-in-ghost-blog/</link><guid isPermaLink="false">63c335e0acbe8dfd252da58a</guid><category><![CDATA[Blog]]></category><dc:creator><![CDATA[relentlesstorm]]></dc:creator><pubDate>Thu, 05 Jan 2023 23:23:00 GMT</pubDate><media:content url="https://images.unsplash.com/photo-1499750310107-5fef28a66643?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=MnwxMTc3M3wwfDF8c2VhcmNofDF8fGJsb2d8ZW58MHx8fHwxNjczNzM4NjE1&amp;ixlib=rb-4.0.3&amp;q=80&amp;w=2000" medium="image"/><content:encoded><![CDATA[<!--kg-card-begin: markdown--><img src="https://images.unsplash.com/photo-1499750310107-5fef28a66643?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=MnwxMTc3M3wwfDF8c2VhcmNofDF8fGJsb2d8ZW58MHx8fHwxNjczNzM4NjE1&amp;ixlib=rb-4.0.3&amp;q=80&amp;w=2000" alt="How to redirect the default &quot;404 page not found&quot; error page in Ghost blog"><p>When users access a non-existent page, they may see a page which shows the message &quot;404 page not found&quot; in Ghost blog.</p>
-<p>We can redirect the page to another page by creating a <strong>error-404.hbs</strong> file under the theme folder.</p>
-<p>In the following example, we redirect the users to the website home page when they access a non-existent page.</p>
-<pre><code>&lt;!DOCTYPE html&gt;
-&lt;html&gt;
-  &lt;head&gt;
-    &lt;meta http-equiv=&quot;refresh&quot; content=&quot;0; url=&apos;https://www.flamingbytes.com/&apos;&quot; /&gt;
-  &lt;/head&gt;
-  &lt;body&gt;
-  &lt;/body&gt;
-&lt;/html&gt;
-</code></pre>
 <!--kg-card-end: markdown-->]]></content:encoded></item></channel></rss>
