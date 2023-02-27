@@ -45,6 +45,7 @@
     } 
     </style>
 
+    <meta name="description" content="In this post, we try to understand how to analyze CockroachDB performance by monitoring its built-in DB console." />
     <link rel="icon" href="https://www.flamingbytes.com/content/images/size/w256h256/2023/01/FlamingBytes-icon-64x64.png" type="image/png" />
     <link rel="canonical" href="https://www.flamingbytes.com/blog/analyze-cockroach-performance-from-db-console/" />
     <meta name="referrer" content="no-referrer-when-downgrade" />
@@ -52,31 +53,17 @@
     <meta property="og:site_name" content="FlamingBytes" />
     <meta property="og:type" content="article" />
     <meta property="og:title" content="Analyze Cockroach performance from the built-in DB console" />
-    <meta property="og:description" content="In this post, we try to understand how to analyze CockroachDB performance by monitoring its built-in DB console.
-
-
-
-Problem statement
-
-
-We have a YCSB workload(insert:read&#x3D;0.5:0.5) run over single node CockroachDB server. As a result, the insert OPS is 10940 and average latency is ~31." />
+    <meta property="og:description" content="In this post, we try to understand how to analyze CockroachDB performance by monitoring its built-in DB console." />
     <meta property="og:url" content="https://www.flamingbytes.com/blog/analyze-cockroach-performance-from-db-console/" />
     <meta property="og:image" content="https://images.unsplash.com/photo-1608222351212-18fe0ec7b13b?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDN8fGRhc2hib2FyZHxlbnwwfHx8fDE2Nzc0NTUwMzE&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000" />
     <meta property="article:published_time" content="2023-02-26T23:50:02.000Z" />
-    <meta property="article:modified_time" content="2023-02-26T23:50:02.000Z" />
+    <meta property="article:modified_time" content="2023-02-27T00:14:24.000Z" />
     <meta property="article:tag" content="Performance" />
     
     <meta property="article:publisher" content="https://www.facebook.com/ghost" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="Analyze Cockroach performance from the built-in DB console" />
-    <meta name="twitter:description" content="In this post, we try to understand how to analyze CockroachDB performance by monitoring its built-in DB console.
-
-
-
-Problem statement
-
-
-We have a YCSB workload(insert:read&#x3D;0.5:0.5) run over single node CockroachDB server. As a result, the insert OPS is 10940 and average latency is ~31." />
+    <meta name="twitter:description" content="In this post, we try to understand how to analyze CockroachDB performance by monitoring its built-in DB console." />
     <meta name="twitter:url" content="https://www.flamingbytes.com/blog/analyze-cockroach-performance-from-db-console/" />
     <meta name="twitter:image" content="https://images.unsplash.com/photo-1608222351212-18fe0ec7b13b?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDN8fGRhc2hib2FyZHxlbnwwfHx8fDE2Nzc0NTUwMzE&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000" />
     <meta name="twitter:label1" content="Written by" />
@@ -117,7 +104,7 @@ We have a YCSB workload(insert:read&#x3D;0.5:0.5) run over single node Cockroach
     "headline": "Analyze Cockroach performance from the built-in DB console",
     "url": "https://www.flamingbytes.com/blog/analyze-cockroach-performance-from-db-console/",
     "datePublished": "2023-02-26T23:50:02.000Z",
-    "dateModified": "2023-02-26T23:50:02.000Z",
+    "dateModified": "2023-02-27T00:14:24.000Z",
     "image": {
         "@type": "ImageObject",
         "url": "https://images.unsplash.com/photo-1608222351212-18fe0ec7b13b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxMTc3M3wwfDF8c2VhcmNofDN8fGRhc2hib2FyZHxlbnwwfHx8fDE2Nzc0NTUwMzE&ixlib=rb-4.0.3&q=80&w=2000",
@@ -125,7 +112,7 @@ We have a YCSB workload(insert:read&#x3D;0.5:0.5) run over single node Cockroach
         "height": 1500
     },
     "keywords": "Performance",
-    "description": "In this post, we try to understand how to analyze CockroachDB performance by monitoring its built-in DB console.\n\n\n\nProblem statement\n\n\nWe have a YCSB workload(insert:read&#x3D;0.5:0.5) run over single node CockroachDB server. As a result, the insert OPS is 10940 and average latency is ~31.3ms per operation. We notice that the backend NVME disk I/O latency is less than 1ms, which is fast enough to handle the I/Os. A question is which component introduces the extra ~30ms latency for each insert operat",
+    "description": "In this post, we try to understand how to analyze CockroachDB performance by monitoring its built-in DB console.",
     "mainEntityOfPage": {
         "@type": "WebPage",
         "@id": "https://www.flamingbytes.com/"
@@ -218,6 +205,7 @@ We have a YCSB workload(insert:read&#x3D;0.5:0.5) run over single node Cockroach
 
     </aside>
 
+                    <p class="gh-article-excerpt">In this post, we try to understand how to analyze CockroachDB performance by monitoring its built-in DB console.</p>
 
                     <figure class="gh-article-image">
         <img
@@ -294,7 +282,7 @@ TTL dashboard has metrics about the progress and performance of batch deleting e
 <p><img src="https://www.flamingbytes.com/content/images/posts/crdb_hw_iops.png" alt="image" loading="lazy"></p>
 <p><img src="https://www.flamingbytes.com/content/images/posts/crdb_hw_nw.png" alt="image" loading="lazy"></p>
 <h2 id="summary">Summary</h2>
-<p>This post concludes how to analyze a typical performance issue by making use of the Cockroach DB console. The DB console is producation ready to use and shows many useful insight of CockroachDB and system metrics.</p>
+<p>This post concludes how to analyze a typical performance issue by making use of the Cockroach DB console. The DB console is production ready to use and shows many useful insight of CockroachDB and system metrics.</p>
 <h2 id="reference">Reference</h2>
 <ul>
 <li><a href="https://www.cockroachlabs.com/docs/v22.2/ui-overview.html">https://www.cockroachlabs.com/docs/v22.2/ui-overview.html</a></li>
