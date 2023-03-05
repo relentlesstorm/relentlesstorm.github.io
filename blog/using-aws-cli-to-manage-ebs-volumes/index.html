@@ -46,38 +46,52 @@
     </style>
 
     <link rel="icon" href="https://www.flamingbytes.com/content/images/size/w256h256/2023/01/FlamingBytes-icon-64x64.png" type="image/png" />
-    <link rel="canonical" href="https://www.flamingbytes.com/blog/understanding-rpo-and-rto/" />
+    <link rel="canonical" href="https://www.flamingbytes.com/blog/using-aws-cli-to-manage-ebs-volumes/" />
     <meta name="referrer" content="no-referrer-when-downgrade" />
     
     <meta property="og:site_name" content="FlamingBytes" />
     <meta property="og:type" content="article" />
-    <meta property="og:title" content="Understanding RPO and RTO" />
-    <meta property="og:description" content="The disasters could occur unexpectedly and it could take down the whole data center in an application region. In the real world, a well designed disaster recovery solution would help restore the applications and related data at the time of disaster.
+    <meta property="og:title" content="Using AWS CLI to manage EBS volumes" />
+    <meta property="og:description" content="Intro to AWS CLI
 
 
-There are two critical metrics to measure how timely" />
-    <meta property="og:url" content="https://www.flamingbytes.com/blog/understanding-rpo-and-rto/" />
-    <meta property="og:image" content="https://images.unsplash.com/photo-1586974175094-0a7259238613?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDJ8fHJlY292ZXJ5fGVufDB8fHx8MTY3Mjc3OTU4Ng&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000" />
-    <meta property="article:published_time" content="2022-05-01T00:00:00.000Z" />
-    <meta property="article:modified_time" content="2023-01-04T04:32:33.000Z" />
+The AWS Command Line Interface (AWS CLI) is a unified tool to manage your AWS services. With just one tool to download and configure, you can control multiple AWS services from the command line and automate them through scripts.
+
+
+
+AWS CLI install
+
+
+To install AWS CLI" />
+    <meta property="og:url" content="https://www.flamingbytes.com/blog/using-aws-cli-to-manage-ebs-volumes/" />
+    <meta property="og:image" content="https://images.unsplash.com/photo-1628296499994-70face79ab36?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDJ8fEFXUyUyMHxlbnwwfHx8fDE2Nzc5MTEyMzc&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000" />
+    <meta property="article:published_time" content="2023-03-04T06:30:26.000Z" />
+    <meta property="article:modified_time" content="2023-03-05T18:43:37.000Z" />
     <meta property="article:tag" content="Cloud Storage" />
     
     <meta property="article:publisher" content="https://www.facebook.com/ghost" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Understanding RPO and RTO" />
-    <meta name="twitter:description" content="The disasters could occur unexpectedly and it could take down the whole data center in an application region. In the real world, a well designed disaster recovery solution would help restore the applications and related data at the time of disaster.
+    <meta name="twitter:title" content="Using AWS CLI to manage EBS volumes" />
+    <meta name="twitter:description" content="Intro to AWS CLI
 
 
-There are two critical metrics to measure how timely" />
-    <meta name="twitter:url" content="https://www.flamingbytes.com/blog/understanding-rpo-and-rto/" />
-    <meta name="twitter:image" content="https://images.unsplash.com/photo-1586974175094-0a7259238613?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDJ8fHJlY292ZXJ5fGVufDB8fHx8MTY3Mjc3OTU4Ng&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000" />
+The AWS Command Line Interface (AWS CLI) is a unified tool to manage your AWS services. With just one tool to download and configure, you can control multiple AWS services from the command line and automate them through scripts.
+
+
+
+AWS CLI install
+
+
+To install AWS CLI" />
+    <meta name="twitter:url" content="https://www.flamingbytes.com/blog/using-aws-cli-to-manage-ebs-volumes/" />
+    <meta name="twitter:image" content="https://images.unsplash.com/photo-1628296499994-70face79ab36?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDJ8fEFXUyUyMHxlbnwwfHx8fDE2Nzc5MTEyMzc&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000" />
     <meta name="twitter:label1" content="Written by" />
     <meta name="twitter:data1" content="relentlesstorm" />
     <meta name="twitter:label2" content="Filed under" />
     <meta name="twitter:data2" content="Cloud Storage" />
     <meta name="twitter:site" content="@ghost" />
     <meta property="og:image:width" content="2000" />
-    <meta property="og:image:height" content="1333" />
+    <meta property="og:image:height" content="1502" />
     
     <script type="application/ld+json">
 {
@@ -106,18 +120,18 @@ There are two critical metrics to measure how timely" />
         "url": "https://www.flamingbytes.com/author/relentlesstorm/",
         "sameAs": []
     },
-    "headline": "Understanding RPO and RTO",
-    "url": "https://www.flamingbytes.com/blog/understanding-rpo-and-rto/",
-    "datePublished": "2022-05-01T00:00:00.000Z",
-    "dateModified": "2023-01-04T04:32:33.000Z",
+    "headline": "Using AWS CLI to manage EBS volumes",
+    "url": "https://www.flamingbytes.com/blog/using-aws-cli-to-manage-ebs-volumes/",
+    "datePublished": "2023-03-04T06:30:26.000Z",
+    "dateModified": "2023-03-05T18:43:37.000Z",
     "image": {
         "@type": "ImageObject",
-        "url": "https://images.unsplash.com/photo-1586974175094-0a7259238613?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxMTc3M3wwfDF8c2VhcmNofDJ8fHJlY292ZXJ5fGVufDB8fHx8MTY3Mjc3OTU4Ng&ixlib=rb-4.0.3&q=80&w=2000",
+        "url": "https://images.unsplash.com/photo-1628296499994-70face79ab36?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxMTc3M3wwfDF8c2VhcmNofDJ8fEFXUyUyMHxlbnwwfHx8fDE2Nzc5MTEyMzc&ixlib=rb-4.0.3&q=80&w=2000",
         "width": 2000,
-        "height": 1333
+        "height": 1502
     },
     "keywords": "Cloud Storage",
-    "description": "The disasters could occur unexpectedly and it could take down the whole data center in an application region. In the real world, a well designed disaster recovery solution would help restore the applications and related data at the time of disaster.\n\n\nThere are two critical metrics to measure how timely the applications and data can be recovered and how much data loss can be tolerated.\n\n\n * Recovery Time Objective(RTO)\n * Recovery Point Objective(RPO)\n\n\n\n\n\n\nReference\n\n\n * https://www.enterprises",
+    "description": "Intro to AWS CLI\n\n\nThe AWS Command Line Interface (AWS CLI) is a unified tool to manage your AWS services. With just one tool to download and configure, you can control multiple AWS services from the command line and automate them through scripts.\n\n\n\nAWS CLI install\n\n\nTo install AWS CLI on MacOS:\n\n\n$ curl &quot;https://awscli.amazonaws.com/AWSCLIV2.pkg&quot; -o &quot;AWSCLIV2.pkg&quot;\n$ sudo installer -pkg AWSCLIV2.pkg -target /\n$ which aws\n/usr/local/bin/aws\n$ aws --version\naws-cli/2.10.3 Python/3.9.11 Darwin/20.",
     "mainEntityOfPage": {
         "@type": "WebPage",
         "@id": "https://www.flamingbytes.com/"
@@ -183,7 +197,7 @@ There are two critical metrics to measure how timely" />
             <header class="gh-article-header gh-canvas">
                     <a class="gh-article-tag" href="https://www.flamingbytes.com/blog/tag/cloudstorage/">Cloud Storage</a>
 
-                <h1 class="gh-article-title">Understanding RPO and RTO</h1>
+                <h1 class="gh-article-title">Using AWS CLI to manage EBS volumes</h1>
 
                     <aside class="gh-article-sidebar">
 
@@ -202,9 +216,9 @@ There are two critical metrics to measure how timely" />
 
         <div class="gh-article-meta">
             <div class="gh-article-meta-inner">
-                <time class="gh-article-date" datetime="2022-05-01">May 1, 2022</time>
+                <time class="gh-article-date" datetime="2023-03-04">Mar 4, 2023</time>
                     <span class="gh-article-meta-sep"></span>
-                    <span class="gh-article-length">1 min</span>
+                    <span class="gh-article-length">2 min</span>
             </div>
         </div>
 
@@ -213,32 +227,113 @@ There are two critical metrics to measure how timely" />
 
                     <figure class="gh-article-image">
         <img
-            srcset="https://images.unsplash.com/photo-1586974175094-0a7259238613?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDJ8fHJlY292ZXJ5fGVufDB8fHx8MTY3Mjc3OTU4Ng&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;300 300w,
-                    https://images.unsplash.com/photo-1586974175094-0a7259238613?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDJ8fHJlY292ZXJ5fGVufDB8fHx8MTY3Mjc3OTU4Ng&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720 720w,
-                    https://images.unsplash.com/photo-1586974175094-0a7259238613?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDJ8fHJlY292ZXJ5fGVufDB8fHx8MTY3Mjc3OTU4Ng&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;960 960w,
-                    https://images.unsplash.com/photo-1586974175094-0a7259238613?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDJ8fHJlY292ZXJ5fGVufDB8fHx8MTY3Mjc3OTU4Ng&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1200 1200w,
-                    https://images.unsplash.com/photo-1586974175094-0a7259238613?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDJ8fHJlY292ZXJ5fGVufDB8fHx8MTY3Mjc3OTU4Ng&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000 2000w"
+            srcset="https://images.unsplash.com/photo-1628296499994-70face79ab36?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDJ8fEFXUyUyMHxlbnwwfHx8fDE2Nzc5MTEyMzc&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;300 300w,
+                    https://images.unsplash.com/photo-1628296499994-70face79ab36?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDJ8fEFXUyUyMHxlbnwwfHx8fDE2Nzc5MTEyMzc&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720 720w,
+                    https://images.unsplash.com/photo-1628296499994-70face79ab36?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDJ8fEFXUyUyMHxlbnwwfHx8fDE2Nzc5MTEyMzc&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;960 960w,
+                    https://images.unsplash.com/photo-1628296499994-70face79ab36?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDJ8fEFXUyUyMHxlbnwwfHx8fDE2Nzc5MTEyMzc&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1200 1200w,
+                    https://images.unsplash.com/photo-1628296499994-70face79ab36?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDJ8fEFXUyUyMHxlbnwwfHx8fDE2Nzc5MTEyMzc&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000 2000w"
             sizes="(max-width: 1200px) 100vw, 1200px"
-            src="https://images.unsplash.com/photo-1586974175094-0a7259238613?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDJ8fHJlY292ZXJ5fGVufDB8fHx8MTY3Mjc3OTU4Ng&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1200"
-            alt="Understanding RPO and RTO"
+            src="https://images.unsplash.com/photo-1628296499994-70face79ab36?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDJ8fEFXUyUyMHxlbnwwfHx8fDE2Nzc5MTEyMzc&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1200"
+            alt="Using AWS CLI to manage EBS volumes"
         >
-            <figcaption>Photo by <a href="https://unsplash.com/@martinsanchez?utm_source=ghost&utm_medium=referral&utm_campaign=api-credit">Martin Sanchez</a> / <a href="https://unsplash.com/?utm_source=ghost&utm_medium=referral&utm_campaign=api-credit">Unsplash</a></figcaption>
+            <figcaption>Photo by <a href="https://unsplash.com/@mrpeker?utm_source=ghost&utm_medium=referral&utm_campaign=api-credit">Mehmet Ali Peker</a> / <a href="https://unsplash.com/?utm_source=ghost&utm_medium=referral&utm_campaign=api-credit">Unsplash</a></figcaption>
     </figure>
             </header>
 
             <section class="gh-content gh-canvas">
                 <aside class="gh-sidebar"><div class="gh-toc"></div></aside> 
 
-                <!--kg-card-begin: markdown--><p>The disasters could occur unexpectedly and it could take down the whole data center in an application region. In the real world, a well designed disaster recovery solution would help restore the applications and related data at the time of disaster.</p>
-<p>There are two critical metrics to measure how timely the applications and data can be recovered and how much data loss can be tolerated.</p>
-<ul>
-<li>Recovery Time Objective(RTO)</li>
-<li>Recovery Point Objective(RPO)</li>
-</ul>
-<p><img src="https://www.flamingbytes.com/content/images/posts/rpo-rto.png" alt="Image" loading="lazy"></p>
+                <!--kg-card-begin: markdown--><h2 id="intro-to-aws-cli">Intro to AWS CLI</h2>
+<p>The AWS Command Line Interface (AWS CLI) is a unified tool to manage your AWS services. With just one tool to download and configure, you can control multiple AWS services from the command line and automate them through scripts.</p>
+<h2 id="aws-cli-install">AWS CLI install</h2>
+<p>To install AWS CLI on MacOS:</p>
+<pre><code>$ curl &quot;https://awscli.amazonaws.com/AWSCLIV2.pkg&quot; -o &quot;AWSCLIV2.pkg&quot;
+$ sudo installer -pkg AWSCLIV2.pkg -target /
+$ which aws
+/usr/local/bin/aws
+$ aws --version
+aws-cli/2.10.3 Python/3.9.11 Darwin/20.4.0 exe/x86_64 prompt/off
+</code></pre>
+<h2 id="configure-aws-credentials">Configure AWS credentials</h2>
+<p>The AWS CLI stores sensitive credential information that you specify with <em>aws configure</em> in a local file ~/.aws/credentials.</p>
+<p>$ aws configure<br>
+AWS Access Key ID [<strong><strong><strong><strong><strong><strong><strong><strong>6N7Q]: [Your AWS access Key ID]<br>
+AWS Secret Access Key [</strong></strong></strong></strong></strong></strong></strong></strong>+Ic+]: [Your AWS Secret Access Key]<br>
+Default region name [None]: [Your Region Name]<br>
+Default output format [None]:</p>
+<p>$ cat ~/.aws/credentials<br>
+[default]<br>
+aws_access_key_id =  [Your AWS access Key ID]<br>
+aws_secret_access_key = [Your AWS Secret Access Key]<br>
+aws_region = [Your Region Name]</p>
+<h2 id="aws-cli-commands">AWS CLI Commands</h2>
+<p>To get commands help:</p>
+<pre><code>$ aws eks help
+$ aws ec2 help
+</code></pre>
+<p>To list and describe clusters:</p>
+<pre><code>$ aws eks list-clusters
+$ aws eks describe-cluster --name [your-cluster-name]
+</code></pre>
+<p>To list and describe nodegroups:</p>
+<pre><code>$ aws eks list-nodegroups --cluster-name [your-cluster-name]
+$ aws eks describe-nodegroup --cluster-name [your-cluster-name] --nodegroup-name [you-nodegroup-name]
+</code></pre>
+<p>To delete multiple EBS volumes(example):</p>
+<pre><code>$ aws ec2 describe-volumes --filters &quot;Name=tag:Name,Values=gp3-volume-*&quot;  | egrep &quot;VolumeId&quot; | awk '{print $NF}' | sed 's/\&quot;//g;s/\,//' &gt; vol_ids
+
+$ for id in `cat vol_ids`
+do
+    aws ec2 delete-volume --volume-id $id
+done
+
+$ aws ec2 describe-volumes --filters &quot;Name=tag:Name,Values=gp3-volume-*&quot;  | egrep &quot;VolumeId&quot; | awk '{print $NF}'  | wc -l
+0
+</code></pre>
+<p>To create multiple EBS volumes(example):</p>
+<pre><code>$ for i in `seq 1 8`
+do
+aws ec2 create-volume --volume-type gp3 --size 256 --iops 16000 --throughput 1000 --availability-zone us-east-1a --tag-specifications &quot;ResourceType=volume,Tags=[{Key=Name,Value=gp3-volume-$i}]&quot;
+done
+</code></pre>
+<p>To attach EBS volume to EC2 instance:</p>
+<pre><code>$ aws ec2 describe-volumes --filters &quot;Name=tag:Name,Values=gp3-volume-1&quot; --query &quot;Volumes[*].{ID:VolumeId}&quot;
+[
+    {
+        &quot;ID&quot;: &quot;vol-0101002b66d4fc211&quot;
+    }
+]
+
+$ aws ec2 attach-volume --volume-id vol-0101002b66d4fc211 --instance-id i-0c2b7553a99a7277b --device /dev/sdf
+{
+    &quot;AttachTime&quot;: &quot;2023-03-04T01:58:37.155000+00:00&quot;,
+    &quot;Device&quot;: &quot;/dev/sdf&quot;,
+    &quot;InstanceId&quot;: &quot;i-0c2b7553a99a7277b&quot;,
+    &quot;State&quot;: &quot;attaching&quot;,
+    &quot;VolumeId&quot;: &quot;vol-0101002b66d4fc211&quot;
+}
+</code></pre>
+<p>To describe instance:</p>
+<pre><code>$ aws ec2 describe-instances --instance-ids i-0c2b7553a99a7277b | egrep &quot;DeviceName|Status|VolumeId&quot;
+&quot;DeviceName&quot;: &quot;/dev/sdf&quot;,
+&quot;Status&quot;: &quot;attached&quot;,
+&quot;VolumeId&quot;: &quot;vol-0101002b66d4fc211&quot;
+&quot;Status&quot;: &quot;attached&quot;
+</code></pre>
+<p>To verify the attached volumes in EC2 instance:</p>
+<pre><code>[ec2-user@ip-192-168-25-183 ~]$ ls -la /dev/sdf
+lrwxrwxrwx 1 root root 7 Mar  4 01:58 /dev/sdf -&gt; nvme1n1
+
+[ec2-user@ip-192-168-25-183 ~]$ lsblk
+NAME          MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
+nvme0n1       259:0    0  256G  0 disk
+├─nvme0n1p1   259:1    0  256G  0 part /
+└─nvme0n1p128 259:2    0    1M  0 part
+nvme1n1       259:3    0  256G  0 disk
+</code></pre>
 <h2 id="reference">Reference</h2>
 <ul>
-<li><a href="https://www.enterprisestorageforum.com/management/rpo-and-rto-understanding-the-differences/">https://www.enterprisestorageforum.com/management/rpo-and-rto-understanding-the-differences/</a>)</li>
+<li><a href="https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html">https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html</a></li>
 </ul>
 <!--kg-card-end: markdown-->
 
@@ -260,54 +355,6 @@ There are two critical metrics to measure how timely" />
                 <div class="gh-topic gh-topic-grid">
                     <div class="gh-topic-content">
                             <article class="gh-card post">
-    <a class="gh-card-link" href="/blog/using-aws-cli-to-manage-ebs-volumes/">
-            <figure class="gh-card-image">
-                <img
-                    srcset="https://images.unsplash.com/photo-1628296499994-70face79ab36?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDJ8fEFXUyUyMHxlbnwwfHx8fDE2Nzc5MTEyMzc&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;300 300w,
-                            https://images.unsplash.com/photo-1628296499994-70face79ab36?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDJ8fEFXUyUyMHxlbnwwfHx8fDE2Nzc5MTEyMzc&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720 720w,
-                            https://images.unsplash.com/photo-1628296499994-70face79ab36?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDJ8fEFXUyUyMHxlbnwwfHx8fDE2Nzc5MTEyMzc&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;960 960w,
-                            https://images.unsplash.com/photo-1628296499994-70face79ab36?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDJ8fEFXUyUyMHxlbnwwfHx8fDE2Nzc5MTEyMzc&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1200 1200w,
-                            https://images.unsplash.com/photo-1628296499994-70face79ab36?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDJ8fEFXUyUyMHxlbnwwfHx8fDE2Nzc5MTEyMzc&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000 2000w"
-                    sizes="(max-width: 1200px) 100vw, 1200px"
-                    src="https://images.unsplash.com/photo-1628296499994-70face79ab36?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDJ8fEFXUyUyMHxlbnwwfHx8fDE2Nzc5MTEyMzc&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720"
-                    alt="Using AWS CLI to manage EBS volumes"
-                >
-            </figure>
-
-        <div class="gh-card-wrapper">
-            <header class="gh-card-header">
-                <h3 class="gh-card-title">Using AWS CLI to manage EBS volumes</h3>
-            </header>
-
-                    <div class="gh-card-excerpt">Intro to AWS CLI
-
-
-The AWS Command Line Interface (AWS CLI) is a unified tool to manage your AWS services. With just one tool to download and configure, you can control multiple AWS services from the command line and automate them through scripts.
-
-
-
-AWS CLI install
-
-
-To install AWS CLI</div>
-
-            <footer class="gh-card-footer">
-                <span class="gh-card-author">relentlesstorm</span>
-                <time class="gh-card-date" datetime="2023-03-04">Mar 4, 2023</time>
-                    <script
-    data-ghost-comment-count="6402d4fb32be7b0c9cc952fb"
-    data-ghost-comment-count-empty=""
-    data-ghost-comment-count-singular="comment"
-    data-ghost-comment-count-plural="comments"
-    data-ghost-comment-count-tag="span"
-    data-ghost-comment-count-class-name="gh-card-comments"
-    data-ghost-comment-count-autowrap="true"
->
-</script>
-            </footer>
-        </div>
-    </a>
-</article>                            <article class="gh-card post">
     <a class="gh-card-link" href="/blog/understanding-azure-disk-bursting/">
             <figure class="gh-card-image">
                 <img
@@ -337,6 +384,47 @@ An on-demand bursting model, where the disk bursts whenever its needs exceed its
                 <time class="gh-card-date" datetime="2022-09-15">Sep 15, 2022</time>
                     <script
     data-ghost-comment-count="63b48f561527a00d97449cbf"
+    data-ghost-comment-count-empty=""
+    data-ghost-comment-count-singular="comment"
+    data-ghost-comment-count-plural="comments"
+    data-ghost-comment-count-tag="span"
+    data-ghost-comment-count-class-name="gh-card-comments"
+    data-ghost-comment-count-autowrap="true"
+>
+</script>
+            </footer>
+        </div>
+    </a>
+</article>                            <article class="gh-card post">
+    <a class="gh-card-link" href="/blog/understanding-rpo-and-rto/">
+            <figure class="gh-card-image">
+                <img
+                    srcset="https://images.unsplash.com/photo-1586974175094-0a7259238613?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDJ8fHJlY292ZXJ5fGVufDB8fHx8MTY3Mjc3OTU4Ng&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;300 300w,
+                            https://images.unsplash.com/photo-1586974175094-0a7259238613?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDJ8fHJlY292ZXJ5fGVufDB8fHx8MTY3Mjc3OTU4Ng&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720 720w,
+                            https://images.unsplash.com/photo-1586974175094-0a7259238613?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDJ8fHJlY292ZXJ5fGVufDB8fHx8MTY3Mjc3OTU4Ng&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;960 960w,
+                            https://images.unsplash.com/photo-1586974175094-0a7259238613?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDJ8fHJlY292ZXJ5fGVufDB8fHx8MTY3Mjc3OTU4Ng&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1200 1200w,
+                            https://images.unsplash.com/photo-1586974175094-0a7259238613?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDJ8fHJlY292ZXJ5fGVufDB8fHx8MTY3Mjc3OTU4Ng&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000 2000w"
+                    sizes="(max-width: 1200px) 100vw, 1200px"
+                    src="https://images.unsplash.com/photo-1586974175094-0a7259238613?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDJ8fHJlY292ZXJ5fGVufDB8fHx8MTY3Mjc3OTU4Ng&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720"
+                    alt="Understanding RPO and RTO"
+                >
+            </figure>
+
+        <div class="gh-card-wrapper">
+            <header class="gh-card-header">
+                <h3 class="gh-card-title">Understanding RPO and RTO</h3>
+            </header>
+
+                    <div class="gh-card-excerpt">The disasters could occur unexpectedly and it could take down the whole data center in an application region. In the real world, a well designed disaster recovery solution would help restore the applications and related data at the time of disaster.
+
+
+There are two critical metrics to measure how timely</div>
+
+            <footer class="gh-card-footer">
+                <span class="gh-card-author">relentlesstorm</span>
+                <time class="gh-card-date" datetime="2022-05-01">May 1, 2022</time>
+                    <script
+    data-ghost-comment-count="63b497051527a00d97449dca"
     data-ghost-comment-count-empty=""
     data-ghost-comment-count-singular="comment"
     data-ghost-comment-count-plural="comments"
@@ -398,7 +486,7 @@ $ /opt/pwx/bin/pxctl -j volume create datavol --sharedv4</div>
                     <div class="gh-comments gh-read-next gh-canvas">
             <section class="gh-pagehead">
                 <h4 class="gh-pagehead-title">Comments (<script
-    data-ghost-comment-count="63b497051527a00d97449dca"
+    data-ghost-comment-count="6402d4fb32be7b0c9cc952fb"
     data-ghost-comment-count-empty="0"
     data-ghost-comment-count-singular=""
     data-ghost-comment-count-plural=""
@@ -409,7 +497,7 @@ $ /opt/pwx/bin/pxctl -j volume create datavol --sharedv4</div>
 </script>)</h3>
             </section>
             
-        <script defer src="https://cdn.jsdelivr.net/ghost/comments-ui@~0.12/umd/comments-ui.min.js" data-ghost-comments="https://www.flamingbytes.com/" data-api="https://www.flamingbytes.com/ghost/api/content/" data-admin="https://www.flamingbytes.com/ghost/" data-key="321a1d1aea33fd468f6e61f563" data-styles="https://cdn.jsdelivr.net/ghost/comments-ui@~0.12/umd/main.css" data-title="" data-count="false" data-post-id="63b497051527a00d97449dca" data-sentry-dsn="" data-color-scheme="auto" data-avatar-saturation="60" data-accent-color="#6a13ec" data-app-version="0.12" data-comments-enabled="all" data-publication="FlamingBytes" crossorigin="anonymous"></script>
+        <script defer src="https://cdn.jsdelivr.net/ghost/comments-ui@~0.12/umd/comments-ui.min.js" data-ghost-comments="https://www.flamingbytes.com/" data-api="https://www.flamingbytes.com/ghost/api/content/" data-admin="https://www.flamingbytes.com/ghost/" data-key="321a1d1aea33fd468f6e61f563" data-styles="https://cdn.jsdelivr.net/ghost/comments-ui@~0.12/umd/main.css" data-title="" data-count="false" data-post-id="6402d4fb32be7b0c9cc952fb" data-sentry-dsn="" data-color-scheme="auto" data-avatar-saturation="60" data-accent-color="#6a13ec" data-app-version="0.12" data-comments-enabled="all" data-publication="FlamingBytes" crossorigin="anonymous"></script>
     
         </div>
         -->
@@ -418,8 +506,8 @@ $ /opt/pwx/bin/pxctl -j volume create datavol --sharedv4</div>
         <div id="disqus_thread"></div>
 <script>
     var disqus_config = function () {
-        this.page.url = "https://www.flamingbytes.com/blog/understanding-rpo-and-rto/";
-        this.page.identifier = "ghost-63b497051527a00d97449dca"
+        this.page.url = "https://www.flamingbytes.com/blog/using-aws-cli-to-manage-ebs-volumes/";
+        this.page.identifier = "ghost-6402d4fb32be7b0c9cc952fb"
     };
     (function() {
     var d = document, s = d.createElement('script');

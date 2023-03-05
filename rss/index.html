@@ -1,4 +1,99 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:media="http://search.yahoo.com/mrss/"><channel><title><![CDATA[FlamingBytes]]></title><description><![CDATA[Stay hungry, Stay foolish.]]></description><link>https://www.flamingbytes.com/</link><image><url>https://www.flamingbytes.com/favicon.png</url><title>FlamingBytes</title><link>https://www.flamingbytes.com/</link></image><generator>Ghost 5.26</generator><lastBuildDate>Mon, 27 Feb 2023 00:15:08 GMT</lastBuildDate><atom:link href="https://www.flamingbytes.com/rss/" rel="self" type="application/rss+xml"/><ttl>60</ttl><item><title><![CDATA[Analyze Cockroach performance from the built-in DB console]]></title><description><![CDATA[In this post, we try to understand how to analyze CockroachDB performance by monitoring its built-in DB console.]]></description><link>https://www.flamingbytes.com/blog/analyze-cockroach-performance-from-db-console/</link><guid isPermaLink="false">63fbd09c5fc5490f28da1daa</guid><category><![CDATA[Performance]]></category><dc:creator><![CDATA[relentlesstorm]]></dc:creator><pubDate>Sun, 26 Feb 2023 23:50:02 GMT</pubDate><media:content url="https://images.unsplash.com/photo-1608222351212-18fe0ec7b13b?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=MnwxMTc3M3wwfDF8c2VhcmNofDN8fGRhc2hib2FyZHxlbnwwfHx8fDE2Nzc0NTUwMzE&amp;ixlib=rb-4.0.3&amp;q=80&amp;w=2000" medium="image"/><content:encoded><![CDATA[<!--kg-card-begin: markdown--><img src="https://images.unsplash.com/photo-1608222351212-18fe0ec7b13b?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=MnwxMTc3M3wwfDF8c2VhcmNofDN8fGRhc2hib2FyZHxlbnwwfHx8fDE2Nzc0NTUwMzE&amp;ixlib=rb-4.0.3&amp;q=80&amp;w=2000" alt="Analyze Cockroach performance from the built-in DB console"><p>In this post, we try to understand how to analyze CockroachDB performance by monitoring its built-in DB console.</p>
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:media="http://search.yahoo.com/mrss/"><channel><title><![CDATA[FlamingBytes]]></title><description><![CDATA[Stay hungry, Stay foolish.]]></description><link>https://www.flamingbytes.com/</link><image><url>https://www.flamingbytes.com/favicon.png</url><title>FlamingBytes</title><link>https://www.flamingbytes.com/</link></image><generator>Ghost 5.26</generator><lastBuildDate>Sun, 05 Mar 2023 18:45:29 GMT</lastBuildDate><atom:link href="https://www.flamingbytes.com/rss/" rel="self" type="application/rss+xml"/><ttl>60</ttl><item><title><![CDATA[Using AWS CLI to manage EBS volumes]]></title><description><![CDATA[<!--kg-card-begin: markdown--><h2 id="intro-to-aws-cli">Intro to AWS CLI</h2>
+<p>The AWS Command Line Interface (AWS CLI) is a unified tool to manage your AWS services. With just one tool to download and configure, you can control multiple AWS services from the command line and automate them through scripts.</p>
+<h2 id="aws-cli-install">AWS CLI install</h2>
+<p>To install AWS CLI</p>]]></description><link>https://www.flamingbytes.com/blog/using-aws-cli-to-manage-ebs-volumes/</link><guid isPermaLink="false">6402d4fb32be7b0c9cc952fb</guid><category><![CDATA[Cloud Storage]]></category><dc:creator><![CDATA[relentlesstorm]]></dc:creator><pubDate>Sat, 04 Mar 2023 06:30:26 GMT</pubDate><media:content url="https://images.unsplash.com/photo-1628296499994-70face79ab36?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=MnwxMTc3M3wwfDF8c2VhcmNofDJ8fEFXUyUyMHxlbnwwfHx8fDE2Nzc5MTEyMzc&amp;ixlib=rb-4.0.3&amp;q=80&amp;w=2000" medium="image"/><content:encoded><![CDATA[<!--kg-card-begin: markdown--><h2 id="intro-to-aws-cli">Intro to AWS CLI</h2>
+<img src="https://images.unsplash.com/photo-1628296499994-70face79ab36?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=MnwxMTc3M3wwfDF8c2VhcmNofDJ8fEFXUyUyMHxlbnwwfHx8fDE2Nzc5MTEyMzc&amp;ixlib=rb-4.0.3&amp;q=80&amp;w=2000" alt="Using AWS CLI to manage EBS volumes"><p>The AWS Command Line Interface (AWS CLI) is a unified tool to manage your AWS services. With just one tool to download and configure, you can control multiple AWS services from the command line and automate them through scripts.</p>
+<h2 id="aws-cli-install">AWS CLI install</h2>
+<p>To install AWS CLI on MacOS:</p>
+<pre><code>$ curl &quot;https://awscli.amazonaws.com/AWSCLIV2.pkg&quot; -o &quot;AWSCLIV2.pkg&quot;
+$ sudo installer -pkg AWSCLIV2.pkg -target /
+$ which aws
+/usr/local/bin/aws
+$ aws --version
+aws-cli/2.10.3 Python/3.9.11 Darwin/20.4.0 exe/x86_64 prompt/off
+</code></pre>
+<h2 id="configure-aws-credentials">Configure AWS credentials</h2>
+<p>The AWS CLI stores sensitive credential information that you specify with <em>aws configure</em> in a local file ~/.aws/credentials.</p>
+<p>$ aws configure<br>
+AWS Access Key ID [<strong><strong><strong><strong><strong><strong><strong><strong>6N7Q]: [Your AWS access Key ID]<br>
+AWS Secret Access Key [</strong></strong></strong></strong></strong></strong></strong></strong>+Ic+]: [Your AWS Secret Access Key]<br>
+Default region name [None]: [Your Region Name]<br>
+Default output format [None]:</p>
+<p>$ cat ~/.aws/credentials<br>
+[default]<br>
+aws_access_key_id =  [Your AWS access Key ID]<br>
+aws_secret_access_key = [Your AWS Secret Access Key]<br>
+aws_region = [Your Region Name]</p>
+<h2 id="aws-cli-commands">AWS CLI Commands</h2>
+<p>To get commands help:</p>
+<pre><code>$ aws eks help
+$ aws ec2 help
+</code></pre>
+<p>To list and describe clusters:</p>
+<pre><code>$ aws eks list-clusters
+$ aws eks describe-cluster --name [your-cluster-name]
+</code></pre>
+<p>To list and describe nodegroups:</p>
+<pre><code>$ aws eks list-nodegroups --cluster-name [your-cluster-name]
+$ aws eks describe-nodegroup --cluster-name [your-cluster-name] --nodegroup-name [you-nodegroup-name]
+</code></pre>
+<p>To delete multiple EBS volumes(example):</p>
+<pre><code>$ aws ec2 describe-volumes --filters &quot;Name=tag:Name,Values=gp3-volume-*&quot;  | egrep &quot;VolumeId&quot; | awk &apos;{print $NF}&apos; | sed &apos;s/\&quot;//g;s/\,//&apos; &gt; vol_ids
+
+$ for id in `cat vol_ids`
+do
+    aws ec2 delete-volume --volume-id $id
+done
+
+$ aws ec2 describe-volumes --filters &quot;Name=tag:Name,Values=gp3-volume-*&quot;  | egrep &quot;VolumeId&quot; | awk &apos;{print $NF}&apos;  | wc -l
+0
+</code></pre>
+<p>To create multiple EBS volumes(example):</p>
+<pre><code>$ for i in `seq 1 8`
+do
+aws ec2 create-volume --volume-type gp3 --size 256 --iops 16000 --throughput 1000 --availability-zone us-east-1a --tag-specifications &quot;ResourceType=volume,Tags=[{Key=Name,Value=gp3-volume-$i}]&quot;
+done
+</code></pre>
+<p>To attach EBS volume to EC2 instance:</p>
+<pre><code>$ aws ec2 describe-volumes --filters &quot;Name=tag:Name,Values=gp3-volume-1&quot; --query &quot;Volumes[*].{ID:VolumeId}&quot;
+[
+    {
+        &quot;ID&quot;: &quot;vol-0101002b66d4fc211&quot;
+    }
+]
+
+$ aws ec2 attach-volume --volume-id vol-0101002b66d4fc211 --instance-id i-0c2b7553a99a7277b --device /dev/sdf
+{
+    &quot;AttachTime&quot;: &quot;2023-03-04T01:58:37.155000+00:00&quot;,
+    &quot;Device&quot;: &quot;/dev/sdf&quot;,
+    &quot;InstanceId&quot;: &quot;i-0c2b7553a99a7277b&quot;,
+    &quot;State&quot;: &quot;attaching&quot;,
+    &quot;VolumeId&quot;: &quot;vol-0101002b66d4fc211&quot;
+}
+</code></pre>
+<p>To describe instance:</p>
+<pre><code>$ aws ec2 describe-instances --instance-ids i-0c2b7553a99a7277b | egrep &quot;DeviceName|Status|VolumeId&quot;
+&quot;DeviceName&quot;: &quot;/dev/sdf&quot;,
+&quot;Status&quot;: &quot;attached&quot;,
+&quot;VolumeId&quot;: &quot;vol-0101002b66d4fc211&quot;
+&quot;Status&quot;: &quot;attached&quot;
+</code></pre>
+<p>To verify the attached volumes in EC2 instance:</p>
+<pre><code>[ec2-user@ip-192-168-25-183 ~]$ ls -la /dev/sdf
+lrwxrwxrwx 1 root root 7 Mar  4 01:58 /dev/sdf -&gt; nvme1n1
+
+[ec2-user@ip-192-168-25-183 ~]$ lsblk
+NAME          MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
+nvme0n1       259:0    0  256G  0 disk
+&#x251C;&#x2500;nvme0n1p1   259:1    0  256G  0 part /
+&#x2514;&#x2500;nvme0n1p128 259:2    0    1M  0 part
+nvme1n1       259:3    0  256G  0 disk
+</code></pre>
+<h2 id="reference">Reference</h2>
+<ul>
+<li><a href="https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html">https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html</a></li>
+</ul>
+<!--kg-card-end: markdown-->]]></content:encoded></item><item><title><![CDATA[Analyze Cockroach performance from the built-in DB console]]></title><description><![CDATA[In this post, we try to understand how to analyze CockroachDB performance by monitoring its built-in DB console.]]></description><link>https://www.flamingbytes.com/blog/analyze-cockroach-performance-from-db-console/</link><guid isPermaLink="false">63fbd09c5fc5490f28da1daa</guid><category><![CDATA[Performance]]></category><dc:creator><![CDATA[relentlesstorm]]></dc:creator><pubDate>Sun, 26 Feb 2023 23:50:02 GMT</pubDate><media:content url="https://images.unsplash.com/photo-1608222351212-18fe0ec7b13b?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=MnwxMTc3M3wwfDF8c2VhcmNofDN8fGRhc2hib2FyZHxlbnwwfHx8fDE2Nzc0NTUwMzE&amp;ixlib=rb-4.0.3&amp;q=80&amp;w=2000" medium="image"/><content:encoded><![CDATA[<!--kg-card-begin: markdown--><img src="https://images.unsplash.com/photo-1608222351212-18fe0ec7b13b?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=MnwxMTc3M3wwfDF8c2VhcmNofDN8fGRhc2hib2FyZHxlbnwwfHx8fDE2Nzc0NTUwMzE&amp;ixlib=rb-4.0.3&amp;q=80&amp;w=2000" alt="Analyze Cockroach performance from the built-in DB console"><p>In this post, we try to understand how to analyze CockroachDB performance by monitoring its built-in DB console.</p>
 <h2 id="problem-statement">Problem statement</h2>
 <p>We have a YCSB workload(insert:read=0.5:0.5) run over single node CockroachDB server. As a result, the insert OPS is 10940 and average latency is ~31.3ms per operation. We notice that the backend NVME disk I/O latency is less than 1ms, which is fast enough to handle the I/Os. A question is which component introduces the extra ~30ms latency for each insert operation? We also notice that the CockroachDB consumes ~50% CPU in user space. So, we want to dig more about the CockroachDB behaviors by leveraging its DB console.</p>
 <pre><code>INSERT - Takes(s): 4517.6, Count: 49423144, OPS: 10940.0, Avg(us): 31295, Min(us): 1080, Max(us): 61951, 99th(us): 59583, 99.9th(us): 61663, 99.99th(us): 61919
@@ -1268,74 +1363,4 @@ df_ratio[&quot;covid_ratio&quot;] = covid_ratio
 </code></pre>
 <h2 id="draw-diagram-for-covid-ratio">Draw diagram for covid ratio</h2>
 <p>Do you want to try it by yourself?</p>
-<!--kg-card-end: markdown-->]]></content:encoded></item><item><title><![CDATA[Getting started with R]]></title><description><![CDATA[A getting started guide to install and use  R.]]></description><link>https://www.flamingbytes.com/blog/getting-started-with-r/</link><guid isPermaLink="false">63bcea3316d5d70e3a76d7c5</guid><category><![CDATA[Big Data]]></category><dc:creator><![CDATA[relentlesstorm]]></dc:creator><pubDate>Sun, 08 Jan 2023 04:42:00 GMT</pubDate><media:content url="https://images.unsplash.com/photo-1640158615573-cd28feb1bf4e?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=MnwxMTc3M3wwfDF8c2VhcmNofDl8fGRhdGElMjBtaW58ZW58MHx8fHwxNjczMzI1ODE2&amp;ixlib=rb-4.0.3&amp;q=80&amp;w=2000" medium="image"/><content:encoded><![CDATA[<!--kg-card-begin: markdown--><h2 id="installation">Installation</h2>
-<img src="https://images.unsplash.com/photo-1640158615573-cd28feb1bf4e?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=MnwxMTc3M3wwfDF8c2VhcmNofDl8fGRhdGElMjBtaW58ZW58MHx8fHwxNjczMzI1ODE2&amp;ixlib=rb-4.0.3&amp;q=80&amp;w=2000" alt="Getting started with R"><p>The simplest way is to use Homebrew:</p>
-<pre><code>$ brew install r
-</code></pre>
-<p>Another way is to download installation package from <a href="https://cloud.r-project.org/">https://cloud.r-project.org/</a></p>
-<h2 id="hello-world-of-r">&quot;Hello world&quot; of R</h2>
-<h3 id="run-it-from-r-console">Run it from R console</h3>
-<p>Command <code>R</code> will start a R console, and you can run R code inside R console.</p>
-<pre><code>(base) &#x279C;  benchling git:(b_test_pr) &#x2717; R
-
-R version 4.2.2 (2022-10-31) -- &quot;Innocent and Trusting&quot;
-Copyright (C) 2022 The R Foundation for Statistical Computing
-Platform: aarch64-apple-darwin20 (64-bit)
-
-...
-&gt; print(&quot;hello,world&quot;)
-[1] &quot;hello,world&quot;
-</code></pre>
-<h3 id="run-it-from-terminal">Run it from terminal</h3>
-<p><code>Rscript</code> is a binary front-end to R, for use in scripting applications, see <a href="https://linux.die.net/man/1/rscript">https://linux.die.net/man/1/rscript</a> for more detail.</p>
-<pre><code>(base) &#x279C;  R git:(b_test_pr) &#x2717; cat hello.R
-print(&quot;hello,world&quot;)
-(base) &#x279C;  R git:(b_test_pr) &#x2717; Rscript hello.R
-[1] &quot;hello,world&quot;
-</code></pre>
-<!--kg-card-end: markdown--><!--kg-card-begin: html--><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8578408127828851" crossorigin="anonymous"></script>
-<ins class="adsbygoogle" style="display:block; text-align:center;" data-ad-layout="in-article" data-ad-format="fluid" data-ad-client="ca-pub-8578408127828851" data-ad-slot="5596270594"></ins>
-<script>
-     (adsbygoogle = window.adsbygoogle || []).push({});
-</script><!--kg-card-end: html--><!--kg-card-begin: markdown--><h2 id="install-commonly-used-packages">Install commonly used packages</h2>
-<p>R installation package comes along with a lot of useful packages, besides that, there are a lot of useful packages available from <a href="https://cran.r-project.org/web/packages/">CRAN</a>.</p>
-<p>Here are top 10 most important packages in R for data science.</p>
-<ul>
-<li>ggplot2</li>
-<li>data.table</li>
-<li>dplyr</li>
-<li>tidyr</li>
-<li>Shiny</li>
-<li>plotly</li>
-<li>knitr</li>
-<li>mlr3</li>
-</ul>
-<p>To install those packages from CRAN, we can just simiply follow below steps.</p>
-<ul>
-<li>Start R console</li>
-<li>Call &quot;install.packages(XXX)&quot;</li>
-</ul>
-<p>Here is an example:</p>
-<pre><code>&gt; install.packages(&quot;mlr3&quot;)
---- Please select a CRAN mirror for use in this session ---
-Secure CRAN mirrors
-
- 1: 0-Cloud [https]
- 2: Australia (Canberra) [https]
- 3: Australia (Melbourne 1) [https]
- ....
- Selection: 1
-also installing the dependencies &#x2018;globals&#x2019;, &#x2018;listenv&#x2019;, &#x2018;PRROC&#x2019;, &#x2018;future&#x2019;, &#x2018;future.apply&#x2019;, &#x2018;lgr&#x2019;, &#x2018;mlbench&#x2019;, &#x2018;mlr3measures&#x2019;, &#x2018;mlr3misc&#x2019;, &#x2018;parallelly&#x2019;, &#x2018;palmerpenguins&#x2019;, &#x2018;paradox&#x2019;
-
-trying URL &apos;https://cloud.r-project.org/bin/macosx/big-sur-arm64/contrib/4.2/globals_0.16.2.tgz&apos;
-...
-&gt;&gt; library(mlr3)
-&gt; ?mlr3
-</code></pre>
-<p>As above, after installation completes, we can try to run <code>library(&lt;package name&gt;)</code> to verify, and run <code>?&lt;package name&gt;</code> to see its document.</p>
-<h2 id="reference">Reference</h2>
-<ul>
-<li><a href="https://www.w3schools.com/r/r_get_started.asp">https://www.w3schools.com/r/r_get_started.asp</a></li>
-<li><a href="https://www.datacamp.com/tutorial/top-ten-most-important-packages-in-r-for-data-science">https://www.datacamp.com/tutorial/top-ten-most-important-packages-in-r-for-data-science</a></li>
-</ul>
 <!--kg-card-end: markdown-->]]></content:encoded></item></channel></rss>
