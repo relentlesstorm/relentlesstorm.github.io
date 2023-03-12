@@ -412,32 +412,32 @@ Tracing block device I/O... Hit Ctrl-C to end.
         </div>
     </a>
 </article>                            <article class="gh-card post">
-    <a class="gh-card-link" href="/blog/introduction-to-bpf-performance-tools/">
+    <a class="gh-card-link" href="/blog/flame-graph-and-stack-trace-visualization/">
             <figure class="gh-card-image">
                 <img
-                    srcset="https://images.unsplash.com/photo-1519229875649-6b8da16368fd?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDEwOHx8dHJhY2V8ZW58MHx8fHwxNjc3MTk4NTc1&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;300 300w,
-                            https://images.unsplash.com/photo-1519229875649-6b8da16368fd?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDEwOHx8dHJhY2V8ZW58MHx8fHwxNjc3MTk4NTc1&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720 720w,
-                            https://images.unsplash.com/photo-1519229875649-6b8da16368fd?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDEwOHx8dHJhY2V8ZW58MHx8fHwxNjc3MTk4NTc1&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;960 960w,
-                            https://images.unsplash.com/photo-1519229875649-6b8da16368fd?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDEwOHx8dHJhY2V8ZW58MHx8fHwxNjc3MTk4NTc1&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1200 1200w,
-                            https://images.unsplash.com/photo-1519229875649-6b8da16368fd?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDEwOHx8dHJhY2V8ZW58MHx8fHwxNjc3MTk4NTc1&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000 2000w"
+                    srcset="https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDN8fGNvZGUlMjBzdGFja3xlbnwwfHx8fDE2Nzg1OTYxNTE&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;300 300w,
+                            https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDN8fGNvZGUlMjBzdGFja3xlbnwwfHx8fDE2Nzg1OTYxNTE&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720 720w,
+                            https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDN8fGNvZGUlMjBzdGFja3xlbnwwfHx8fDE2Nzg1OTYxNTE&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;960 960w,
+                            https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDN8fGNvZGUlMjBzdGFja3xlbnwwfHx8fDE2Nzg1OTYxNTE&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1200 1200w,
+                            https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDN8fGNvZGUlMjBzdGFja3xlbnwwfHx8fDE2Nzg1OTYxNTE&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000 2000w"
                     sizes="(max-width: 1200px) 100vw, 1200px"
-                    src="https://images.unsplash.com/photo-1519229875649-6b8da16368fd?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDEwOHx8dHJhY2V8ZW58MHx8fHwxNjc3MTk4NTc1&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720"
-                    alt="Introduction to BPF performance tools"
+                    src="https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDN8fGNvZGUlMjBzdGFja3xlbnwwfHx8fDE2Nzg1OTYxNTE&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720"
+                    alt="Flame Graph and stack trace visualization"
                 >
             </figure>
 
         <div class="gh-card-wrapper">
             <header class="gh-card-header">
-                <h3 class="gh-card-title">Introduction to BPF performance tools</h3>
+                <h3 class="gh-card-title">Flame Graph and stack trace visualization</h3>
             </header>
 
-                    <div class="gh-card-excerpt">BPF stands for Berkeley Packet Filter, which was firstly developed to improve the performance of packet capture tools. It was rewritten later and turned into a general-purpose execution engine including the creation of performance analysis tools.</div>
+                    <div class="gh-card-excerpt">A stack trace is series of functions which show the code path. With the Linux perf(1) tool, the stack samples are summarized as call tree. With the BCC profile(8) tool, the unique stack trace shows as a count. Both tools are very useful when there are only a</div>
 
             <footer class="gh-card-footer">
                 <span class="gh-card-author">relentlesstorm</span>
-                <time class="gh-card-date" datetime="2023-02-22">Feb 22, 2023</time>
+                <time class="gh-card-date" datetime="2023-02-24">Feb 24, 2023</time>
                     <script
-    data-ghost-comment-count="63f7fe52a9435e0ecab20d72"
+    data-ghost-comment-count="640d58644a1a730c884e88c8"
     data-ghost-comment-count-empty=""
     data-ghost-comment-count-singular="comment"
     data-ghost-comment-count-plural="comments"
@@ -450,32 +450,39 @@ Tracing block device I/O... Hit Ctrl-C to end.
         </div>
     </a>
 </article>                            <article class="gh-card post">
-    <a class="gh-card-link" href="/blog/getting-started-with-bpftrace/">
+    <a class="gh-card-link" href="/blog/why-performance-tools-need-bpf/">
             <figure class="gh-card-image">
                 <img
-                    srcset="https://images.unsplash.com/photo-1544206269-b7e48d9a93f7?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDEwfHx0cmFjZXxlbnwwfHx8fDE2NzcxODY5MDI&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;300 300w,
-                            https://images.unsplash.com/photo-1544206269-b7e48d9a93f7?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDEwfHx0cmFjZXxlbnwwfHx8fDE2NzcxODY5MDI&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720 720w,
-                            https://images.unsplash.com/photo-1544206269-b7e48d9a93f7?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDEwfHx0cmFjZXxlbnwwfHx8fDE2NzcxODY5MDI&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;960 960w,
-                            https://images.unsplash.com/photo-1544206269-b7e48d9a93f7?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDEwfHx0cmFjZXxlbnwwfHx8fDE2NzcxODY5MDI&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1200 1200w,
-                            https://images.unsplash.com/photo-1544206269-b7e48d9a93f7?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDEwfHx0cmFjZXxlbnwwfHx8fDE2NzcxODY5MDI&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000 2000w"
+                    srcset="https://images.unsplash.com/photo-1532906619279-a4b7267faa66?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDF8fGYxfGVufDB8fHx8MTY3ODU5MTM0OA&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;300 300w,
+                            https://images.unsplash.com/photo-1532906619279-a4b7267faa66?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDF8fGYxfGVufDB8fHx8MTY3ODU5MTM0OA&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720 720w,
+                            https://images.unsplash.com/photo-1532906619279-a4b7267faa66?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDF8fGYxfGVufDB8fHx8MTY3ODU5MTM0OA&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;960 960w,
+                            https://images.unsplash.com/photo-1532906619279-a4b7267faa66?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDF8fGYxfGVufDB8fHx8MTY3ODU5MTM0OA&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1200 1200w,
+                            https://images.unsplash.com/photo-1532906619279-a4b7267faa66?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDF8fGYxfGVufDB8fHx8MTY3ODU5MTM0OA&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000 2000w"
                     sizes="(max-width: 1200px) 100vw, 1200px"
-                    src="https://images.unsplash.com/photo-1544206269-b7e48d9a93f7?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDEwfHx0cmFjZXxlbnwwfHx8fDE2NzcxODY5MDI&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720"
-                    alt="Getting started with bpftrace"
+                    src="https://images.unsplash.com/photo-1532906619279-a4b7267faa66?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDF8fGYxfGVufDB8fHx8MTY3ODU5MTM0OA&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720"
+                    alt="Why performance tools need BPF"
                 >
             </figure>
 
         <div class="gh-card-wrapper">
             <header class="gh-card-header">
-                <h3 class="gh-card-title">Getting started with bpftrace</h3>
+                <h3 class="gh-card-title">Why performance tools need BPF</h3>
             </header>
 
-                    <div class="gh-card-excerpt">bpftrace is a high-level tracing language for Linux enhanced Berkeley Packet Filter (eBPF) available in recent Linux kernels (4.x).</div>
+                    <div class="gh-card-excerpt">BPF is efficient, production safe and built into the Linux kernel. With BPF, you can use the performance tools in production environment without needing to add any new kernel components.
+
+
+The following example summarizes the block I/O latency as a histogram.
+
+
+$ biolatency
+Tracing block device I/O... Hit Ctrl-C</div>
 
             <footer class="gh-card-footer">
                 <span class="gh-card-author">relentlesstorm</span>
-                <time class="gh-card-date" datetime="2023-02-21">Feb 21, 2023</time>
+                <time class="gh-card-date" datetime="2023-02-23">Feb 23, 2023</time>
                     <script
-    data-ghost-comment-count="63f7d46ea9435e0ecab20d18"
+    data-ghost-comment-count="640d455e4a1a730c884e8853"
     data-ghost-comment-count-empty=""
     data-ghost-comment-count-singular="comment"
     data-ghost-comment-count-plural="comments"
