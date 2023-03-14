@@ -1,4 +1,69 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:media="http://search.yahoo.com/mrss/"><channel><title><![CDATA[FlamingBytes]]></title><description><![CDATA[Stay hungry, Stay foolish.]]></description><link>https://www.flamingbytes.com/</link><image><url>https://www.flamingbytes.com/favicon.png</url><title>FlamingBytes</title><link>https://www.flamingbytes.com/</link></image><generator>Ghost 5.26</generator><lastBuildDate>Sun, 12 Mar 2023 05:30:43 GMT</lastBuildDate><atom:link href="https://www.flamingbytes.com/rss/" rel="self" type="application/rss+xml"/><ttl>60</ttl><item><title><![CDATA[Using AWS CLI to manage EBS volumes]]></title><description><![CDATA[<!--kg-card-begin: markdown--><h2 id="intro-to-aws-cli">Intro to AWS CLI</h2>
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:media="http://search.yahoo.com/mrss/"><channel><title><![CDATA[FlamingBytes]]></title><description><![CDATA[Stay hungry, Stay foolish.]]></description><link>https://www.flamingbytes.com/</link><image><url>https://www.flamingbytes.com/favicon.png</url><title>FlamingBytes</title><link>https://www.flamingbytes.com/</link></image><generator>Ghost 5.26</generator><lastBuildDate>Tue, 14 Mar 2023 05:23:31 GMT</lastBuildDate><atom:link href="https://www.flamingbytes.com/rss/" rel="self" type="application/rss+xml"/><ttl>60</ttl><item><title><![CDATA[General steps for system performance analysis]]></title><description><![CDATA[<!--kg-card-begin: markdown--><p>This post tries to provide general steps for system performance analysis. We are going to cover the following objectives.</p>
+<ul>
+<li>The performance goals</li>
+<li>Workload characterization</li>
+<li>Drill-down analysis</li>
+<li>Traditional performance tools</li>
+<li>BCC/BPF performance tools</li>
+</ul>
+<h2 id="the-goals-of-performance-analysis">The Goals of performance analysis</h2>
+<p>In general, the goals of performance analysis are to improve end-user performance</p>]]></description><link>https://www.flamingbytes.com/blog/general-steps-for-system-performance-analysis/</link><guid isPermaLink="false">640e354dabc64a0e0bd1f48a</guid><category><![CDATA[Performance]]></category><dc:creator><![CDATA[relentlesstorm]]></dc:creator><pubDate>Sun, 05 Mar 2023 01:52:00 GMT</pubDate><media:content url="https://images.unsplash.com/photo-1591696205602-2f950c417cb9?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=MnwxMTc3M3wwfDF8c2VhcmNofDE2fHxhbmFseXNpc3xlbnwwfHx8fDE2Nzg2NzIzNzY&amp;ixlib=rb-4.0.3&amp;q=80&amp;w=2000" medium="image"/><content:encoded><![CDATA[<!--kg-card-begin: markdown--><img src="https://images.unsplash.com/photo-1591696205602-2f950c417cb9?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=MnwxMTc3M3wwfDF8c2VhcmNofDE2fHxhbmFseXNpc3xlbnwwfHx8fDE2Nzg2NzIzNzY&amp;ixlib=rb-4.0.3&amp;q=80&amp;w=2000" alt="General steps for system performance analysis"><p>This post tries to provide general steps for system performance analysis. We are going to cover the following objectives.</p>
+<ul>
+<li>The performance goals</li>
+<li>Workload characterization</li>
+<li>Drill-down analysis</li>
+<li>Traditional performance tools</li>
+<li>BCC/BPF performance tools</li>
+</ul>
+<h2 id="the-goals-of-performance-analysis">The Goals of performance analysis</h2>
+<p>In general, the goals of performance analysis are to improve end-user performance and reduce the operating cost. To achieve this, it&apos;s important to make the performance measurable. We often use the following metrics to measure performance.</p>
+<ul>
+<li>Rates - operation or request rates per second</li>
+<li>Throughput - data transferred per second</li>
+<li>Latency - the time to accomplish a operation or request in milliseconds</li>
+<li>Resource utilization - the resource usage in percentage</li>
+<li>Cost - Price/performance ratio</li>
+</ul>
+<p>The rates, throughput and latency are usually the most important metrics to check if the certain performance goal is met. For example, the throughput measured in MiB/s for a daily database backup is too slow to complete in a given backup window. We need to investigate the issue from the backup application to system layer in order to find a solution to improve the performance. For a second example, the latency at cloud native storage volume layer is as high as 20ms while the underneath SSD disk latency shows less than 1ms. This requires further analysis at volume layer in order to find out the cause for the 19ms latency.</p>
+<p>Performance optimization is endless effort. It depends on the goal you are targeting. So, setting the goals is the first step before you involve further performance analysis activities.</p>
+<h2 id="workload-characterization">Workload characterization</h2>
+<p>Performance analysis is a process to analyze systematically. Understanding the system/application configuration and applied workload are often needed before you do further performance analysis. This is the workload characterization.</p>
+<p>The workload characterization tries to answer the following questions:</p>
+<ul>
+<li>What&apos;s the running application? What&apos;s the major components/features used in the application?</li>
+<li>What is the schedule to run the workload? What is the job concurrency?</li>
+<li>What are the read/write patterns? Mixed read and write, or read/write only workload?</li>
+<li>What are the rates, throughput and latency at application level?</li>
+<li>What is the performance concern?</li>
+</ul>
+<p>Sometimes, you may get a description of the workload from end-users. However, the workload and its configuraiton are usualaly not described clearly enough by the users. It&apos;s worth to characterize the workload with custom profiler. An application level workload profiler can be developed for this purpose. But this often requires application expertise.  At system level, you may leverage the BCC/BPF performance tools to profile the workload.</p>
+<h2 id="drill-down-analysis">Drill-down analysis</h2>
+<p>The drill-down analysis is to find a clue and drill deeper until you find the root cause for the performance issue.</p>
+<p>The general process for drill-down analysis would be like these steps.</p>
+<ol>
+<li>Examine the high level performance metrics and identify the degraded performance point</li>
+<li>For the target workload point with degradation, lazer focus on the four major system resources(CPU, memory, disk I/O and network) to see what is the potential bottleneck</li>
+<li>If it&apos;s hardware bottleneck, it might be resolved by scaling up and scaling out the system resources. Otherwise, it could be a software bottleneck either from kernel space or user space.</li>
+<li>Find a clue based on the collected metrics to drill down to the next level. Software bottleneck analysis often requires profiling and tracing effort to pinpoint the culprit.</li>
+</ol>
+<p>To identify a hardware bottleneck, you would check if any of the four major resources are saturated. For example, the system must be CPU bound if the CPU utilization is above 90%. The system must be disk I/O bound if the disk is 100% busy and wait queue is unexpected large.</p>
+<p>It&apos;s likely that you could not find the root cause with one round of analysis if you go with the wrong direction. You have to repeat the above steps to identify the right direction for RCA. Keep in mind, finding a needle in haystack is not an easy work. You must be patient.</p>
+<h2 id="traditional-performance-tools">Traditional performance tools</h2>
+<p>During the drill-down performance analysis, you can use the following Linux built-in tools. They are simple but very powerful to help determine the next direction on the way of performance analysis.</p>
+<ul>
+<li>uptime - system loads in past 1 minute, 5 minutes and 15 minutes</li>
+<li>dmesg - system error messages</li>
+<li>vmstat - overview of system resource usage(CPU, Memory and disk/network I/O)</li>
+<li>mpstat - per-CPU usage in different states</li>
+<li>pidstat - CPU usage per process</li>
+<li>iostat - disk I/O statistics(throughput, IOPS, latency, etc)</li>
+<li>netstat/sar - network throughput, TCP/IP connection stats</li>
+<li>top - CPU/Memory usage per process and more</li>
+</ul>
+<p>Please refer to this <a href="https://www.flamingbytes.com/blog/performance-analysis-in-60-seconds">post</a> for more detail on how to use Linux traditional tools to analyze performance.</p>
+<h2 id="bccbpf-performance-tools">BCC/BPF performance tools</h2>
+<p>While the traditional tools always gives us a first look at the system performance especially on the resource usage, we can use(or create) BCC/BPF tools for further performance analysis. Please refer to this <a href="https://www.flamingbytes.com/blog/bcc-performance-tools-checklist">post</a> for more detail.</p>
+<!--kg-card-end: markdown-->]]></content:encoded></item><item><title><![CDATA[Using AWS CLI to manage EBS volumes]]></title><description><![CDATA[<!--kg-card-begin: markdown--><h2 id="intro-to-aws-cli">Intro to AWS CLI</h2>
 <p>The AWS Command Line Interface (AWS CLI) is a unified tool to manage your AWS services. With just one tool to download and configure, you can control multiple AWS services from the command line and automate them through scripts.</p>
 <h2 id="aws-cli-install">AWS CLI install</h2>
 <p>To install AWS CLI</p>]]></description><link>https://www.flamingbytes.com/blog/using-aws-cli-to-manage-ebs-volumes/</link><guid isPermaLink="false">6402d4fb32be7b0c9cc952fb</guid><category><![CDATA[Cloud Storage]]></category><dc:creator><![CDATA[relentlesstorm]]></dc:creator><pubDate>Sat, 04 Mar 2023 06:30:26 GMT</pubDate><media:content url="https://images.unsplash.com/photo-1628296499994-70face79ab36?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=MnwxMTc3M3wwfDF8c2VhcmNofDJ8fEFXUyUyMHxlbnwwfHx8fDE2Nzc5MTEyMzc&amp;ixlib=rb-4.0.3&amp;q=80&amp;w=2000" medium="image"/><content:encoded><![CDATA[<!--kg-card-begin: markdown--><h2 id="intro-to-aws-cli">Intro to AWS CLI</h2>
@@ -861,140 +926,4 @@ latency : target=0, window=0, percentile=100.00%, depth=128</code></pre><p><stro
 <!--kg-card-end: markdown--><figure class="kg-card kg-image-card"><img src="https://www.flamingbytes.com/content/images/2023/01/quick_ratio.png" class="kg-image" alt="Tracking stock financial metrics in tradingview" loading="lazy" width="1543" height="877" srcset="https://www.flamingbytes.com/content/images/size/w600/2023/01/quick_ratio.png 600w, https://www.flamingbytes.com/content/images/size/w1000/2023/01/quick_ratio.png 1000w, https://www.flamingbytes.com/content/images/2023/01/quick_ratio.png 1543w" sizes="(min-width: 720px) 720px"></figure><!--kg-card-begin: markdown--><h2 id="add-the-pe-ratio">Add the P/E ratio</h2>
 <!--kg-card-end: markdown--><figure class="kg-card kg-image-card"><img src="https://www.flamingbytes.com/content/images/2023/01/pe.png" class="kg-image" alt="Tracking stock financial metrics in tradingview" loading="lazy" width="1540" height="875" srcset="https://www.flamingbytes.com/content/images/size/w600/2023/01/pe.png 600w, https://www.flamingbytes.com/content/images/size/w1000/2023/01/pe.png 1000w, https://www.flamingbytes.com/content/images/2023/01/pe.png 1540w" sizes="(min-width: 720px) 720px"></figure><!--kg-card-begin: markdown--><h2 id="check-the-trend-for-the-added-metrics">Check the trend for the added metrics</h2>
 <p>In the case of Tesla stock, the prive surged in 2020 and 2021. Notice that the revenue and operating income increased tremendously at the same time.</p>
-<!--kg-card-end: markdown--><figure class="kg-card kg-image-card"><img src="https://www.flamingbytes.com/content/images/2023/01/indicators.png" class="kg-image" alt="Tracking stock financial metrics in tradingview" loading="lazy" width="1545" height="881" srcset="https://www.flamingbytes.com/content/images/size/w600/2023/01/indicators.png 600w, https://www.flamingbytes.com/content/images/size/w1000/2023/01/indicators.png 1000w, https://www.flamingbytes.com/content/images/2023/01/indicators.png 1545w" sizes="(min-width: 720px) 720px"></figure>]]></content:encoded></item><item><title><![CDATA[Using ANOVA in R to analyze US COVID data to understand age impact to death rate]]></title><description><![CDATA[A great example to use ANOVA in R to analyze complicated data.]]></description><link>https://www.flamingbytes.com/blog/using-anova-in-r-to-analyze-us-covid-data/</link><guid isPermaLink="false">63c4d8dafc850b0e49cce665</guid><category><![CDATA[Big Data]]></category><dc:creator><![CDATA[relentlesstorm]]></dc:creator><pubDate>Thu, 12 Jan 2023 04:57:00 GMT</pubDate><media:content url="https://images.unsplash.com/photo-1583946099379-f9c9cb8bc030?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=MnwxMTc3M3wwfDF8c2VhcmNofDIwfHxjb3ZpZCUyMDE5fGVufDB8fHx8MTY3Mzg0NTEyMA&amp;ixlib=rb-4.0.3&amp;q=80&amp;w=2000" medium="image"/><content:encoded><![CDATA[<!--kg-card-begin: markdown--><h2 id="goal">Goal</h2>
-<img src="https://images.unsplash.com/photo-1583946099379-f9c9cb8bc030?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=MnwxMTc3M3wwfDF8c2VhcmNofDIwfHxjb3ZpZCUyMDE5fGVufDB8fHx8MTY3Mzg0NTEyMA&amp;ixlib=rb-4.0.3&amp;q=80&amp;w=2000" alt="Using ANOVA in R to analyze US COVID data to understand age impact to death rate"><p>We want to analysis the relationship between age and covid death rate in US.</p>
-<h2 id="download-the-data">Download the data</h2>
-<p>We will use NCHS(National Center for Health Statistics) as our data source.<br>
-Visit <a href="https://data.cdc.gov/browse?category=NCHS&amp;sortBy=last_modified">https://data.cdc.gov/browse?category=NCHS&amp;sortBy=last_modified</a>, and search <code>VSRR Quarterly</code>, we will find the data we are intrest.</p>
-<p><a href="https://data.cdc.gov/NCHS/NCHS-VSRR-Quarterly-provisional-estimates-for-sele/489q-934x">https://data.cdc.gov/NCHS/NCHS-VSRR-Quarterly-provisional-estimates-for-sele/489q-934x</a>, in this page, we can export data into csv file.</p>
-<p>With that, we may can download data source csv, <code>NCHS_-_VSRR_Quarterly_provisional_estimates_for_selected_indicators_of_mortality.csv</code></p>
-<h2 id="load-the-data">Load the data</h2>
-<pre><code>library(&quot;dplyr&quot;)
-library(&quot;ggplot2&quot;)
-library(&quot;janitor&quot;)
-library(&quot;tidyr&quot;)
-library(&quot;readr&quot;)
-library(&quot;sjPlot&quot;)
-df &lt;- readr::read_csv(file.path(getwd(), &quot;NCHS_-_VSRR_Quarterly_provisional_estimates_for_selected_indicators_of_mortality.csv&quot;), col_names = TRUE)
-df &lt;- clean_names(df)
-# To fix the colname format from origin csv file
-df &lt;- df %&gt;% rename(&quot;rate_age_65_74&quot; = &quot;rate_65_74&quot;)
-</code></pre>
-<h2 id="filter-and-select">Filter and Select</h2>
-<pre><code>df1 &lt;- df %&gt;%
-    filter(time_period == &quot;3-month period&quot; &amp; rate_type == &quot;Crude&quot; &amp; cause_of_death %in% c(&quot;COVID-19&quot;)) %&gt;%
-    select(year_and_quarter, rate_age_1_4, rate_age_5_14,rate_age_15_24, rate_age_25_34,rate_age_35_44, rate_age_45_54,rate_age_55_64,rate_age_65_74,rate_age_75_84,rate_age_85_plus)
-  # take a quick look from column&apos;s point of view
-!&gt; glimpse(df1)
- Rows: 14
- Columns: 11
- $ year_and_quarter &lt;chr&gt; &quot;2019 Q1&quot;, &quot;2019 Q2&quot;, &quot;2019 Q3&quot;, &quot;2019 Q4&quot;, &quot;2020 Q1&quot;&#x2026;
- $ rate_age_1_4     &lt;dbl&gt; NA, NA, NA, NA, NA, 0.2, NA, 0.2, 0.2, 0.2, 0.6, 0.4,&#x2026;
- $ rate_age_5_14    &lt;dbl&gt; NA, NA, NA, NA, NA, 0.1, 0.2, 0.2, 0.2, 0.1, 0.6, 0.5&#x2026;
- $ rate_age_15_24   &lt;dbl&gt; NA, NA, NA, NA, 0.1, 1.4, 1.5, 1.6, 1.9, 1.0, 5.9, 4.&#x2026;
- $ rate_age_25_34   &lt;dbl&gt; NA, NA, NA, NA, 0.8, 6.6, 5.4, 6.7, 8.9, 4.6, 23.8, 1&#x2026;
- $ rate_age_35_44   &lt;dbl&gt; NA, NA, NA, NA, 2.1, 18.8, 16.1, 20.6, 25.1, 11.9, 65&#x2026;
- $ rate_age_45_54   &lt;dbl&gt; NA, NA, NA, NA, 4.9, 56.1, 42.8, 64.4, 79.9, 33.9, 14&#x2026;
- $ rate_age_55_64   &lt;dbl&gt; NA, NA, NA, NA, 9.3, 129.8, 96.0, 162.0, 201.9, 67.4,&#x2026;
- $ rate_age_65_74   &lt;dbl&gt; NA, NA, NA, NA, 19.0, 293.6, 206.7, 413.6, 464.8, 109&#x2026;
- $ rate_age_75_84   &lt;dbl&gt; NA, NA, NA, NA, 43.9, 725.6, 465.8, 1112.4, 1110.7, 1&#x2026;
- $ rate_age_85_plus &lt;dbl&gt; NA, NA, NA, NA, 97.7, 2210.8, 1127.2, 3101.9, 2783.8,&#x2026;
-</code></pre>
-<h2 id="pivotlonger-to-reorg-the-data-for-grouping"><code>pivot_longer</code> to reorg the data for grouping</h2>
-<pre><code>df2 = df1 %&gt;% pivot_longer(names_to = &quot;rate_type&quot;, values_to = &quot;rate_of_10k&quot;,cols = -c(year_and_quarter))
-# convert NA to 0
-df2 &lt;- df2 %&gt;%
-    mutate_at(c(&quot;rate_of_10k&quot;), ~coalesce(.,0))
-!&gt; df2
- # A tibble: 140 &#xD7; 3
-    year_and_quarter rate_type        rate_of_10k
-    &lt;chr&gt;            &lt;chr&gt;                  &lt;dbl&gt;
-  1 2019 Q1          rate_age_1_4               0
-  2 2019 Q1          rate_age_5_14              0
-  3 2019 Q1          rate_age_15_24             0
-  4 2019 Q1          rate_age_25_34             0
-  5 2019 Q1          rate_age_35_44             0
-  6 2019 Q1          rate_age_45_54             0
-  7 2019 Q1          rate_age_55_64             0
-  8 2019 Q1          rate_age_65_74             0
-  9 2019 Q1          rate_age_75_84             0
- 10 2019 Q1          rate_age_85_plus           0	
-</code></pre>
-<h2 id="draw-diagram-for-each-group">Draw diagram for each group</h2>
-<pre><code>plotdata &lt;- df2 %&gt;%
-    group_by(rate_type) %&gt;%
-    summarize(n = n(),
-            mean = mean(rate_of_10k),
-            sd = sd(rate_of_10k),
-            ci = qt(0.975, df = n - 1) * sd / sqrt(n))
-p = ggplot(plotdata,
-       aes(x = factor(rate_type, level = c(&apos;rate_age_1_4&apos;,&apos;rate_age_5_14&apos;,&apos;rate_age_15_24&apos;,&apos;rate_age_25_34&apos;,&apos;rate_age_35_44&apos;,&apos;rate_age_45_54&apos;,&apos;rate_age_55_64&apos;,&apos;rate_age_65_74&apos;,&apos;rate_age_75_84&apos;,&apos;rate_age_85_plus&apos;))
-         , y = mean, group = 1)) +
-    geom_line(linetype=&quot;dashed&quot;, color=&quot;darkgrey&quot;) +
-    geom_errorbar(aes(ymin = mean - ci,
-                      ymax = mean + ci),
-                  width = .2) +
-    geom_point(size = 3, color=&quot;red&quot;) +
-    scale_y_continuous(breaks=seq(0,1800,100)) +
-    theme_bw() +
-    labs(x=&quot;rate_type&quot;,
-         y=&quot;rate_of_10k&quot;,
-         title=&quot;Mean Plot with 95% Confidence Interval&quot;)
-save_plot(&quot;covid_plot_age_impact1.svg&quot;, fig = p, width=30, height=20)
-</code></pre>
-<p><img src="https://www.flamingbytes.com/content/images/posts/covid_plot_age_impact1.svg" alt="Using ANOVA in R to analyze US COVID data to understand age impact to death rate" loading="lazy"></p>
-<h2 id="anova-analysis">ANOVA analysis</h2>
-<p>Analysis of variance (ANOVA) is a collection of statistical models and their associated estimation procedures (such as the &quot;variation&quot; among and between groups) used to analyze the differences among means.<br>
-It&apos;s very useful in our case, <code>aov</code> from R make it very easy to use, see <a href="https://www.rdocumentation.org/packages/stats/versions/3.6.2/topics/aov">https://www.rdocumentation.org/packages/stats/versions/3.6.2/topics/aov</a> for more detail.</p>
-<pre><code>fit &lt;- aov(rate_of_10k ~ rate_type, data=df2)
-summary(fit)
-!&gt; summary(fit)
-              Df   Sum Sq Mean Sq F value   Pr(&gt;F)
- rate_type     9 12988087 1443121   10.21 8.49e-12 ***
- Residuals   130 18370513  141312
- ---
- Signif. codes:  0 &#x2018;***&#x2019; 0.001 &#x2018;**&#x2019; 0.01 &#x2018;*&#x2019; 0.05 &#x2018;.&#x2019; 0.1 &#x2018; &#x2019; 1
-</code></pre>
-<p>we saw <code>8.49e-12 ***</code>, which means age has big impact on covid death rate.</p>
-<h2 id="compare-diffrent-age-ranges">Compare diffrent age ranges</h2>
-<pre><code>pairwise &lt;- TukeyHSD(fit)
-pairwise
-
- + pairwise
- &gt;   Tukey multiple comparisons of means
-     95% family-wise confidence level
-
- Fit: aov(formula = rate_of_10k ~ rate_type, data = df2)
-
- $rate_type
-                                          diff        lwr       upr     p adj
- rate_age_15_24-rate_age_1_4        1.25000000 -456.16974  458.6697 1.0000000
- rate_age_25_34-rate_age_1_4        5.87857143 -451.54117  463.2983 1.0000000
- rate_age_35_44-rate_age_1_4       16.50714286 -440.91259  473.9269 1.0000000
- rate_age_45_54-rate_age_1_4       43.45714286 -413.96259  500.8769 0.9999996
- rate_age_5_14-rate_age_1_4        -0.02857143 -457.44831  457.3912 1.0000000
- ....
-</code></pre>
-<p>if <code>p adj</code> is close to 1, it means <code>no big difference</code> for this pair<br>
-if <code>p adj</code> is close to 0, it means <code>big difference</code> for this pair</p>
-<h2 id="draw-diagram-for-pairs-comparisons">Draw diagram for pairs comparisons</h2>
-<pre><code>plotdata &lt;- as.data.frame(pairwise[[1]])
-plotdata$conditions &lt;- row.names(plotdata)
-p = ggplot(data=plotdata, aes(x=conditions, y=diff)) +
-  geom_errorbar(aes(ymin=lwr, ymax=upr, width=.2)) +
-  geom_hline(yintercept=0, color=&quot;red&quot;, linetype=&quot;dashed&quot;) +
-  geom_point(size=3, color=&quot;red&quot;) +
-  theme_bw() +
-  labs(y=&quot;Difference in mean levels&quot;, x=&quot;&quot;,
-       title=&quot;95% family-wise confidence level&quot;) +
-   coord_flip()
-save_plot(&quot;covid_plot_age_impact2.svg&quot;, fig = p, width=30, height=20)
-</code></pre>
-<p><img src="https://www.flamingbytes.com/content/images/posts/covid_plot_age_impact2.svg" alt="Using ANOVA in R to analyze US COVID data to understand age impact to death rate" loading="lazy"></p>
-<h2 id="conclusion">Conclusion</h2>
-<ul>
-<li>Age does have big impact for covid death rate.</li>
-<li>85+ was impacted the most.</li>
-<li>For 35-,  the death rate is very low, and no big difference from age 0-35.</li>
-</ul>
-<!--kg-card-end: markdown-->]]></content:encoded></item></channel></rss>
+<!--kg-card-end: markdown--><figure class="kg-card kg-image-card"><img src="https://www.flamingbytes.com/content/images/2023/01/indicators.png" class="kg-image" alt="Tracking stock financial metrics in tradingview" loading="lazy" width="1545" height="881" srcset="https://www.flamingbytes.com/content/images/size/w600/2023/01/indicators.png 600w, https://www.flamingbytes.com/content/images/size/w1000/2023/01/indicators.png 1000w, https://www.flamingbytes.com/content/images/2023/01/indicators.png 1545w" sizes="(min-width: 720px) 720px"></figure>]]></content:encoded></item></channel></rss>

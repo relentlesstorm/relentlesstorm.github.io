@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>FlamingBytes</title>
+    <link rel="stylesheet" href="/assets/built/screen.css?v=51fc30bf49">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.12.3/tocbot.css">
+    
+    <style>
+    .gh-content {
+        position: relative;
+    }
+
+    .gh-toc > .toc-list {
+        position: relative;
+    }
+
+    .toc-list {
+        overflow: hidden;
+        list-style: none;
+    }
+
+    @media (min-width: 1300px) {
+        .gh-sidebar {
+            position: absolute; 
+            top: 0;
+            bottom: 0;
+            margin-top: 4vmin;
+            margin-left: 2vmin;
+            /*grid-column: wide-start / main-start; *//* Place the TOC to the left of the content */
+            grid-column: wide-end / main-end; /* Place the TOC to the right of the content */
+        }
+    
+        .gh-toc {
+            position: sticky; /* On larger screens, TOC will stay in the same spot on the page */
+            top: 4vmin;
+        }
+    }
+
+    .gh-toc .is-active-link::before {
+        background-color: var(--ghost-accent-color); /* Defines TOC accent color based on Accent color set in Ghost Admin */
+    } 
+    </style>
+
+    <link rel="icon" href="https://www.flamingbytes.com/content/images/size/w256h256/2023/01/FlamingBytes-icon-64x64.png" type="image/png" />
+    <link rel="canonical" href="https://www.flamingbytes.com/blog/general-steps-for-system-performance-analysis/" />
+    <meta name="referrer" content="no-referrer-when-downgrade" />
+    
+    <meta property="og:site_name" content="FlamingBytes" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="General steps for system performance analysis" />
+    <meta property="og:description" content="This post tries to provide general steps for system performance analysis. We are going to cover the following objectives.
+
+
+ * The performance goals
+ * Workload characterization
+ * Drill-down analysis
+ * Traditional performance tools
+ * BCC/BPF performance tools
+
+
+
+The Goals of performance analysis
+
+
+In general, the goals of performance analysis are to improve end-user performance" />
+    <meta property="og:url" content="https://www.flamingbytes.com/blog/general-steps-for-system-performance-analysis/" />
+    <meta property="og:image" content="https://images.unsplash.com/photo-1591696205602-2f950c417cb9?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDE2fHxhbmFseXNpc3xlbnwwfHx8fDE2Nzg2NzIzNzY&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000" />
+    <meta property="article:published_time" content="2023-03-05T01:52:00.000Z" />
+    <meta property="article:modified_time" content="2023-03-14T05:23:20.000Z" />
+    <meta property="article:tag" content="Performance" />
+    
+    <meta property="article:publisher" content="https://www.facebook.com/ghost" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="General steps for system performance analysis" />
+    <meta name="twitter:description" content="This post tries to provide general steps for system performance analysis. We are going to cover the following objectives.
+
+
+ * The performance goals
+ * Workload characterization
+ * Drill-down analysis
+ * Traditional performance tools
+ * BCC/BPF performance tools
+
+
+
+The Goals of performance analysis
+
+
+In general, the goals of performance analysis are to improve end-user performance" />
+    <meta name="twitter:url" content="https://www.flamingbytes.com/blog/general-steps-for-system-performance-analysis/" />
+    <meta name="twitter:image" content="https://images.unsplash.com/photo-1591696205602-2f950c417cb9?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDE2fHxhbmFseXNpc3xlbnwwfHx8fDE2Nzg2NzIzNzY&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000" />
+    <meta name="twitter:label1" content="Written by" />
+    <meta name="twitter:data1" content="relentlesstorm" />
+    <meta name="twitter:label2" content="Filed under" />
+    <meta name="twitter:data2" content="Performance" />
+    <meta name="twitter:site" content="@ghost" />
+    <meta property="og:image:width" content="2000" />
+    <meta property="og:image:height" content="1333" />
+    
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "publisher": {
+        "@type": "Organization",
+        "name": "FlamingBytes",
+        "url": "https://www.flamingbytes.com/",
+        "logo": {
+            "@type": "ImageObject",
+            "url": "https://www.flamingbytes.com/content/images/size/w256h256/2023/01/FlamingBytes-icon-64x64.png",
+            "width": 60,
+            "height": 60
+        }
+    },
+    "author": {
+        "@type": "Person",
+        "name": "relentlesstorm",
+        "image": {
+            "@type": "ImageObject",
+            "url": "https://www.flamingbytes.com/content/images/2023/01/FlamingBytes-icon-64x64-1.png",
+            "width": 64,
+            "height": 64
+        },
+        "url": "https://www.flamingbytes.com/author/relentlesstorm/",
+        "sameAs": []
+    },
+    "headline": "General steps for system performance analysis",
+    "url": "https://www.flamingbytes.com/blog/general-steps-for-system-performance-analysis/",
+    "datePublished": "2023-03-05T01:52:00.000Z",
+    "dateModified": "2023-03-14T05:23:20.000Z",
+    "image": {
+        "@type": "ImageObject",
+        "url": "https://images.unsplash.com/photo-1591696205602-2f950c417cb9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxMTc3M3wwfDF8c2VhcmNofDE2fHxhbmFseXNpc3xlbnwwfHx8fDE2Nzg2NzIzNzY&ixlib=rb-4.0.3&q=80&w=2000",
+        "width": 2000,
+        "height": 1333
+    },
+    "keywords": "Performance",
+    "description": "This post tries to provide general steps for system performance analysis. We are going to cover the following objectives.\n\n\n * The performance goals\n * Workload characterization\n * Drill-down analysis\n * Traditional performance tools\n * BCC/BPF performance tools\n\n\n\nThe Goals of performance analysis\n\n\nIn general, the goals of performance analysis are to improve end-user performance and reduce the operating cost. To achieve this, it&#x27;s important to make the performance measurable. We often use the ",
+    "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https://www.flamingbytes.com/"
+    }
+}
+    </script>
+
+    <meta name="generator" content="Ghost 5.26" />
+    <link rel="alternate" type="application/rss+xml" title="FlamingBytes" href="https://www.flamingbytes.com/rss/" />
+    
+    <script defer src="https://cdn.jsdelivr.net/ghost/sodo-search@~1.1/umd/sodo-search.min.js" data-key="321a1d1aea33fd468f6e61f563" data-styles="https://cdn.jsdelivr.net/ghost/sodo-search@~1.1/umd/main.css" data-sodo-search="https://www.flamingbytes.com/" crossorigin="anonymous"></script>
+    <script defer src="/public/cards.min.js?v=51fc30bf49"></script>
+    <link rel="stylesheet" type="text/css" href="/public/cards.min.css?v=51fc30bf49">
+    <script defer src="/public/comment-counts.min.js?v=51fc30bf49" data-ghost-comments-counts-api="https://www.flamingbytes.com/members/api/comments/counts/"></script>
+    <style>.gh-head-logo img{max-height:100px;height:100%;}</style>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-B8PQ47L2H0"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-B8PQ47L2H0');
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8578408127828851" crossorigin="anonymous"></script><style>:root {--ghost-accent-color: #6a13ec;}</style>
+</head>
+
+<body class="post-template tag-performance is-head-left-logo has-serif-body">
+<div class="gh-site">
+
+    <header id="gh-head" class="gh-head gh-outer">
+        <div class="gh-head-inner gh-inner">
+            <div class="gh-head-brand">
+                <div class="gh-head-brand-wrapper">
+                    <a class="gh-head-logo" href="https://www.flamingbytes.com">
+                            FlamingBytes
+                    </a>
+                </div>
+                <button class="gh-search gh-icon-btn" data-ghost-search><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" width="20" height="20"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg></button>
+                <button class="gh-burger"></button>
+            </div>
+
+            <nav class="gh-head-menu">
+                <ul class="nav">
+    <li class="nav-home"><a href="https://www.flamingbytes.com/">Home</a></li>
+    <li class="nav-tags"><a href="https://www.flamingbytes.com/blog/tags/">Tags</a></li>
+    <li class="nav-archive"><a href="https://www.flamingbytes.com/blog/archive/">Archive</a></li>
+    <li class="nav-about"><a href="https://www.flamingbytes.com/about/">About</a></li>
+</ul>
+
+            </nav>
+
+            <div class="gh-head-actions">
+                        <button class="gh-search gh-icon-btn" data-ghost-search><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" width="20" height="20"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg></button>
+            </div>
+        </div>
+    </header>
+
+    
+<main class="gh-main">
+        <article class="gh-article post tag-performance">
+
+            <header class="gh-article-header gh-canvas">
+                    <a class="gh-article-tag" href="https://www.flamingbytes.com/blog/tag/performance/">Performance</a>
+
+                <h1 class="gh-article-title">General steps for system performance analysis</h1>
+
+                    <aside class="gh-article-sidebar">
+
+        <div class="gh-author-image-list">
+                <a class="gh-author-image" href="/author/relentlesstorm/">
+                        <img src="https://www.flamingbytes.com/content/images/2023/01/FlamingBytes-icon-64x64-1.png" alt="relentlesstorm">
+                </a>
+        </div>
+
+        <div class="gh-author-name-list">
+                <h4 class="gh-author-name">
+                    <a href="/author/relentlesstorm/">relentlesstorm</a>
+                </h4>
+                
+        </div>
+
+        <div class="gh-article-meta">
+            <div class="gh-article-meta-inner">
+                <time class="gh-article-date" datetime="2023-03-05">Mar 5, 2023</time>
+                    <span class="gh-article-meta-sep"></span>
+                    <span class="gh-article-length">3 min</span>
+            </div>
+        </div>
+
+    </aside>
+
+
+                    <figure class="gh-article-image">
+        <img
+            srcset="https://images.unsplash.com/photo-1591696205602-2f950c417cb9?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDE2fHxhbmFseXNpc3xlbnwwfHx8fDE2Nzg2NzIzNzY&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;300 300w,
+                    https://images.unsplash.com/photo-1591696205602-2f950c417cb9?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDE2fHxhbmFseXNpc3xlbnwwfHx8fDE2Nzg2NzIzNzY&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720 720w,
+                    https://images.unsplash.com/photo-1591696205602-2f950c417cb9?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDE2fHxhbmFseXNpc3xlbnwwfHx8fDE2Nzg2NzIzNzY&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;960 960w,
+                    https://images.unsplash.com/photo-1591696205602-2f950c417cb9?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDE2fHxhbmFseXNpc3xlbnwwfHx8fDE2Nzg2NzIzNzY&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1200 1200w,
+                    https://images.unsplash.com/photo-1591696205602-2f950c417cb9?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDE2fHxhbmFseXNpc3xlbnwwfHx8fDE2Nzg2NzIzNzY&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000 2000w"
+            sizes="(max-width: 1200px) 100vw, 1200px"
+            src="https://images.unsplash.com/photo-1591696205602-2f950c417cb9?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDE2fHxhbmFseXNpc3xlbnwwfHx8fDE2Nzg2NzIzNzY&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1200"
+            alt="General steps for system performance analysis"
+        >
+            <figcaption>Photo by <a href="https://unsplash.com/@markuswinkler?utm_source=ghost&utm_medium=referral&utm_campaign=api-credit">Markus Winkler</a> / <a href="https://unsplash.com/?utm_source=ghost&utm_medium=referral&utm_campaign=api-credit">Unsplash</a></figcaption>
+    </figure>
+            </header>
+
+            <section class="gh-content gh-canvas">
+                <aside class="gh-sidebar"><div class="gh-toc"></div></aside> 
+
+                <!--kg-card-begin: markdown--><p>This post tries to provide general steps for system performance analysis. We are going to cover the following objectives.</p>
+<ul>
+<li>The performance goals</li>
+<li>Workload characterization</li>
+<li>Drill-down analysis</li>
+<li>Traditional performance tools</li>
+<li>BCC/BPF performance tools</li>
+</ul>
+<h2 id="the-goals-of-performance-analysis">The Goals of performance analysis</h2>
+<p>In general, the goals of performance analysis are to improve end-user performance and reduce the operating cost. To achieve this, it's important to make the performance measurable. We often use the following metrics to measure performance.</p>
+<ul>
+<li>Rates - operation or request rates per second</li>
+<li>Throughput - data transferred per second</li>
+<li>Latency - the time to accomplish a operation or request in milliseconds</li>
+<li>Resource utilization - the resource usage in percentage</li>
+<li>Cost - Price/performance ratio</li>
+</ul>
+<p>The rates, throughput and latency are usually the most important metrics to check if the certain performance goal is met. For example, the throughput measured in MiB/s for a daily database backup is too slow to complete in a given backup window. We need to investigate the issue from the backup application to system layer in order to find a solution to improve the performance. For a second example, the latency at cloud native storage volume layer is as high as 20ms while the underneath SSD disk latency shows less than 1ms. This requires further analysis at volume layer in order to find out the cause for the 19ms latency.</p>
+<p>Performance optimization is endless effort. It depends on the goal you are targeting. So, setting the goals is the first step before you involve further performance analysis activities.</p>
+<h2 id="workload-characterization">Workload characterization</h2>
+<p>Performance analysis is a process to analyze systematically. Understanding the system/application configuration and applied workload are often needed before you do further performance analysis. This is the workload characterization.</p>
+<p>The workload characterization tries to answer the following questions:</p>
+<ul>
+<li>What's the running application? What's the major components/features used in the application?</li>
+<li>What is the schedule to run the workload? What is the job concurrency?</li>
+<li>What are the read/write patterns? Mixed read and write, or read/write only workload?</li>
+<li>What are the rates, throughput and latency at application level?</li>
+<li>What is the performance concern?</li>
+</ul>
+<p>Sometimes, you may get a description of the workload from end-users. However, the workload and its configuraiton are usualaly not described clearly enough by the users. It's worth to characterize the workload with custom profiler. An application level workload profiler can be developed for this purpose. But this often requires application expertise.  At system level, you may leverage the BCC/BPF performance tools to profile the workload.</p>
+<h2 id="drill-down-analysis">Drill-down analysis</h2>
+<p>The drill-down analysis is to find a clue and drill deeper until you find the root cause for the performance issue.</p>
+<p>The general process for drill-down analysis would be like these steps.</p>
+<ol>
+<li>Examine the high level performance metrics and identify the degraded performance point</li>
+<li>For the target workload point with degradation, lazer focus on the four major system resources(CPU, memory, disk I/O and network) to see what is the potential bottleneck</li>
+<li>If it's hardware bottleneck, it might be resolved by scaling up and scaling out the system resources. Otherwise, it could be a software bottleneck either from kernel space or user space.</li>
+<li>Find a clue based on the collected metrics to drill down to the next level. Software bottleneck analysis often requires profiling and tracing effort to pinpoint the culprit.</li>
+</ol>
+<p>To identify a hardware bottleneck, you would check if any of the four major resources are saturated. For example, the system must be CPU bound if the CPU utilization is above 90%. The system must be disk I/O bound if the disk is 100% busy and wait queue is unexpected large.</p>
+<p>It's likely that you could not find the root cause with one round of analysis if you go with the wrong direction. You have to repeat the above steps to identify the right direction for RCA. Keep in mind, finding a needle in haystack is not an easy work. You must be patient.</p>
+<h2 id="traditional-performance-tools">Traditional performance tools</h2>
+<p>During the drill-down performance analysis, you can use the following Linux built-in tools. They are simple but very powerful to help determine the next direction on the way of performance analysis.</p>
+<ul>
+<li>uptime - system loads in past 1 minute, 5 minutes and 15 minutes</li>
+<li>dmesg - system error messages</li>
+<li>vmstat - overview of system resource usage(CPU, Memory and disk/network I/O)</li>
+<li>mpstat - per-CPU usage in different states</li>
+<li>pidstat - CPU usage per process</li>
+<li>iostat - disk I/O statistics(throughput, IOPS, latency, etc)</li>
+<li>netstat/sar - network throughput, TCP/IP connection stats</li>
+<li>top - CPU/Memory usage per process and more</li>
+</ul>
+<p>Please refer to this <a href="https://www.flamingbytes.com/blog/performance-analysis-in-60-seconds">post</a> for more detail on how to use Linux traditional tools to analyze performance.</p>
+<h2 id="bccbpf-performance-tools">BCC/BPF performance tools</h2>
+<p>While the traditional tools always gives us a first look at the system performance especially on the resource usage, we can use(or create) BCC/BPF tools for further performance analysis. Please refer to this <a href="https://www.flamingbytes.com/blog/bcc-performance-tools-checklist">post</a> for more detail.</p>
+<!--kg-card-end: markdown-->
+
+                <!-- native ads start -->
+                <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8578408127828851" crossorigin="anonymous"></script>
+                <ins class="adsbygoogle" style="display:block; text-align:center;" data-ad-layout="in-article" data-ad-format="fluid" data-ad-client="ca-pub-8578408127828851" data-ad-slot="5596270594"></ins>
+                <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+                <!-- native ads end -->
+                
+            </section>
+
+        </article>
+
+                <div class="gh-read-next gh-canvas">
+                <section class="gh-pagehead">
+                    <h4 class="gh-pagehead-title">Read next</h4>
+                </section>
+
+                <div class="gh-topic gh-topic-grid">
+                    <div class="gh-topic-content">
+                            <article class="gh-card post">
+    <a class="gh-card-link" href="/blog/analyze-cockroach-performance-from-db-console/">
+            <figure class="gh-card-image">
+                <img
+                    srcset="https://images.unsplash.com/photo-1608222351212-18fe0ec7b13b?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDN8fGRhc2hib2FyZHxlbnwwfHx8fDE2Nzc0NTUwMzE&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;300 300w,
+                            https://images.unsplash.com/photo-1608222351212-18fe0ec7b13b?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDN8fGRhc2hib2FyZHxlbnwwfHx8fDE2Nzc0NTUwMzE&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720 720w,
+                            https://images.unsplash.com/photo-1608222351212-18fe0ec7b13b?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDN8fGRhc2hib2FyZHxlbnwwfHx8fDE2Nzc0NTUwMzE&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;960 960w,
+                            https://images.unsplash.com/photo-1608222351212-18fe0ec7b13b?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDN8fGRhc2hib2FyZHxlbnwwfHx8fDE2Nzc0NTUwMzE&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1200 1200w,
+                            https://images.unsplash.com/photo-1608222351212-18fe0ec7b13b?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDN8fGRhc2hib2FyZHxlbnwwfHx8fDE2Nzc0NTUwMzE&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000 2000w"
+                    sizes="(max-width: 1200px) 100vw, 1200px"
+                    src="https://images.unsplash.com/photo-1608222351212-18fe0ec7b13b?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDN8fGRhc2hib2FyZHxlbnwwfHx8fDE2Nzc0NTUwMzE&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720"
+                    alt="Analyze Cockroach performance from the built-in DB console"
+                >
+            </figure>
+
+        <div class="gh-card-wrapper">
+            <header class="gh-card-header">
+                <h3 class="gh-card-title">Analyze Cockroach performance from the built-in DB console</h3>
+            </header>
+
+                    <div class="gh-card-excerpt">In this post, we try to understand how to analyze CockroachDB performance by monitoring its built-in DB console.</div>
+
+            <footer class="gh-card-footer">
+                <span class="gh-card-author">relentlesstorm</span>
+                <time class="gh-card-date" datetime="2023-02-26">Feb 26, 2023</time>
+                    <script
+    data-ghost-comment-count="63fbd09c5fc5490f28da1daa"
+    data-ghost-comment-count-empty=""
+    data-ghost-comment-count-singular="comment"
+    data-ghost-comment-count-plural="comments"
+    data-ghost-comment-count-tag="span"
+    data-ghost-comment-count-class-name="gh-card-comments"
+    data-ghost-comment-count-autowrap="true"
+>
+</script>
+            </footer>
+        </div>
+    </a>
+</article>                            <article class="gh-card post">
+    <a class="gh-card-link" href="/blog/flame-graph-and-stack-trace-visualization/">
+            <figure class="gh-card-image">
+                <img
+                    srcset="https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDN8fGNvZGUlMjBzdGFja3xlbnwwfHx8fDE2Nzg1OTYxNTE&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;300 300w,
+                            https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDN8fGNvZGUlMjBzdGFja3xlbnwwfHx8fDE2Nzg1OTYxNTE&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720 720w,
+                            https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDN8fGNvZGUlMjBzdGFja3xlbnwwfHx8fDE2Nzg1OTYxNTE&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;960 960w,
+                            https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDN8fGNvZGUlMjBzdGFja3xlbnwwfHx8fDE2Nzg1OTYxNTE&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1200 1200w,
+                            https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDN8fGNvZGUlMjBzdGFja3xlbnwwfHx8fDE2Nzg1OTYxNTE&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000 2000w"
+                    sizes="(max-width: 1200px) 100vw, 1200px"
+                    src="https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDN8fGNvZGUlMjBzdGFja3xlbnwwfHx8fDE2Nzg1OTYxNTE&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720"
+                    alt="Flame Graph and stack trace visualization"
+                >
+            </figure>
+
+        <div class="gh-card-wrapper">
+            <header class="gh-card-header">
+                <h3 class="gh-card-title">Flame Graph and stack trace visualization</h3>
+            </header>
+
+                    <div class="gh-card-excerpt">A stack trace is series of functions which show the code path. With the Linux perf(1) tool, the stack samples are summarized as call tree. With the BCC profile(8) tool, the unique stack trace shows as a count. Both tools are very useful when there are only a</div>
+
+            <footer class="gh-card-footer">
+                <span class="gh-card-author">relentlesstorm</span>
+                <time class="gh-card-date" datetime="2023-02-24">Feb 24, 2023</time>
+                    <script
+    data-ghost-comment-count="640d58644a1a730c884e88c8"
+    data-ghost-comment-count-empty=""
+    data-ghost-comment-count-singular="comment"
+    data-ghost-comment-count-plural="comments"
+    data-ghost-comment-count-tag="span"
+    data-ghost-comment-count-class-name="gh-card-comments"
+    data-ghost-comment-count-autowrap="true"
+>
+</script>
+            </footer>
+        </div>
+    </a>
+</article>                            <article class="gh-card post">
+    <a class="gh-card-link" href="/blog/why-performance-tools-need-bpf/">
+            <figure class="gh-card-image">
+                <img
+                    srcset="https://images.unsplash.com/photo-1532906619279-a4b7267faa66?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDF8fGYxfGVufDB8fHx8MTY3ODU5MTM0OA&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;300 300w,
+                            https://images.unsplash.com/photo-1532906619279-a4b7267faa66?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDF8fGYxfGVufDB8fHx8MTY3ODU5MTM0OA&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720 720w,
+                            https://images.unsplash.com/photo-1532906619279-a4b7267faa66?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDF8fGYxfGVufDB8fHx8MTY3ODU5MTM0OA&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;960 960w,
+                            https://images.unsplash.com/photo-1532906619279-a4b7267faa66?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDF8fGYxfGVufDB8fHx8MTY3ODU5MTM0OA&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1200 1200w,
+                            https://images.unsplash.com/photo-1532906619279-a4b7267faa66?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDF8fGYxfGVufDB8fHx8MTY3ODU5MTM0OA&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;2000 2000w"
+                    sizes="(max-width: 1200px) 100vw, 1200px"
+                    src="https://images.unsplash.com/photo-1532906619279-a4b7267faa66?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;MnwxMTc3M3wwfDF8c2VhcmNofDF8fGYxfGVufDB8fHx8MTY3ODU5MTM0OA&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;720"
+                    alt="Why performance tools need BPF"
+                >
+            </figure>
+
+        <div class="gh-card-wrapper">
+            <header class="gh-card-header">
+                <h3 class="gh-card-title">Why performance tools need BPF</h3>
+            </header>
+
+                    <div class="gh-card-excerpt">BPF is efficient, production safe and built into the Linux kernel. With BPF, you can use the performance tools in production environment without needing to add any new kernel components.
+
+
+The following example summarizes the block I/O latency as a histogram.
+
+
+$ biolatency
+Tracing block device I/O... Hit Ctrl-C</div>
+
+            <footer class="gh-card-footer">
+                <span class="gh-card-author">relentlesstorm</span>
+                <time class="gh-card-date" datetime="2023-02-23">Feb 23, 2023</time>
+                    <script
+    data-ghost-comment-count="640d455e4a1a730c884e8853"
+    data-ghost-comment-count-empty=""
+    data-ghost-comment-count-singular="comment"
+    data-ghost-comment-count-plural="comments"
+    data-ghost-comment-count-tag="span"
+    data-ghost-comment-count-class-name="gh-card-comments"
+    data-ghost-comment-count-autowrap="true"
+>
+</script>
+            </footer>
+        </div>
+    </a>
+</article>                    </div>
+                </div>
+            </div>
+
+    
+        <!-- ghost native comments
+                    <div class="gh-comments gh-read-next gh-canvas">
+            <section class="gh-pagehead">
+                <h4 class="gh-pagehead-title">Comments (<script
+    data-ghost-comment-count="640e354dabc64a0e0bd1f48a"
+    data-ghost-comment-count-empty="0"
+    data-ghost-comment-count-singular=""
+    data-ghost-comment-count-plural=""
+    data-ghost-comment-count-tag="span"
+    data-ghost-comment-count-class-name=""
+    data-ghost-comment-count-autowrap="true"
+>
+</script>)</h3>
+            </section>
+            
+        <script defer src="https://cdn.jsdelivr.net/ghost/comments-ui@~0.12/umd/comments-ui.min.js" data-ghost-comments="https://www.flamingbytes.com/" data-api="https://www.flamingbytes.com/ghost/api/content/" data-admin="https://www.flamingbytes.com/ghost/" data-key="321a1d1aea33fd468f6e61f563" data-styles="https://cdn.jsdelivr.net/ghost/comments-ui@~0.12/umd/main.css" data-title="" data-count="false" data-post-id="640e354dabc64a0e0bd1f48a" data-sentry-dsn="" data-color-scheme="auto" data-avatar-saturation="60" data-accent-color="#6a13ec" data-app-version="0.12" data-comments-enabled="all" data-publication="FlamingBytes" crossorigin="anonymous"></script>
+    
+        </div>
+        -->
+
+        <!-- disqus comments 
+        <div id="disqus_thread"></div>
+<script>
+    var disqus_config = function () {
+        this.page.url = "https://www.flamingbytes.com/blog/general-steps-for-system-performance-analysis/";
+        this.page.identifier = "ghost-640e354dabc64a0e0bd1f48a"
+    };
+    (function() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://www-flamingbytes-com.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+    })();
+</script>
+-->
+
+</main>
+
+    <footer class="gh-foot gh-outer">
+        <div class="gh-foot-inner gh-inner">
+
+            <!--<nav class="gh-foot-menu">
+                <<ul class="nav">
+    <li class="nav-sign-up"><a href="#/portal/">Sign up</a></li>
+</ul>
+
+            </nav>-->
+
+            <div class="gh-copyright">
+                    FlamingBytes © 2023. Powered by <a href="https://ghost.org/" target="_blank" rel="noopener">Ghost</a>
+            </div>
+        </div>
+    </footer>
+
+</div>
+
+    <div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="pswp__bg"></div>
+
+    <div class="pswp__scroll-wrap">
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)"></button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)"></button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="/assets/built/main.min.js?v=51fc30bf49"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.12.3/tocbot.min.js"></script>
+
+<script>
+    tocbot.init({
+        // Where to render the table of contents.
+        tocSelector: '.gh-toc',
+        // Where to grab the headings to build the table of contents.
+        contentSelector: '.gh-content',
+        // Which headings to grab inside of the contentSelector element.
+        headingSelector: 'h1, h2, h3, h4',
+        // Ensure correct positioning
+        hasInnerContainers: true,
+    });
+</script>
+
+
+
+</body>
+
+</html>
